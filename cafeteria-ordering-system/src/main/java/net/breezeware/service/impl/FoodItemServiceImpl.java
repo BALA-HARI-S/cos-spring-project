@@ -97,7 +97,9 @@ public class FoodItemServiceImpl implements FoodItemService {
     }
 
     private FoodItemDto processFoodItem(FoodItem foodItem) {
+        log.info("Entering processFoodItem()");
         FoodItem saveFoodItem = foodItemRepository.save(foodItem);
+        log.info("Leaving processFoodItem()");
         return foodItemMapper.foodItemToFoodItemDto(saveFoodItem);
     }
 }
