@@ -225,6 +225,66 @@ class FoodItemServiceImplTest {
     }
 
     @Test
+    void givenFoodItemNameInDto_WhenUpdateFoodItem_ThenReturnFoodItemDto() throws FoodItemException {
+        log.info("Entering UpdateFoodItem Test");
+        // given
+        FoodItemDto foodItemDto = new FoodItemDto();
+        String newFoodItemName = "Idli";
+        foodItemDto.setName(newFoodItemName);
+
+        FoodItem excistingFoodItem = new FoodItem();
+        excistingFoodItem.setId(ID);
+        excistingFoodItem.setName(FOOD_ITEM_NAME);
+        excistingFoodItem.setPrice(PRICE);
+
+        FoodItem savedFoodItem = new FoodItem();
+        savedFoodItem.setId(ID);
+        savedFoodItem.setName(newFoodItemName);
+        savedFoodItem.setPrice(PRICE);
+
+        // when
+        when(foodItemRepository.findById(anyLong())).thenReturn(Optional.of(excistingFoodItem));
+        when(foodItemRepository.save(any(FoodItem.class))).thenReturn(savedFoodItem);
+        FoodItemDto updatedFoodItem = foodItemService.updateFoodItem(ID, foodItemDto);
+
+        // then
+        Assertions.assertThat(1L).isEqualTo(updatedFoodItem.getId());
+        Assertions.assertThat(newFoodItemName).isEqualTo(updatedFoodItem.getName());
+        log.info("Leaving UpdateFoodItem Test");
+    }
+
+    @Test
+    void givenFoodItemPriceInDto_WhenUpdateFoodItem_ThenReturnFoodItemDto() throws FoodItemException {
+        log.info("Entering UpdateFoodItem Test");
+        // given
+        double newPrice = 15.0;
+        FoodItemDto foodItemDto = new FoodItemDto();
+        foodItemDto.setPrice(newPrice);
+
+        FoodItem excistingFoodItem = new FoodItem();
+        excistingFoodItem.setId(ID);
+        excistingFoodItem.setName(FOOD_ITEM_NAME);
+        foodItemDto.setPrice(PRICE);
+
+        FoodItem savedFoodItem = new FoodItem();
+        savedFoodItem.setId(ID);
+        savedFoodItem.setName(FOOD_ITEM_NAME);
+        savedFoodItem.setPrice(newPrice);
+
+        // when
+        when(foodItemRepository.findById(anyLong())).thenReturn(Optional.of(excistingFoodItem));
+        when(foodItemRepository.save(any(FoodItem.class))).thenReturn(savedFoodItem);
+        FoodItemDto updatedFoodItem = foodItemService.updateFoodItem(ID, foodItemDto);
+
+        // then
+        Assertions.assertThat(1L).isEqualTo(updatedFoodItem.getId());
+        Assertions.assertThat(FOOD_ITEM_NAME).isEqualTo(updatedFoodItem.getName());
+        Assertions.assertThat(newPrice).isEqualTo(updatedFoodItem.getPrice());
+
+        log.info("Leaving UpdateFoodItem Test");
+    }
+
+    @Test
     void givenFoodItemId_WhenDeleteFoodItem_ThenTrowsException() throws FoodItemException {
         log.info("Entering DeleteFoodItem Test");
 
