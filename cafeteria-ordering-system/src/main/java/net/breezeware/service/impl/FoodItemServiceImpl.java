@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import java.time.Instant;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 @Service
 @AllArgsConstructor
@@ -69,20 +70,21 @@ public class FoodItemServiceImpl implements FoodItemService {
     @Override
     public FoodItemDto updateFoodItem(Long id, FoodItemDto foodItemDto) throws FoodItemException {
         log.info("Entering updateFoodItem()");
-        FoodItem retrievedFoodItem = foodItemRepository.findById(id).orElseThrow(() ->
-                new FoodItemException("Food item not found for id: " + id));
+        Optional<FoodItem> retrievedFoodItem = foodItemRepository.findById(id);
         FoodItem foodItem = foodItemMapper.foodItemDtoToFoodItem(foodItemDto);
-
-        foodItem.setId(id);
-        if (Objects.isNull(foodItemDto.getName())) {
-            foodItem.setName(retrievedFoodItem.getName());
+        if(retrievedFoodItem.isPresent()) {
+            foodItem.setId(retrievedFoodItem.get().getId());
+            if (Objects.isNull(foodItemDto.getName())) {
+                foodItem.setName(retrievedFoodItem.get().getName());
+            }
+            if (Objects.isNull(foodItemDto.getPrice())) {
+                foodItem.setPrice(retrievedFoodItem.get().getPrice());
+            }
+            foodItem.setCreated(retrievedFoodItem.get().getCreated());
+            foodItem.setModified(Instant.now());
+        } else {
+            throw new FoodItemException("Food item not found for id: " + id);
         }
-        if (Objects.isNull(foodItemDto.getPrice())) {
-            foodItem.setPrice(retrievedFoodItem.getPrice());
-        }
-        foodItem.setCreated(retrievedFoodItem.getCreated());
-        foodItem.setModified(Instant.now());
-
         log.info("Leaving updateFoodItem()");
         return processFoodItem(foodItem);
     }
