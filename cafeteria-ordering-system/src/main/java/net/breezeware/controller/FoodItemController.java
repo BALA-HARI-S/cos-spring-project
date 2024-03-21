@@ -25,7 +25,7 @@ import java.util.List;
 @AllArgsConstructor
 @Slf4j
 public class FoodItemController {
-    static final String BASE_URL = "/foodItems";
+    static final String BASE_URL = "/food-items";
 
     private final FoodItemService foodItemService;
 
