@@ -171,8 +171,8 @@ public class FoodItemController {
             summary = "Delete Food Item by Id",
             responses = {
                     @ApiResponse(
-                            description = "Success",
-                            responseCode = "200"
+                            description = "NO CONTENT",
+                            responseCode = "204"
                     ),
                     @ApiResponse(
                             description = "Client Error",
