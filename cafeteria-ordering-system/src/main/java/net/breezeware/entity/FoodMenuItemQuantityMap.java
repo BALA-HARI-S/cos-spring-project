@@ -17,12 +17,15 @@ public class FoodMenuItemQuantityMap {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotNull
-    private Instant created;
-
     @OneToOne
     private FoodMenuItemMap foodMenuItemMap;
 
     @NotNull
     private Integer quantity;
+
+    @NotNull
+    private Instant created;
+
+    @NotNull
+    private Instant modified;
 }

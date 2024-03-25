@@ -4,9 +4,13 @@ import lombok.extern.slf4j.Slf4j;
 import net.breezeware.dao.FoodMenuItemMapRepository;
 import net.breezeware.dao.FoodMenuItemQuantityMapRepository;
 import net.breezeware.dao.FoodMenuRepository;
+import net.breezeware.dto.FoodMenuCreateDto;
 import net.breezeware.dto.FoodMenuDto;
+import net.breezeware.dto.FoodMenuItemsDto;
+import net.breezeware.dto.FoodMenuUpdateDto;
 import net.breezeware.entity.Availability;
 import net.breezeware.entity.FoodMenu;
+import net.breezeware.exception.FoodItemException;
 import net.breezeware.exception.FoodMenuException;
 import net.breezeware.mapper.FoodMenuMapper;
 import org.assertj.core.api.Assertions;
@@ -41,6 +45,8 @@ class FoodMenuServiceImplTest {
     @Mock
     private FoodMenuItemQuantityMapRepository foodMenuItemQuantityMapRepository;
 
+    @Mock
+    private FoodItemServiceImpl foodItemService;
 
     @InjectMocks
     private FoodMenuServiceImpl foodMenuService;
@@ -50,7 +56,7 @@ class FoodMenuServiceImplTest {
         log.info("Entering Test setUp()");
         MockitoAnnotations.openMocks(this);
         foodMenuService = new FoodMenuServiceImpl(foodMenuRepository,FoodMenuMapper.INSTANCE
-                ,foodMenuItemMapRepository,foodMenuItemQuantityMapRepository);
+                ,foodMenuItemMapRepository,foodMenuItemQuantityMapRepository,foodItemService);
         log.info("Leaving Test setUp()");
     }
 
@@ -104,56 +110,25 @@ class FoodMenuServiceImplTest {
     }
 
     @Test
-    void givenFoodMenuId_WhenRetrieveFoodMenu_ThenReturnFoodMenuDto() throws FoodMenuException {
+    void givenFoodMenuId_WhenRetrieveFoodMenu_ThenReturnFoodMenuDto() throws FoodMenuException, FoodItemException {
         log.info("Entering retrieveFoodMenu() by id Test");
         // given
         FoodMenu foodMenu = new FoodMenu(ID,MENU_NAME,FIXED_INSTANT,FIXED_INSTANT, AVAILABILITY);
 
         // when
         when(foodMenuRepository.findById(anyLong())).thenReturn(Optional.of(foodMenu));
-        FoodMenuDto retrievedFoodMenu = foodMenuService.retrieveFoodMenu(ID);
+        FoodMenuItemsDto retrievedFoodMenu = foodMenuService.retrieveFoodMenu(ID);
 
         // then
-        Assertions.assertThat(ID).isEqualTo(retrievedFoodMenu.getId());
         Assertions.assertThat(MENU_NAME).isEqualTo(retrievedFoodMenu.getName());
         log.info("Leaving retrieveFoodMenu() by id Test");
-    }
-
-    @Test
-    void givenInvalidFoodMenuName_WhenRetrieveFoodMenu_ThenThrowsException() throws FoodMenuException {
-        log.info("Entering retrieveFoodMenu() by name Test");
-        // given NAME
-        // when
-        when(foodMenuRepository.findByName(anyString())).thenReturn(Optional.empty());
-
-        // then
-        Assertions.assertThatThrownBy(() -> foodMenuService.retrieveFoodMenu(MENU_NAME))
-                .isInstanceOf(FoodMenuException.class)
-                .hasMessage("Food menu not found for name: " + MENU_NAME);
-        log.info("Leaving retrieveFoodMenu() by name Test");
-    }
-
-    @Test
-    void givenFoodMenuName_WhenRetrieveFoodMenu_ThenReturnFoodMenuDto() throws FoodMenuException {
-        log.info("Entering retrieveFoodMenu() by name Test");
-        // given
-        FoodMenu foodMenu = new FoodMenu(ID,MENU_NAME,FIXED_INSTANT,FIXED_INSTANT, AVAILABILITY);
-
-        // when
-        when(foodMenuRepository.findByName(anyString())).thenReturn(Optional.of(foodMenu));
-        FoodMenuDto retrievedFoodMenu = foodMenuService.retrieveFoodMenu(MENU_NAME);
-
-        // then
-        Assertions.assertThat(ID).isEqualTo(retrievedFoodMenu.getId());
-        Assertions.assertThat(MENU_NAME).isEqualTo(retrievedFoodMenu.getName());
-        log.info("Leaving retrieveFoodMenu() by name Test");
     }
 
     @Test
     void givenFoodMenuDto_WhenCreateFoodMenu_ThenReturnFoodMenuDto() {
         log.info("Entering createFoodMenu() Test");
         // given
-        FoodMenuDto foodMenuDto = new FoodMenuDto(ID,MENU_NAME,FIXED_INSTANT,FIXED_INSTANT, AVAILABILITY);
+        FoodMenuCreateDto foodMenuDto = new FoodMenuCreateDto(MENU_NAME,AVAILABILITY);
         FoodMenu foodMenu = new FoodMenu(ID,MENU_NAME,FIXED_INSTANT,FIXED_INSTANT, AVAILABILITY);
 
         // when
@@ -170,7 +145,7 @@ class FoodMenuServiceImplTest {
     void givenInvalidFoodMenuId_WhenUpdateFoodMenu_ThenReturnFoodMenuDto() throws FoodMenuException {
         log.info("Entering updateFoodMenu() Exception Test");
         // given
-        FoodMenuDto foodMenuDto = new FoodMenuDto();
+        FoodMenuUpdateDto foodMenuDto = new FoodMenuUpdateDto();
         foodMenuDto.setName("Special");
 
         // when
@@ -187,7 +162,7 @@ class FoodMenuServiceImplTest {
     void givenFoodMenuDtoWithNameAndId_WhenUpdateFoodMenu_ThenReturnFoodMenuDto() throws FoodMenuException {
         log.info("Entering updateFoodMenu() name Test");
         // given
-        FoodMenuDto foodMenuDto = new FoodMenuDto();
+        FoodMenuUpdateDto foodMenuDto = new FoodMenuUpdateDto();
         foodMenuDto.setName("Special");
         FoodMenu existingFoodMenu = new FoodMenu(ID,MENU_NAME,FIXED_INSTANT,FIXED_INSTANT, AVAILABILITY);
         FoodMenu savedFoodMenu = new FoodMenu(ID,"special",FIXED_INSTANT,FIXED_INSTANT, AVAILABILITY);
@@ -208,7 +183,7 @@ class FoodMenuServiceImplTest {
     void givenFoodMenuDtoWithAvailabilityAndId_WhenUpdateFoodMenu_ThenReturnFoodMenuDto() throws FoodMenuException {
         log.info("Entering updateFoodMenu() availability Test");
         // given
-        FoodMenuDto foodMenuDto = new FoodMenuDto();
+        FoodMenuUpdateDto foodMenuDto = new FoodMenuUpdateDto();
         Set<Availability> newAvailability = new HashSet<>(Arrays.asList(Availability.MONDAY,Availability.TUESDAY));
         foodMenuDto.setMenuAvailability(newAvailability);
         FoodMenu existingFoodMenu = new FoodMenu(ID,MENU_NAME,FIXED_INSTANT,FIXED_INSTANT, AVAILABILITY);
