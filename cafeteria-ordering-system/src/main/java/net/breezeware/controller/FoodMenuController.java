@@ -119,8 +119,8 @@ public class FoodMenuController {
     }
 
     @Operation(
-            description = "Update food menu",
-            summary = "Update food menu",
+            description = "Update menu",
+            summary = "Update menu",
             responses = {
                     @ApiResponse(
                             description = "Success",
@@ -136,7 +136,7 @@ public class FoodMenuController {
                     )
             }
     )
-    @PatchMapping("/update-food-menu/{id}")
+    @PatchMapping("/update-menu/{id}")
     public FoodMenuDto updateFoodMenu(@PathVariable Long id,@Valid @RequestBody FoodMenuUpdateDto foodMenuUpdateDto) throws FoodMenuException {
         log.info("Entering updateFoodMenu() controller");
         FoodMenuDto updatedFoodMenuDto = foodMenuService.updateFoodMenu(id,foodMenuUpdateDto);
