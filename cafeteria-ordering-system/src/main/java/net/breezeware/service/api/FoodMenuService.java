@@ -1,6 +1,6 @@
 package net.breezeware.service.api;
 
-import net.breezeware.dto.*;
+import net.breezeware.dto.foodmenudto.*;
 import net.breezeware.exception.FoodItemException;
 import net.breezeware.exception.FoodMenuException;
 
@@ -11,7 +11,7 @@ public interface FoodMenuService {
 
     FoodMenuItemsDto retrieveFoodMenu(Long id) throws FoodMenuException, FoodItemException;
 
-    FoodMenuItemsQuantityDto retrieveFoodMenuOfTheDay(Long Id) throws FoodMenuException, FoodItemException;
+    List<FoodMenuItemsQuantityDto> retrieveFoodMenuOfTheDay() throws FoodMenuException, FoodItemException;
 
     FoodMenuDto createFoodMenu(FoodMenuCreateDto foodMenuCreateDto);
 
@@ -19,9 +19,9 @@ public interface FoodMenuService {
 
     void deleteFoodMenu(Long id) throws FoodMenuException;
 
-    FoodMenuItemsDto updateFoodMenuItems(Long id, FoodMenuItemsUpdateDto foodMenuItemsUpdateDto) throws FoodMenuException;
+    FoodMenuItemsDto addFoodItemToMenu(Long menuId, Long foodItemId) throws FoodMenuException, FoodItemException;
 
     FoodMenuItemsQuantityDto updateFoodMenuItemQuantity(Long menuId, Long foodItemId, Integer quantity) throws FoodMenuException, FoodItemException;
 
-    void deleteFoodMenuItem(Long id) throws FoodMenuException;
+    void deleteFoodMenuItem(Long foodMenuId, Long foodItemId) throws FoodMenuException;
 }

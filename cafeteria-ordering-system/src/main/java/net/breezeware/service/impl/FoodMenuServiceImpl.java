@@ -5,7 +5,9 @@ import lombok.extern.slf4j.Slf4j;
 import net.breezeware.dao.FoodMenuItemMapRepository;
 import net.breezeware.dao.FoodMenuItemQuantityMapRepository;
 import net.breezeware.dao.FoodMenuRepository;
-import net.breezeware.dto.*;
+import net.breezeware.dto.fooditemdto.FoodItemDto;
+import net.breezeware.dto.foodmenudto.*;
+import net.breezeware.entity.Availability;
 import net.breezeware.entity.FoodMenu;
 import net.breezeware.entity.FoodMenuItemMap;
 import net.breezeware.entity.FoodMenuItemQuantityMap;
@@ -18,7 +20,10 @@ import net.breezeware.service.api.FoodMenuService;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.time.DayOfWeek;
 import java.time.Instant;
+import java.time.LocalDate;
+import java.time.format.TextStyle;
 import java.util.*;
 
 @Service
@@ -33,6 +38,8 @@ public class FoodMenuServiceImpl implements FoodMenuService {
     private final FoodMenuItemMapRepository foodMenuItemMapRepository;
 
     private final FoodMenuItemQuantityMapRepository foodMenuItemQuantityMapRepository;
+
+    private final FoodItemService foodItemService;
 
     private final FoodItemMapper foodItemMapper;
 
@@ -69,22 +76,31 @@ public class FoodMenuServiceImpl implements FoodMenuService {
     }
 
     @Override
-    public FoodMenuItemsQuantityDto retrieveFoodMenuOfTheDay(Long id) throws FoodMenuException, FoodItemException {
-        FoodMenuItemsDto retrievedFoodMenuDto = retrieveFoodMenu(id);
-        List<FoodMenuItemMap> foodMenuItemMaps = foodMenuItemMapRepository.findByFoodMenuId(id);
-        Map<FoodItemDto, Integer> foodItemsQuantity = new HashMap<>();
-        for(FoodMenuItemMap itemMap: foodMenuItemMaps){
-            FoodItemDto foodItemDto = foodItemMapper.foodItemToFoodItemDto(itemMap.getFoodItem());
-            Integer itemQuantity = foodMenuItemQuantityMapRepository
-                    .findByFoodMenuItemMapId(itemMap.getId()).getQuantity();
-            foodItemsQuantity.put(foodItemDto, itemQuantity);
-        }
+    public List<FoodMenuItemsQuantityDto> retrieveFoodMenuOfTheDay() throws FoodMenuException, FoodItemException {
+        log.info("Entering retrieveFoodMenuOfTheDay() service");
+        LocalDate currentDate = LocalDate.now();
+        DayOfWeek dayOfWeek = currentDate.getDayOfWeek();
+        String today = dayOfWeek.getDisplayName(TextStyle.FULL, Locale.ENGLISH).toUpperCase();
 
-        FoodMenuItemsQuantityDto foodMenuItemsQuantityDto = new FoodMenuItemsQuantityDto();
-        foodMenuItemsQuantityDto.setName(retrievedFoodMenuDto.getName());
-        foodMenuItemsQuantityDto.setMenuAvailability(retrievedFoodMenuDto.getMenuAvailability());
-        foodMenuItemsQuantityDto.setFoodMenuItemsQuantity(foodItemsQuantity);
-        return foodMenuItemsQuantityDto;
+        List<FoodMenu> retrievedFoodMenus = foodMenuRepository.findByMenuAvailability(Availability.valueOf(today));
+        List<FoodMenuItemsQuantityDto> foodMenuItemsQuantityDtoList = new ArrayList<>();
+        for (FoodMenu foodMenu: retrievedFoodMenus){
+            Map<FoodItemDto, Integer> foodItemsQuantity = new HashMap<>();
+            FoodMenuItemsQuantityDto foodMenuItemsQuantityDto = new FoodMenuItemsQuantityDto();
+            List<FoodMenuItemMap> foodMenuItemMaps = foodMenuItemMapRepository.findByFoodMenuId(foodMenu.getId());
+            foodMenuItemsQuantityDto.setName(foodMenu.getName());
+            foodMenuItemsQuantityDto.setMenuAvailability(foodMenu.getMenuAvailability());
+            for(FoodMenuItemMap itemMap: foodMenuItemMaps){
+                FoodItemDto foodItemDto = foodItemMapper.foodItemToFoodItemDto(itemMap.getFoodItem());
+                Integer quantity = foodMenuItemQuantityMapRepository
+                        .findByFoodMenuItemMapId(itemMap.getId()).getQuantity();
+                foodItemsQuantity.put(foodItemDto, quantity);
+            }
+            foodMenuItemsQuantityDto.setFoodMenuItemsQuantity(foodItemsQuantity);
+            foodMenuItemsQuantityDtoList.add(foodMenuItemsQuantityDto);
+        }
+        log.info("Leaving retrieveFoodMenuOfTheDay() service");
+        return foodMenuItemsQuantityDtoList;
     }
 
     @Override
@@ -148,29 +164,28 @@ public class FoodMenuServiceImpl implements FoodMenuService {
     }
 
     @Override
-    public FoodMenuItemsDto updateFoodMenuItems(Long id, FoodMenuItemsUpdateDto foodMenuItemsUpdateDto) throws FoodMenuException {
+    public FoodMenuItemsDto addFoodItemToMenu(Long menuId, Long foodItemId) throws FoodMenuException, FoodItemException {
         log.info("Entering updateFoodMenuItems() service");
-        FoodMenu retrievedFoodMenu = foodMenuRepository.findById(id).orElseThrow(() ->
-                new FoodMenuException("Food menu not found for id: " + id));
+        FoodMenu retrievedFoodMenu = foodMenuRepository.findById(menuId).orElseThrow(() ->
+                new FoodMenuException("Food menu not found for id: " + menuId));
 
-        for(FoodItemDto item: foodMenuItemsUpdateDto.getFoodMenuItemsDto()){
-            FoodMenuItemMap foodMenuItemMap = new FoodMenuItemMap();
-            foodMenuItemMap.setFoodItem(foodItemMapper.foodItemDtoToFoodItem(item));
-            foodMenuItemMap.setFoodMenu(retrievedFoodMenu);
-            foodMenuItemMapRepository.save(foodMenuItemMap);
+        FoodMenuItemMap foodMenuItemMap = new FoodMenuItemMap();
+        foodMenuItemMap.setFoodItem(foodItemMapper.foodItemDtoToFoodItem(foodItemService.retrieveFoodItem(foodItemId)));
+        foodMenuItemMap.setFoodMenu(retrievedFoodMenu);
+        foodMenuItemMapRepository.save(foodMenuItemMap);
 
-            FoodMenuItemQuantityMap foodMenuItemQuantityMap = new FoodMenuItemQuantityMap();
-            foodMenuItemQuantityMap.setFoodMenuItemMap(foodMenuItemMap);
-            foodMenuItemQuantityMap.setQuantity(0);
-            Instant now = Instant.now();
-            foodMenuItemQuantityMap.setCreated(now);
-            foodMenuItemQuantityMap.setModified(now);
-            foodMenuItemQuantityMapRepository.save(foodMenuItemQuantityMap);
-        }
+        FoodMenuItemQuantityMap foodMenuItemQuantityMap = new FoodMenuItemQuantityMap();
+        foodMenuItemQuantityMap.setFoodMenuItemMap(foodMenuItemMap);
+        foodMenuItemQuantityMap.setQuantity(0);
+        Instant now = Instant.now();
+        foodMenuItemQuantityMap.setCreated(now);
+        foodMenuItemQuantityMap.setModified(now);
+        foodMenuItemQuantityMapRepository.save(foodMenuItemQuantityMap);
+
         FoodMenuItemsDto foodMenuItemsDto = new FoodMenuItemsDto(
                 retrievedFoodMenu.getName(),
                 retrievedFoodMenu.getMenuAvailability(),
-                retrieveFoodMenuItems(id),
+                retrieveFoodMenuItems(menuId),
                 retrievedFoodMenu.getCreated(),
                 retrievedFoodMenu.getModified()
         );
@@ -215,13 +230,13 @@ public class FoodMenuServiceImpl implements FoodMenuService {
     }
 
     @Override
-    public void deleteFoodMenuItem(Long id) throws FoodMenuException {
+    @Transactional
+    public void deleteFoodMenuItem(Long foodMenuId, Long foodItemId) throws FoodMenuException {
         log.info("Entering deleteFoodMenuItem() service");
-        List<FoodMenuItemMap> foodMenuItemMaps = foodMenuItemMapRepository.findByFoodMenuId(id);
-        for (FoodMenuItemMap itemMap: foodMenuItemMaps){
-            foodMenuItemQuantityMapRepository.deleteByFoodMenuItemMapId(itemMap.getId());
-        }
-        foodMenuItemMapRepository.deleteByFoodMenuId(id);
+        FoodMenuItemMap foodMenuItemMap = foodMenuItemMapRepository.findByFoodMenuIdAndFoodItemId(foodMenuId, foodItemId);
+        System.out.println(foodMenuItemMap);
+        foodMenuItemQuantityMapRepository.deleteByFoodMenuItemMapId(foodMenuItemMap.getId());
+        foodMenuItemMapRepository.delete(foodMenuItemMap);
         log.info("Entering deleteFoodMenuItem() service");
     }
 

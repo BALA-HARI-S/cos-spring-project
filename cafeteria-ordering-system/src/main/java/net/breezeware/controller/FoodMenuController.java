@@ -7,7 +7,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import net.breezeware.dto.*;
+import net.breezeware.dto.foodmenudto.*;
 import net.breezeware.entity.ErrorDetail;
 import net.breezeware.exception.FoodItemException;
 import net.breezeware.exception.FoodMenuException;
@@ -17,6 +17,7 @@ import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import javax.websocket.server.PathParam;
 import java.util.List;
 
 @RestController
@@ -58,14 +59,14 @@ public class FoodMenuController {
                             description = "Success",
                             responseCode = "200",
                             content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
-                                    schema = @Schema(implementation = FoodMenuDto.class))
+                                    schema = @Schema(implementation = FoodMenuItemsQuantityDto.class))
                     )
             }
     )
-    @GetMapping("/today-menu/{id}")
-    public FoodMenuItemsQuantityDto retrieveFoodMenuOfTheDay(@PathVariable Long id) throws FoodMenuException, FoodItemException {
+    @GetMapping("/today-menu")
+    public List<FoodMenuItemsQuantityDto> retrieveFoodMenuOfTheDay() throws FoodMenuException, FoodItemException {
         log.info("Entering retrieveFoodMenuOfTheDay() controller");
-        FoodMenuItemsQuantityDto foodMenuItemsQuantityDto = foodMenuService.retrieveFoodMenuOfTheDay(id);
+        List<FoodMenuItemsQuantityDto> foodMenuItemsQuantityDto = foodMenuService.retrieveFoodMenuOfTheDay();
         log.info("Leaving retrieveFoodMenuOfTheDay() controller");
         return foodMenuItemsQuantityDto;
     }
@@ -135,12 +136,64 @@ public class FoodMenuController {
                     )
             }
     )
-    @PatchMapping("/{id}")
+    @PatchMapping("/update-food-menu/{id}")
     public FoodMenuDto updateFoodMenu(@PathVariable Long id,@Valid @RequestBody FoodMenuUpdateDto foodMenuUpdateDto) throws FoodMenuException {
         log.info("Entering updateFoodMenu() controller");
         FoodMenuDto updatedFoodMenuDto = foodMenuService.updateFoodMenu(id,foodMenuUpdateDto);
         log.info("Leaving updateFoodMenu() controller");
         return updatedFoodMenuDto;
+    }
+
+    @Operation(
+            description = "Update food menu items",
+            summary = "Update food menu items",
+            responses = {
+                    @ApiResponse(
+                            description = "Success",
+                            responseCode = "200",
+                            content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
+                                    schema = @Schema(implementation = FoodMenuItemsDto.class))
+                    ),
+                    @ApiResponse(
+                            description = "Client Error",
+                            responseCode = "4XX",
+                            content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
+                                    schema = @Schema(implementation = ErrorDetail.class))
+                    )
+            }
+    )
+    @PatchMapping("/add-food-item")
+    public FoodMenuItemsDto updateFoodMenuItem(@RequestParam Long menuId,@RequestParam Long foodItemId) throws FoodMenuException, FoodItemException {
+        log.info("Entering updateFoodMenuItem() controller");
+        FoodMenuItemsDto updatedFoodMenuItemsDto = foodMenuService.addFoodItemToMenu(menuId,foodItemId);
+        log.info("Leaving updateFoodMenuItem() controller");
+        return updatedFoodMenuItemsDto;
+    }
+
+    @Operation(
+            description = "Update food menu item quantity",
+            summary = "Update food menu item quantity",
+            responses = {
+                    @ApiResponse(
+                            description = "Success",
+                            responseCode = "200",
+                            content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
+                                    schema = @Schema(implementation = FoodMenuItemsQuantityDto.class))
+                    ),
+                    @ApiResponse(
+                            description = "Client Error",
+                            responseCode = "4XX",
+                            content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
+                                    schema = @Schema(implementation = ErrorDetail.class))
+                    )
+            }
+    )
+    @PatchMapping("/update-food-item-quantity")
+    public FoodMenuItemsQuantityDto updateFoodMenuItemQuantity(@RequestParam Long menuId,@RequestParam Long foodItemId,@RequestParam Integer quantity) throws FoodMenuException, FoodItemException {
+        log.info("Entering updateFoodMenuItemQuantity() controller");
+        FoodMenuItemsQuantityDto updatedFoodMenuItemQuantityDto = foodMenuService.updateFoodMenuItemQuantity(menuId,foodItemId,quantity);
+        log.info("Leaving updateFoodMenuItemQuantity() controller");
+        return updatedFoodMenuItemQuantityDto;
     }
 
     @Operation(
@@ -154,11 +207,30 @@ public class FoodMenuController {
                     )
             }
     )
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/delete-menu/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteFoodMenu(@PathVariable Long id) throws FoodMenuException {
-        log.info("Entering updateFoodMenu() controller");
+        log.info("Entering deleteFoodMenu() controller");
         foodMenuService.deleteFoodMenu(id);
-        log.info("Leaving updateFoodMenu() controller");
+        log.info("Leaving deleteFoodMenu() controller");
+    }
+
+    @Operation(
+            description = "Delete food menu item",
+            summary = "Delete food menu item",
+            responses = {
+                    @ApiResponse(
+                            description = "No Content",
+                            responseCode = "204",
+                            content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE)
+                    )
+            }
+    )
+    @DeleteMapping("/delete-food-item")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deleteFoodMenuItem(@RequestParam Long foodMenuId, @RequestParam  Long foodItemId) throws FoodMenuException {
+        log.info("Entering deleteFoodMenuItem() controller");
+        foodMenuService.deleteFoodMenuItem(foodMenuId,foodItemId);
+        log.info("Leaving deleteFoodMenuItem() controller");
     }
 }

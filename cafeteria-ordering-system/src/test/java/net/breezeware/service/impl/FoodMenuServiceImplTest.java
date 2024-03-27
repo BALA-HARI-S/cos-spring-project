@@ -4,15 +4,17 @@ import lombok.extern.slf4j.Slf4j;
 import net.breezeware.dao.FoodMenuItemMapRepository;
 import net.breezeware.dao.FoodMenuItemQuantityMapRepository;
 import net.breezeware.dao.FoodMenuRepository;
-import net.breezeware.dto.FoodMenuCreateDto;
-import net.breezeware.dto.FoodMenuDto;
-import net.breezeware.dto.FoodMenuItemsDto;
-import net.breezeware.dto.FoodMenuUpdateDto;
+import net.breezeware.dto.foodmenudto.FoodMenuCreateDto;
+import net.breezeware.dto.foodmenudto.FoodMenuDto;
+import net.breezeware.dto.foodmenudto.FoodMenuItemsDto;
+import net.breezeware.dto.foodmenudto.FoodMenuUpdateDto;
 import net.breezeware.entity.Availability;
 import net.breezeware.entity.FoodMenu;
 import net.breezeware.exception.FoodItemException;
 import net.breezeware.exception.FoodMenuException;
+import net.breezeware.mapper.FoodItemMapper;
 import net.breezeware.mapper.FoodMenuMapper;
+import net.breezeware.service.api.FoodItemService;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -38,15 +40,12 @@ class FoodMenuServiceImplTest {
 
     @Mock
     private FoodMenuRepository foodMenuRepository;
-
     @Mock
     private FoodMenuItemMapRepository foodMenuItemMapRepository;
-
     @Mock
     private FoodMenuItemQuantityMapRepository foodMenuItemQuantityMapRepository;
-
     @Mock
-    private FoodItemServiceImpl foodItemService;
+    private FoodItemService foodItemService;
 
     @InjectMocks
     private FoodMenuServiceImpl foodMenuService;
@@ -56,7 +55,7 @@ class FoodMenuServiceImplTest {
         log.info("Entering Test setUp()");
         MockitoAnnotations.openMocks(this);
         foodMenuService = new FoodMenuServiceImpl(foodMenuRepository,FoodMenuMapper.INSTANCE
-                ,foodMenuItemMapRepository,foodMenuItemQuantityMapRepository,foodItemService);
+                ,foodMenuItemMapRepository,foodMenuItemQuantityMapRepository,foodItemService,FoodItemMapper.INSTANCE);
         log.info("Leaving Test setUp()");
     }
 

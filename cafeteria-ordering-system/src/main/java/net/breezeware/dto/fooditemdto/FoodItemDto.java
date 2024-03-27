@@ -1,4 +1,4 @@
-package net.breezeware.dto;
+package net.breezeware.dto.fooditemdto;
 
 import com.fasterxml.jackson.annotation.JsonRootName;
 import io.swagger.v3.oas.annotations.media.Schema;

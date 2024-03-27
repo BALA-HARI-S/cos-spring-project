@@ -94,6 +94,7 @@ public class DataLoader implements CommandLineRunner {
         FoodMenuItemQuantityMap foodMenuItemQuantityMap1 = new FoodMenuItemQuantityMap();
         foodMenuItemQuantityMap1.setId(1L);
         foodMenuItemQuantityMap1.setCreated(now);
+        foodMenuItemQuantityMap1.setModified(now);
         foodMenuItemQuantityMap1.setFoodMenuItemMap(foodMenuItemMap1);
         foodMenuItemQuantityMap1.setQuantity(100);
         foodMenuItemQuantityMapRepository.save(foodMenuItemQuantityMap1);
@@ -101,6 +102,7 @@ public class DataLoader implements CommandLineRunner {
         FoodMenuItemQuantityMap foodMenuItemQuantityMap2 = new FoodMenuItemQuantityMap();
         foodMenuItemQuantityMap2.setId(2L);
         foodMenuItemQuantityMap2.setCreated(now);
+        foodMenuItemQuantityMap2.setModified(now);
         foodMenuItemQuantityMap2.setFoodMenuItemMap(foodMenuItemMap2);
         foodMenuItemQuantityMap2.setQuantity(200);
         foodMenuItemQuantityMapRepository.save(foodMenuItemQuantityMap2);
@@ -108,6 +110,7 @@ public class DataLoader implements CommandLineRunner {
         FoodMenuItemQuantityMap foodMenuItemQuantityMap3 = new FoodMenuItemQuantityMap();
         foodMenuItemQuantityMap3.setId(3L);
         foodMenuItemQuantityMap3.setCreated(now);
+        foodMenuItemQuantityMap3.setModified(now);
         foodMenuItemQuantityMap3.setFoodMenuItemMap(foodMenuItemMap3);
         foodMenuItemQuantityMap3.setQuantity(150);
         foodMenuItemQuantityMapRepository.save(foodMenuItemQuantityMap3);
