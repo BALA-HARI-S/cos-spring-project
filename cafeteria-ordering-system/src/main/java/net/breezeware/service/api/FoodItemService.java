@@ -1,6 +1,6 @@
 package net.breezeware.service.api;
 
-import net.breezeware.dto.FoodItemDto;
+import net.breezeware.dto.fooditemdto.FoodItemDto;
 import net.breezeware.exception.FoodItemException;
 
 import java.util.List;
