@@ -20,7 +20,7 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
                 .message(HttpStatus.NOT_FOUND.name())
                 .detail(exception.getMessage())
                 .build();
-        log.info("Leaving Food Item Exception");
+        log.info("Leaving Food Item Exception Handler");
         return new ResponseEntity<>(errorDetails, HttpStatus.NOT_FOUND);
     }
 
@@ -32,6 +32,17 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
                 .detail(exception.getMessage())
                 .build();
         log.info("Leaving Food Menu Exception Handler");
+        return new ResponseEntity<>(errorDetails, HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(FoodOrderException.class)
+    public ResponseEntity<ErrorDetail> handleFoodOrderNotFoundException(FoodOrderException exception, WebRequest request) {
+        log.info("Entering Food Order Exception Handler");
+        ErrorDetail errorDetails = ErrorDetail.builder()
+                .message(HttpStatus.NOT_FOUND.name())
+                .detail(exception.getMessage())
+                .build();
+        log.info("Leaving Food Order Exception Handler");
         return new ResponseEntity<>(errorDetails, HttpStatus.NOT_FOUND);
     }
 }
