@@ -1,6 +1,6 @@
 package net.breezeware.mapper;
 
-import net.breezeware.dto.foodOrder.FoodOrderDto;
+import net.breezeware.dto.foodOrderDto.FoodOrderDto;
 import net.breezeware.entity.FoodOrder;
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;

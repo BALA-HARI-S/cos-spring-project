@@ -3,7 +3,7 @@ package net.breezeware.service.impl;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.breezeware.dao.FoodItemRepository;
-import net.breezeware.dto.fooditemdto.FoodItemDto;
+import net.breezeware.dto.foodItemDto.FoodItemDto;
 import net.breezeware.entity.FoodItem;
 import net.breezeware.exception.FoodItemException;
 import net.breezeware.mapper.FoodItemMapper;

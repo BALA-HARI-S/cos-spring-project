@@ -1,8 +1,8 @@
 package net.breezeware.service.api;
 
-import net.breezeware.dto.foodOrder.CreateFoodOrderDto;
-import net.breezeware.dto.foodOrder.FoodOrderDto;
-import net.breezeware.dto.foodOrder.UpdateFoodOrderDto;
+import net.breezeware.dto.foodOrderDto.CreateFoodOrderDto;
+import net.breezeware.dto.foodOrderDto.FoodOrderDto;
+import net.breezeware.dto.foodOrderDto.UpdateFoodOrderDto;
 import net.breezeware.exception.FoodItemException;
 import net.breezeware.exception.FoodOrderException;
 

@@ -1,4 +1,4 @@
-package net.breezeware.dto.foodOrder;
+package net.breezeware.dto.foodOrderDto;
 
 import com.fasterxml.jackson.annotation.JsonRootName;
 import io.swagger.v3.oas.annotations.media.Schema;

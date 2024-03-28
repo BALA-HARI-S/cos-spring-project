@@ -7,7 +7,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import net.breezeware.dto.foodmenudto.*;
+import net.breezeware.dto.foodMenuDto.*;
 import net.breezeware.entity.ErrorDetail;
 import net.breezeware.exception.FoodItemException;
 import net.breezeware.exception.FoodMenuException;
@@ -17,7 +17,6 @@ import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import javax.websocket.server.PathParam;
 import java.util.List;
 
 @RestController

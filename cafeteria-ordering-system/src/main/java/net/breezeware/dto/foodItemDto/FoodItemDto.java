@@ -1,13 +1,11 @@
-package net.breezeware.dto.fooditemdto;
+package net.breezeware.dto.foodItemDto;
 
 import com.fasterxml.jackson.annotation.JsonRootName;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.NonNull;
 
-import javax.validation.constraints.NotNull;
 import java.time.Instant;
 
 @Data
