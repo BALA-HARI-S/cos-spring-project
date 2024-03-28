@@ -130,7 +130,7 @@ public class DataLoader implements CommandLineRunner {
         orderFoodItemMap1.setId(1L);
         orderFoodItemMap1.setFoodOrder(foodOrder1);
         orderFoodItemMap1.setFoodItem(foodItem1);
-        orderFoodItemMap1.setQuantity(5);
+        orderFoodItemMap1.setQuantity(1);
         orderFoodItemMapRepository.save(orderFoodItemMap1);
         System.out.println("Loaded Food Order Items: " + orderFoodItemMapRepository.count());
     }
