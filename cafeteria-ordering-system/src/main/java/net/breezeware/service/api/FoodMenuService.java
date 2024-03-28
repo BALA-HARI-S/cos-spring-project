@@ -1,6 +1,6 @@
 package net.breezeware.service.api;
 
-import net.breezeware.dto.foodmenudto.*;
+import net.breezeware.dto.foodMenuDto.*;
 import net.breezeware.exception.FoodItemException;
 import net.breezeware.exception.FoodMenuException;
 

@@ -1,23 +1,21 @@
-package net.breezeware.dto.foodmenudto;
+package net.breezeware.dto.foodMenuDto;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonRootName;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import net.breezeware.dto.fooditemdto.FoodItemDto;
+import net.breezeware.dto.foodItemDto.FoodItemDto;
 import net.breezeware.entity.Availability;
 
-import java.time.Instant;
-import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 @Data
-@JsonRootName("FoodMenuItems")
+@JsonRootName("FoodMenuItemsQuantity")
 @NoArgsConstructor
 @AllArgsConstructor
-public class FoodMenuItemsDto {
+public class FoodMenuItemsQuantityDto {
     @Schema(description = "The name of the food menu")
     private String name;
 
@@ -25,12 +23,5 @@ public class FoodMenuItemsDto {
     private Set<Availability> menuAvailability;
 
     @Schema(description = "The list food items in the menu")
-    @JsonProperty("foodMenuItems")
-    private List<FoodItemDto> foodMenuItemsDto;
-
-    @Schema(description = "The timestamp when the food menu was created")
-    private Instant created;
-
-    @Schema(description = "The timestamp when the food menu was last modified")
-    private Instant modified;
+    private Map<FoodItemDto, Integer> foodMenuItemsQuantity;
 }

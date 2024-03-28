@@ -10,7 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.RequestBody;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import net.breezeware.dto.fooditemdto.FoodItemDto;
+import net.breezeware.dto.foodItemDto.FoodItemDto;
 import net.breezeware.exception.FoodItemException;
 import net.breezeware.service.api.FoodItemService;
 import org.springframework.http.MediaType;

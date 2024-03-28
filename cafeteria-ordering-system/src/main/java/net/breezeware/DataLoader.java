@@ -1,10 +1,7 @@
 package net.breezeware;
 
 import lombok.AllArgsConstructor;
-import net.breezeware.dao.FoodItemRepository;
-import net.breezeware.dao.FoodMenuItemMapRepository;
-import net.breezeware.dao.FoodMenuItemQuantityMapRepository;
-import net.breezeware.dao.FoodMenuRepository;
+import net.breezeware.dao.*;
 import net.breezeware.entity.*;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
@@ -22,6 +19,8 @@ public class DataLoader implements CommandLineRunner {
     private final FoodMenuRepository foodMenuRepository;
     private final FoodMenuItemMapRepository foodMenuItemMapRepository;
     private final FoodMenuItemQuantityMapRepository foodMenuItemQuantityMapRepository;
+    private final FoodOrderRepository foodOrderRepository;
+    private final OrderFoodItemMapRepository orderFoodItemMapRepository;
 
     @Override
     public void run(String... args) throws Exception {
@@ -116,5 +115,23 @@ public class DataLoader implements CommandLineRunner {
         foodMenuItemQuantityMapRepository.save(foodMenuItemQuantityMap3);
         System.out.println("Loaded Menu Item Quantity Map: " + foodMenuItemQuantityMapRepository.count());
 
+        // Food Order
+        // 1
+        FoodOrder foodOrder1 = new FoodOrder();
+        foodOrder1.setId(1L);
+        foodOrder1.setTotalCost(15.0);
+        foodOrder1.setOrderStatus(OrderStatus.ORDER_CART);
+        foodOrder1.setCreated(now);
+        foodOrderRepository.save(foodOrder1);
+        System.out.println("Loaded Food Order: " + foodOrderRepository.count());
+
+        // Order Food Item Map
+        OrderFoodItemMap orderFoodItemMap1 = new OrderFoodItemMap();
+        orderFoodItemMap1.setId(1L);
+        orderFoodItemMap1.setFoodOrder(foodOrder1);
+        orderFoodItemMap1.setFoodItem(foodItem1);
+        orderFoodItemMap1.setQuantity(1);
+        orderFoodItemMapRepository.save(orderFoodItemMap1);
+        System.out.println("Loaded Food Order Items: " + orderFoodItemMapRepository.count());
     }
 }
