@@ -115,7 +115,7 @@ public class FoodOrderController {
                     )
             }
     )
-    @PatchMapping("update-order/{orderId}")
+    @PatchMapping("/update/{orderId}")
     public FoodOrderDto updateFoodOrder(@PathVariable Long orderId,@RequestBody UpdateFoodOrderDto updateFoodOrderDto) throws FoodItemException, FoodOrderException {
         log.info("Entering updateFoodOrder() controller");
         FoodOrderDto foodOrderDto = foodOrderService.updateFoodOrder(orderId,updateFoodOrderDto);
@@ -141,7 +141,7 @@ public class FoodOrderController {
                     )
             }
     )
-    @PostMapping("add-food-item")
+    @PostMapping("/add-food-item")
     public FoodOrderDto addFoodItemToOrder(@RequestParam Long orderId,@RequestParam Long foodItemId,@RequestParam Integer quantity) throws FoodItemException, FoodOrderException {
         log.info("Entering addFoodItemToOrder() controller");
         FoodOrderDto foodOrderDto = foodOrderService.addFoodItemToOrder(orderId,foodItemId,quantity);
@@ -166,7 +166,7 @@ public class FoodOrderController {
                     )
             }
     )
-    @DeleteMapping("delete-order-food-item")
+    @DeleteMapping("/delete-food-item")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteOrderFoodItem(@RequestParam Long orderId,@RequestParam Long foodItemId) throws FoodOrderException {
         log.info("Entering deleteOrderFoodItem() controller");
@@ -191,7 +191,7 @@ public class FoodOrderController {
                     )
             }
     )
-    @DeleteMapping("delete-food-order/{id}")
+    @DeleteMapping("/delete/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteFoodOrder(@PathVariable Long id) throws FoodOrderException {
         log.info("Entering deleteFoodOrder() controller");
