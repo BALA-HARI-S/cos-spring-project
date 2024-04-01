@@ -8,14 +8,16 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import net.breezeware.dto.foodItemDto.FoodItemDto;
 
+import javax.validation.constraints.NotNull;
 import java.util.List;
 
 @Data
 @JsonRootName("FoodMenuItems")
 @NoArgsConstructor
 @AllArgsConstructor
-public class FoodMenuItemsUpdateDto {
+public class UpdateFoodMenuItemsDto {
     @Schema(description = "The list food items in the menu")
     @JsonProperty("foodMenuItems")
+    @NotNull(message = "Food items must not be empty")
     private List<FoodItemDto> foodMenuItemsDto;
 }

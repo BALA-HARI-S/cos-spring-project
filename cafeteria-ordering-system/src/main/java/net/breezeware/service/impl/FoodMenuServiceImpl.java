@@ -104,11 +104,11 @@ public class FoodMenuServiceImpl implements FoodMenuService {
     }
 
     @Override
-    public FoodMenuDto createFoodMenu(FoodMenuCreateDto foodMenuCreateDto) {
+    public FoodMenuDto createFoodMenu(CreateFoodMenuDto createFoodMenuDto) {
         log.info("Entering createFoodMenu() service");
         FoodMenuDto foodMenuDto = new FoodMenuDto();
-        foodMenuDto.setName(foodMenuCreateDto.getName());
-        foodMenuDto.setMenuAvailability(foodMenuCreateDto.getMenuAvailability());
+        foodMenuDto.setName(createFoodMenuDto.getName());
+        foodMenuDto.setMenuAvailability(createFoodMenuDto.getMenuAvailability());
         Instant now = Instant.now();
         foodMenuDto.setCreated(now);
         foodMenuDto.setModified(now);
@@ -117,7 +117,7 @@ public class FoodMenuServiceImpl implements FoodMenuService {
     }
 
     @Override
-    public FoodMenuDto updateFoodMenu(Long id, FoodMenuUpdateDto foodMenuUpdateDto) throws FoodMenuException {
+    public FoodMenuDto updateFoodMenu(Long id, UpdateFoodMenuDto updateFoodMenuDto) throws FoodMenuException {
         log.info("Entering updateFoodMenu() service");
         FoodMenu retrievedFoodMenu = foodMenuRepository.findById(id).orElseThrow(() ->
                 new FoodMenuException("Food menu not found for id: " + id));
@@ -125,15 +125,15 @@ public class FoodMenuServiceImpl implements FoodMenuService {
         FoodMenuDto foodMenuDto = new FoodMenuDto();
 
         foodMenuDto.setId(retrievedFoodMenu.getId());
-        if(Objects.isNull(foodMenuUpdateDto.getName())){
+        if(Objects.isNull(updateFoodMenuDto.getName())){
             foodMenuDto.setName(retrievedFoodMenu.getName());
         } else {
-            foodMenuDto.setName(foodMenuUpdateDto.getName());
+            foodMenuDto.setName(updateFoodMenuDto.getName());
         }
-        if(Objects.isNull(foodMenuUpdateDto.getMenuAvailability())){
+        if(Objects.isNull(updateFoodMenuDto.getMenuAvailability())){
             foodMenuDto.setMenuAvailability(retrievedFoodMenu.getMenuAvailability());
         } else {
-            foodMenuDto.setMenuAvailability(foodMenuUpdateDto.getMenuAvailability());
+            foodMenuDto.setMenuAvailability(updateFoodMenuDto.getMenuAvailability());
         }
         foodMenuDto.setCreated(retrievedFoodMenu.getCreated());
         foodMenuDto.setModified(Instant.now());

@@ -37,20 +37,20 @@ public interface FoodMenuService {
     /**
      * Creates a new food menu.
      *
-     * @param foodMenuCreateDto The {@link FoodMenuCreateDto} representing the details of the new food menu.
+     * @param createFoodMenuDto The {@link CreateFoodMenuDto} representing the details of the new food menu.
      * @return The {@link FoodMenuDto} representing the created food menu.
      */
-    FoodMenuDto createFoodMenu(FoodMenuCreateDto foodMenuCreateDto);
+    FoodMenuDto createFoodMenu(CreateFoodMenuDto createFoodMenuDto);
 
     /**
      * Updates an existing food menu.
      *
      * @param id The ID of the food menu to update.
-     * @param foodMenuUpdateDto The {@link FoodMenuUpdateDto} representing the updated details of the food menu.
+     * @param updateFoodMenuDto The {@link UpdateFoodMenuDto} representing the updated details of the food menu.
      * @return The {@link FoodMenuDto} representing the updated food menu.
      * @throws FoodMenuException if an error occurs while updating the food menu.
      */
-    FoodMenuDto updateFoodMenu(Long id, FoodMenuUpdateDto foodMenuUpdateDto) throws FoodMenuException;
+    FoodMenuDto updateFoodMenu(Long id, UpdateFoodMenuDto updateFoodMenuDto) throws FoodMenuException;
 
     /**
      * Deletes a food menu by its ID.

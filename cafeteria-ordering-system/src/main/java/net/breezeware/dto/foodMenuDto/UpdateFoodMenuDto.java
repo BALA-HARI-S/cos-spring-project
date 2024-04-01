@@ -7,19 +7,16 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import net.breezeware.entity.Availability;
 
-import javax.validation.constraints.NotNull;
 import java.util.Set;
 
 @Data
 @JsonRootName("FoodMenu")
 @NoArgsConstructor
 @AllArgsConstructor
-public class FoodMenuCreateDto {
+public class UpdateFoodMenuDto {
     @Schema(description = "The name of the food menu")
-    @NotNull
     private String name;
 
     @Schema(description = "The availability of the food menu on different days")
-    @NotNull
     private Set<Availability> menuAvailability;
 }

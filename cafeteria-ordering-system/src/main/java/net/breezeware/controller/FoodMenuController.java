@@ -110,9 +110,9 @@ public class FoodMenuController {
     )
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public FoodMenuDto createFoodMenu(@Valid @RequestBody FoodMenuCreateDto foodMenuCreateDto) throws FoodMenuException {
+    public FoodMenuDto createFoodMenu(@Valid @RequestBody CreateFoodMenuDto createFoodMenuDto) throws FoodMenuException {
         log.info("Entering createFoodMenu() controller");
-        FoodMenuDto createdFoodMenuDto = foodMenuService.createFoodMenu(foodMenuCreateDto);
+        FoodMenuDto createdFoodMenuDto = foodMenuService.createFoodMenu(createFoodMenuDto);
         log.info("Leaving createFoodMenu() controller");
         return createdFoodMenuDto;
     }
@@ -136,9 +136,9 @@ public class FoodMenuController {
             }
     )
     @PatchMapping("/update-menu/{id}")
-    public FoodMenuDto updateFoodMenu(@PathVariable Long id,@Valid @RequestBody FoodMenuUpdateDto foodMenuUpdateDto) throws FoodMenuException {
+    public FoodMenuDto updateFoodMenu(@PathVariable Long id,@Valid @RequestBody UpdateFoodMenuDto updateFoodMenuDto) throws FoodMenuException {
         log.info("Entering updateFoodMenu() controller");
-        FoodMenuDto updatedFoodMenuDto = foodMenuService.updateFoodMenu(id,foodMenuUpdateDto);
+        FoodMenuDto updatedFoodMenuDto = foodMenuService.updateFoodMenu(id, updateFoodMenuDto);
         log.info("Leaving updateFoodMenu() controller");
         return updatedFoodMenuDto;
     }

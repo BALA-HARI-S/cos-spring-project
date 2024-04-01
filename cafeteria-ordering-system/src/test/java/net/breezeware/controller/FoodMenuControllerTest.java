@@ -134,15 +134,15 @@ class FoodMenuControllerTest {
         // given
         Set<Availability> availabilities = new HashSet<>();
         availabilities.add(Availability.MONDAY);
-        FoodMenuCreateDto foodMenuCreateDto = new FoodMenuCreateDto(MENU_NAME, availabilities);
+        CreateFoodMenuDto createFoodMenuDto = new CreateFoodMenuDto(MENU_NAME, availabilities);
         FoodMenuDto foodMenuDto = new FoodMenuDto(MENU_ID,MENU_NAME,FIXED_INSTANT,FIXED_INSTANT, AVAILABILITY);
 
         // when
-        when(foodMenuService.createFoodMenu(any(FoodMenuCreateDto.class))).thenReturn(foodMenuDto);
+        when(foodMenuService.createFoodMenu(any(CreateFoodMenuDto.class))).thenReturn(foodMenuDto);
 
         // then
         mockMvc.perform(post(FoodMenuController.BASE_URL)
-                        .content(objectMapper.writeValueAsString(foodMenuCreateDto))
+                        .content(objectMapper.writeValueAsString(createFoodMenuDto))
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.name", is(MENU_NAME)));
@@ -155,12 +155,12 @@ class FoodMenuControllerTest {
         // given
         Set<Availability> availabilities = new HashSet<>();
         availabilities.add(Availability.MONDAY);
-        FoodMenuUpdateDto updateFoodMenuDto = new FoodMenuUpdateDto(MENU_NAME, availabilities);
+        UpdateFoodMenuDto updateFoodMenuDto = new UpdateFoodMenuDto(MENU_NAME, availabilities);
 
         FoodMenuDto foodMenuDto = new FoodMenuDto(MENU_ID,MENU_NAME,FIXED_INSTANT,FIXED_INSTANT, AVAILABILITY);
 
         // when
-        when(foodMenuService.updateFoodMenu(anyLong(),any(FoodMenuUpdateDto.class))).thenReturn(foodMenuDto);
+        when(foodMenuService.updateFoodMenu(anyLong(),any(UpdateFoodMenuDto.class))).thenReturn(foodMenuDto);
 
         // then
         mockMvc.perform(patch(FoodMenuController.BASE_URL + "/update-menu/1")

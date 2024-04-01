@@ -4,10 +4,10 @@ import lombok.extern.slf4j.Slf4j;
 import net.breezeware.dao.FoodMenuItemMapRepository;
 import net.breezeware.dao.FoodMenuItemQuantityMapRepository;
 import net.breezeware.dao.FoodMenuRepository;
-import net.breezeware.dto.foodMenuDto.FoodMenuCreateDto;
+import net.breezeware.dto.foodMenuDto.CreateFoodMenuDto;
 import net.breezeware.dto.foodMenuDto.FoodMenuDto;
 import net.breezeware.dto.foodMenuDto.FoodMenuItemsDto;
-import net.breezeware.dto.foodMenuDto.FoodMenuUpdateDto;
+import net.breezeware.dto.foodMenuDto.UpdateFoodMenuDto;
 import net.breezeware.entity.Availability;
 import net.breezeware.entity.FoodMenu;
 import net.breezeware.exception.FoodItemException;
@@ -127,7 +127,7 @@ class FoodMenuServiceImplTest {
     void givenFoodMenuDto_WhenCreateFoodMenu_ThenReturnFoodMenuDto() {
         log.info("Entering createFoodMenu() Test");
         // given
-        FoodMenuCreateDto foodMenuDto = new FoodMenuCreateDto(MENU_NAME,AVAILABILITY);
+        CreateFoodMenuDto foodMenuDto = new CreateFoodMenuDto(MENU_NAME,AVAILABILITY);
         FoodMenu foodMenu = new FoodMenu(ID,MENU_NAME,FIXED_INSTANT,FIXED_INSTANT, AVAILABILITY);
 
         // when
@@ -144,7 +144,7 @@ class FoodMenuServiceImplTest {
     void givenInvalidFoodMenuId_WhenUpdateFoodMenu_ThenReturnFoodMenuDto() throws FoodMenuException {
         log.info("Entering updateFoodMenu() Exception Test");
         // given
-        FoodMenuUpdateDto foodMenuDto = new FoodMenuUpdateDto();
+        UpdateFoodMenuDto foodMenuDto = new UpdateFoodMenuDto();
         foodMenuDto.setName("Special");
 
         // when
@@ -161,7 +161,7 @@ class FoodMenuServiceImplTest {
     void givenFoodMenuDtoWithNameAndId_WhenUpdateFoodMenu_ThenReturnFoodMenuDto() throws FoodMenuException {
         log.info("Entering updateFoodMenu() name Test");
         // given
-        FoodMenuUpdateDto foodMenuDto = new FoodMenuUpdateDto();
+        UpdateFoodMenuDto foodMenuDto = new UpdateFoodMenuDto();
         foodMenuDto.setName("Special");
         FoodMenu existingFoodMenu = new FoodMenu(ID,MENU_NAME,FIXED_INSTANT,FIXED_INSTANT, AVAILABILITY);
         FoodMenu savedFoodMenu = new FoodMenu(ID,"special",FIXED_INSTANT,FIXED_INSTANT, AVAILABILITY);
@@ -182,7 +182,7 @@ class FoodMenuServiceImplTest {
     void givenFoodMenuDtoWithAvailabilityAndId_WhenUpdateFoodMenu_ThenReturnFoodMenuDto() throws FoodMenuException {
         log.info("Entering updateFoodMenu() availability Test");
         // given
-        FoodMenuUpdateDto foodMenuDto = new FoodMenuUpdateDto();
+        UpdateFoodMenuDto foodMenuDto = new UpdateFoodMenuDto();
         Set<Availability> newAvailability = new HashSet<>(Arrays.asList(Availability.MONDAY,Availability.TUESDAY));
         foodMenuDto.setMenuAvailability(newAvailability);
         FoodMenu existingFoodMenu = new FoodMenu(ID,MENU_NAME,FIXED_INSTANT,FIXED_INSTANT, AVAILABILITY);
