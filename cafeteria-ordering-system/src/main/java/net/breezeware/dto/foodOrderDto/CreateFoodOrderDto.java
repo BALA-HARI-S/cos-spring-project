@@ -14,14 +14,14 @@ import java.util.Map;
 @NoArgsConstructor
 @AllArgsConstructor
 public class CreateFoodOrderDto {
-    @NotNull
     @Schema(description = "The ID of the customer placing the food order.")
+    @NotNull(message = "Customer id must not be empty")
     private Long customerId;
 
-    @NotNull
     @Schema(
             description = "A map representing the food items and their corresponding quantities.",
             example = "{1: 2, 2: 1}"
     )
+    @NotNull(message = "Food item id and its corresponding quantity must not be empty")
     private Map<Long, Integer> foodItemsQuantityMap;
 }
