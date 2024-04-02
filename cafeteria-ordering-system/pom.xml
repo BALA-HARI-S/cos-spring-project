@@ -19,6 +19,8 @@
 		<junit-jupiter-api.version>5.9.3</junit-jupiter-api.version>
 		<maven-compiler-plugin.version>3.8.1</maven-compiler-plugin.version>
 		<springdoc-openapi-ui.version>1.7.0</springdoc-openapi-ui.version>
+		<maven-checkstyle-plugin.version>3.2.1</maven-checkstyle-plugin.version>
+		<maven-pmd-plugin.version>3.13.0</maven-pmd-plugin.version>
 	</properties>
 	<dependencies>
 		<dependency>
@@ -60,6 +62,18 @@
 			<artifactId>springdoc-openapi-ui</artifactId>
 			<version>${springdoc-openapi-ui.version}</version>
 		</dependency>
+
+		<dependency>
+			<groupId>org.apache.maven.plugins</groupId>
+			<artifactId>maven-pmd-plugin</artifactId>
+			<version>${maven-pmd-plugin.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.maven.plugins</groupId>
+			<artifactId>maven-checkstyle-plugin</artifactId>
+			<version>${maven-checkstyle-plugin.version}</version>
+		</dependency>
+
 		<dependency>
 			<groupId>org.junit.jupiter</groupId>
 			<artifactId>junit-jupiter-api</artifactId>
@@ -91,6 +105,49 @@
 							<version>${mapstruct.version}</version>
 						</path>
 					</annotationProcessorPaths>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-pmd-plugin</artifactId>
+				<version>${maven-pmd-plugin.version}</version>
+				<configuration>
+					<failOnViolation>true</failOnViolation>
+				</configuration>
+			</plugin>
+
+			<plugin>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-maven-plugin</artifactId>
+			</plugin>
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-checkstyle-plugin</artifactId>
+				<version>3.2.1</version>
+				<executions>
+					<execution>
+						<id>validate</id>
+						<phase>validate</phase>
+						<goals>
+							<goal>check</goal>
+						</goals>
+					</execution>
+				</executions>
+				<dependencies>
+					<dependency>
+						<groupId>com.puppycrawl.tools</groupId>
+						<artifactId>checkstyle</artifactId>
+						<version>10.14.1</version>
+					</dependency>
+				</dependencies>
+				<configuration>
+					<violationSeverity>warning</violationSeverity>
+					<failsOnError>true</failsOnError>
+					<consoleOutput>true</consoleOutput>
+<!--					<configLocation>src/main/resources/checkstyle.xml</configLocation>-->
+					<configLocation>https://breezeware-dev-config.s3.amazonaws.com/BreezewareGoogleCheckStyle.xml</configLocation>
+					<linkXRef>false</linkXRef>
 				</configuration>
 			</plugin>
 		</plugins>
