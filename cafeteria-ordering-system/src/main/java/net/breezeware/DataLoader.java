@@ -119,6 +119,7 @@ public class DataLoader implements CommandLineRunner {
         // 1
         FoodOrder foodOrder1 = new FoodOrder();
         foodOrder1.setId(1L);
+        foodOrder1.setCustomerId(1L);
         foodOrder1.setTotalCost(15.0);
         foodOrder1.setOrderStatus(OrderStatus.ORDER_CART);
         foodOrder1.setCreated(now);
@@ -129,6 +130,7 @@ public class DataLoader implements CommandLineRunner {
         OrderFoodItemMap orderFoodItemMap1 = new OrderFoodItemMap();
         orderFoodItemMap1.setId(1L);
         orderFoodItemMap1.setFoodOrder(foodOrder1);
+        orderFoodItemMap1.setFoodMenu(foodMenu1);
         orderFoodItemMap1.setFoodItem(foodItem1);
         orderFoodItemMap1.setQuantity(1);
         orderFoodItemMapRepository.save(orderFoodItemMap1);

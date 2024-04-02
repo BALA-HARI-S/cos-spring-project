@@ -209,9 +209,10 @@ class FoodOrderControllerTest {
         foodOrderDto1.setOrderStatus(OrderStatus.ORDER_CART);
         foodOrderDto1.setCreated(FIXED_INSTANT);
         // when
-        when(foodOrderService.addFoodItemToOrder(anyLong(),anyLong(),anyInt())).thenReturn(foodOrderDto1);
+        when(foodOrderService.addFoodItemToOrder(anyLong(),anyLong(),anyLong(),anyInt())).thenReturn(foodOrderDto1);
         mockMvc.perform(post(FoodOrderController.BASE_URL + "/add-food-item")
                         .param("orderId", "1")
+                        .param("menuId", "1")
                         .param("foodItemId", "1")
                         .param("quantity", "2")
                         .contentType(MediaType.APPLICATION_JSON))

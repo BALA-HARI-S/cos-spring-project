@@ -20,6 +20,9 @@ public class OrderFoodItemMap {
     private FoodOrder foodOrder;
 
     @OneToOne
+    private FoodMenu foodMenu;
+
+    @OneToOne
     private FoodItem foodItem;
 
     private Integer quantity;

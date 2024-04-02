@@ -4,6 +4,7 @@ import net.breezeware.dto.foodOrderDto.CreateFoodOrderDto;
 import net.breezeware.dto.foodOrderDto.FoodOrderDto;
 import net.breezeware.dto.foodOrderDto.UpdateFoodOrderDto;
 import net.breezeware.exception.FoodItemException;
+import net.breezeware.exception.FoodMenuException;
 import net.breezeware.exception.FoodOrderException;
 
 import java.util.List;
@@ -34,7 +35,7 @@ public interface FoodOrderService {
      * @return FoodOrderDto representing the newly created food order.
      * @throws FoodItemException if there is an error related to food items while creating the order.
      */
-    FoodOrderDto createFoodOrder(CreateFoodOrderDto createFoodOrderDto) throws FoodItemException;
+    FoodOrderDto createFoodOrder(CreateFoodOrderDto createFoodOrderDto) throws FoodItemException, FoodMenuException, FoodOrderException;
 
     /**
      * Updates an existing food order.
@@ -57,7 +58,7 @@ public interface FoodOrderService {
      * @throws FoodOrderException if the specified food order is not found or if there is an error adding the item.
      * @throws FoodItemException if there is an error related to food items while adding to the order.
      */
-    FoodOrderDto addFoodItemToOrder(Long orderId, Long foodItemId, Integer quantity) throws FoodOrderException, FoodItemException;
+    FoodOrderDto addFoodItemToOrder(Long orderId,Long menuId, Long foodItemId, Integer quantity) throws FoodOrderException, FoodItemException, FoodMenuException;
 
     /**
      * Deletes a food item from a food order.

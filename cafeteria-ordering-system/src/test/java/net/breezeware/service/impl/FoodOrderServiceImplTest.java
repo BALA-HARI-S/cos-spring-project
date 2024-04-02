@@ -1,9 +1,7 @@
 package net.breezeware.service.impl;
 
 import lombok.extern.slf4j.Slf4j;
-import net.breezeware.dao.FoodItemRepository;
-import net.breezeware.dao.FoodOrderRepository;
-import net.breezeware.dao.OrderFoodItemMapRepository;
+import net.breezeware.dao.*;
 import net.breezeware.dto.foodItemDto.FoodItemDto;
 import net.breezeware.dto.foodOrderDto.CreateFoodOrderDto;
 import net.breezeware.dto.foodOrderDto.FoodOrderDto;
@@ -13,9 +11,9 @@ import net.breezeware.entity.FoodOrder;
 import net.breezeware.entity.OrderFoodItemMap;
 import net.breezeware.entity.OrderStatus;
 import net.breezeware.exception.FoodItemException;
+import net.breezeware.exception.FoodMenuException;
 import net.breezeware.exception.FoodOrderException;
 import net.breezeware.mapper.FoodItemMapper;
-import net.breezeware.mapper.FoodOrderMapper;
 import net.breezeware.service.api.FoodItemService;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -38,8 +36,15 @@ class FoodOrderServiceImplTest {
     public static final long CUSTOMER_ID = 1L;
     public static final double TOTAL_COST = 15.0;
     public static final Instant FIXED_INSTANT = Instant.now();
+
     @Mock
-    private FoodOrderMapper foodOrderMapper;
+    private FoodMenuRepository foodMenuRepository;
+
+    @Mock
+    private FoodMenuItemMapRepository foodMenuItemMapRepository;
+
+    @Mock
+    FoodMenuItemQuantityMapRepository foodMenuItemQuantityMapRepository;
 
     @Mock
     private FoodOrderRepository foodOrderRepository;
@@ -60,7 +65,7 @@ class FoodOrderServiceImplTest {
     void setUp() {
         log.info("Entering Test setUp()");
         MockitoAnnotations.openMocks(this);
-        foodOrderService = new FoodOrderServiceImpl(foodOrderMapper,foodOrderRepository,
+        foodOrderService = new FoodOrderServiceImpl(foodMenuRepository,foodMenuItemMapRepository,foodMenuItemQuantityMapRepository,foodOrderRepository,
                 orderFoodItemMapRepository,foodItemService,foodItemMapper);
         log.info("Leaving Test setUp()");
     }
@@ -125,7 +130,7 @@ class FoodOrderServiceImplTest {
     }
 
     @Test
-    void givenCreateFoodOrderDto_WhenCreateFoodOrder_ThenReturnFoodOrderDto() throws FoodItemException {
+    void givenCreateFoodOrderDto_WhenCreateFoodOrder_ThenReturnFoodOrderDto() throws FoodItemException, FoodOrderException, FoodMenuException {
         log.info("Entering createFoodOrder() Test");
         // given
         FoodItem foodItem1 = new FoodItem(1L, "Dosa", 15.0, FIXED_INSTANT, FIXED_INSTANT);
@@ -213,14 +218,14 @@ class FoodOrderServiceImplTest {
         when(foodOrderRepository.findById(anyLong())).thenReturn(Optional.empty());
 
         // then
-        Assertions.assertThatThrownBy(() -> foodOrderService.addFoodItemToOrder(ORDER_ID, 1L, 1))
+        Assertions.assertThatThrownBy(() -> foodOrderService.addFoodItemToOrder(ORDER_ID, 1L, 1L, 1))
                 .isInstanceOf(FoodOrderException.class)
                 .hasMessage("Order not found for id: " + ORDER_ID);
         log.info("Leaving addFoodItemToOrder() Test");
     }
 
     @Test
-    void givenFoodOrderIdFoodItemIdQuantity_WhenAddFoodItemToOrder_ThenReturnFoodOrderDto() throws FoodItemException, FoodOrderException {
+    void givenFoodOrderIdFoodItemIdQuantity_WhenAddFoodItemToOrder_ThenReturnFoodOrderDto() throws FoodItemException, FoodOrderException, FoodMenuException {
         log.info("Entering addFoodItemToOrder() Test");
         // given
         FoodItem foodItem1 = new FoodItem(1L, "Dosa", 15.0, FIXED_INSTANT, FIXED_INSTANT);
@@ -259,7 +264,7 @@ class FoodOrderServiceImplTest {
         when(foodOrderRepository.save(any(FoodOrder.class))).thenReturn(foodOrder1);
         when(orderFoodItemMapRepository.findByFoodOrderId(anyLong())).thenReturn(orderFoodItemMaps);
 
-        FoodOrderDto foodOrderDto = foodOrderService.addFoodItemToOrder(ORDER_ID, 1L, 1);
+        FoodOrderDto foodOrderDto = foodOrderService.addFoodItemToOrder(ORDER_ID, 1L, 1L, 1);
 
         // then
         Assertions.assertThat(ORDER_ID).isEqualTo(foodOrderDto.getId());

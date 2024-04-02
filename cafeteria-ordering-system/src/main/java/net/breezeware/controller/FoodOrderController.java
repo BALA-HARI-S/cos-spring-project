@@ -12,6 +12,7 @@ import net.breezeware.dto.foodOrderDto.FoodOrderDto;
 import net.breezeware.dto.foodOrderDto.UpdateFoodOrderDto;
 import net.breezeware.entity.ErrorDetail;
 import net.breezeware.exception.FoodItemException;
+import net.breezeware.exception.FoodMenuException;
 import net.breezeware.exception.FoodOrderException;
 import net.breezeware.service.api.FoodOrderService;
 import org.springframework.http.HttpStatus;
@@ -90,7 +91,7 @@ public class FoodOrderController {
     )
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public FoodOrderDto createFoodOrder(@RequestBody CreateFoodOrderDto createFoodOrderDto) throws FoodItemException {
+    public FoodOrderDto createFoodOrder(@RequestBody CreateFoodOrderDto createFoodOrderDto) throws FoodItemException, FoodOrderException, FoodMenuException {
         log.info("Entering createFoodOrder() controller");
         FoodOrderDto foodOrderDto = foodOrderService.createFoodOrder(createFoodOrderDto);
         log.info("Leaving createFoodOrder() controller");
@@ -142,9 +143,9 @@ public class FoodOrderController {
             }
     )
     @PostMapping("/add-food-item")
-    public FoodOrderDto addFoodItemToOrder(@RequestParam Long orderId,@RequestParam Long foodItemId,@RequestParam Integer quantity) throws FoodItemException, FoodOrderException {
+    public FoodOrderDto addFoodItemToOrder(@RequestParam Long orderId,@RequestParam Long menuId,@RequestParam Long foodItemId,@RequestParam Integer quantity) throws FoodItemException, FoodOrderException, FoodMenuException {
         log.info("Entering addFoodItemToOrder() controller");
-        FoodOrderDto foodOrderDto = foodOrderService.addFoodItemToOrder(orderId,foodItemId,quantity);
+        FoodOrderDto foodOrderDto = foodOrderService.addFoodItemToOrder(orderId,menuId,foodItemId,quantity);
         log.info("Leaving addFoodItemToOrder() controller");
         return foodOrderDto;
     }

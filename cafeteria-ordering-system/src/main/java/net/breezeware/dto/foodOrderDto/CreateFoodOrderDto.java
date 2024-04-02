@@ -18,10 +18,11 @@ public class CreateFoodOrderDto {
     @NotNull(message = "Customer id must not be empty")
     private Long customerId;
 
-    @Schema(
-            description = "A map representing the food items and their corresponding quantities.",
-            example = "{1: 2, 2: 1}"
-    )
+    @Schema(description = "The ID of the menu in which the food item is picked from to place order.")
+    @NotNull(message = "Menu id must not be empty")
+    private Long menuId;
+
+    @Schema(description = "A map representing the food items and their corresponding quantities.")
     @NotNull(message = "Food item id and its corresponding quantity must not be empty")
     private Map<Long, Integer> foodItemsQuantityMap;
 }
