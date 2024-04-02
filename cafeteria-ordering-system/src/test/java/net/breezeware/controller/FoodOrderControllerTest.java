@@ -26,10 +26,15 @@ import java.util.List;
 import java.util.Map;
 
 import static org.hamcrest.Matchers.is;
-import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -61,7 +66,7 @@ class FoodOrderControllerTest {
 
     @Test
     void givenRetrieveFoodOrdersGetRequest_WhenRetrieveFoodOrders_ThenReturnFoodOrdersDtoList() throws Exception {
-        log.info("Entering retrieveFoodOrders() controller");
+        log.info("Entering givenRetrieveFoodOrdersGetRequest_WhenRetrieveFoodOrders_ThenReturnFoodOrdersDtoList() controller");
         // given
         FoodItemDto foodItemDto1 = new FoodItemDto(1L, "Dosa", 15.0, FIXED_INSTANT, FIXED_INSTANT);
 
@@ -86,12 +91,12 @@ class FoodOrderControllerTest {
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.length()", is(1)));
-        log.info("Leaving retrieveFoodOrders() controller");
+        log.info("Leaving givenRetrieveFoodOrdersGetRequest_WhenRetrieveFoodOrders_ThenReturnFoodOrdersDtoList() controller");
     }
 
     @Test
     void givenRetrieveFoodOrderByIdGetRequest_WhenRetrieveFoodOrder_ThenReturnFoodOrdersDto() throws Exception {
-        log.info("Entering retrieveFoodOrder() controller");
+        log.info("Entering givenRetrieveFoodOrderByIdGetRequest_WhenRetrieveFoodOrder_ThenReturnFoodOrdersDto() controller");
         // given
         FoodItemDto foodItemDto1 = new FoodItemDto(1L, "Dosa", 15.0, FIXED_INSTANT, FIXED_INSTANT);
 
@@ -116,12 +121,12 @@ class FoodOrderControllerTest {
                 .andExpect(jsonPath("$.id", is(1)))
                 .andExpect(jsonPath("$.customerId", is(1)))
                 .andExpect(jsonPath("$.totalCost", is(TOTAL_COST)));
-        log.info("Leaving retrieveFoodOrder() controller");
+        log.info("Leaving givenRetrieveFoodOrderByIdGetRequest_WhenRetrieveFoodOrder_ThenReturnFoodOrdersDto() controller");
     }
 
     @Test
     void givenCreateFoodOrderDtoPostRequest_WhenCreateFoodOrder_ThenReturnFoodOrdersDto() throws Exception {
-        log.info("Entering createFoodOrder() controller");
+        log.info("Entering givenCreateFoodOrderDtoPostRequest_WhenCreateFoodOrder_ThenReturnFoodOrdersDto() controller");
         // given
         FoodItemDto foodItemDto1 = new FoodItemDto(1L, "Dosa", 15.0, FIXED_INSTANT, FIXED_INSTANT);
 
@@ -154,12 +159,12 @@ class FoodOrderControllerTest {
                 .andExpect(jsonPath("$.id", is(1)))
                 .andExpect(jsonPath("$.customerId", is(1)))
                 .andExpect(jsonPath("$.totalCost", is(TOTAL_COST)));
-        log.info("Leaving createFoodOrder() controller");
+        log.info("Leaving givenCreateFoodOrderDtoPostRequest_WhenCreateFoodOrder_ThenReturnFoodOrdersDto() controller");
     }
 
     @Test
     void givenUpdateFoodOrderDtoPatchRequest_WhenUpdateFoodOrder_ThenReturnFoodOrdersDto() throws Exception {
-        log.info("Entering updateFoodOrder() controller");
+        log.info("Entering givenUpdateFoodOrderDtoPatchRequest_WhenUpdateFoodOrder_ThenReturnFoodOrdersDto() controller");
         // given
         FoodItemDto foodItemDto1 = new FoodItemDto(1L, "Dosa", 15.0, FIXED_INSTANT, FIXED_INSTANT);
 
@@ -189,12 +194,12 @@ class FoodOrderControllerTest {
                 .andExpect(jsonPath("$.customerId", is(1)))
                 .andExpect(jsonPath("$.totalCost", is(TOTAL_COST)));
 
-        log.info("Leaving updateFoodOrder() controller");
+        log.info("Leaving givenUpdateFoodOrderDtoPatchRequest_WhenUpdateFoodOrder_ThenReturnFoodOrdersDto() controller");
     }
 
     @Test
     void givenFoodOrderIdFoodItemIdQuantityPostRequest_WhenAddFoodItemToOrder_ThenReturnFoodOrdersDto() throws Exception {
-        log.info("Entering addFoodItemToOrder() controller");
+        log.info("Entering givenFoodOrderIdFoodItemIdQuantityPostRequest_WhenAddFoodItemToOrder_ThenReturnFoodOrdersDto() controller");
         // given
         FoodItemDto foodItemDto1 = new FoodItemDto(1L, "Dosa", 15.0, FIXED_INSTANT, FIXED_INSTANT);
 
@@ -222,12 +227,12 @@ class FoodOrderControllerTest {
                 .andExpect(jsonPath("$.totalCost", is(TOTAL_COST)));
 
         // then
-        log.info("Leaving addFoodItemToOrder() controller");
+        log.info("Leaving givenFoodOrderIdFoodItemIdQuantityPostRequest_WhenAddFoodItemToOrder_ThenReturnFoodOrdersDto() controller");
     }
 
     @Test
     void givenFoodOrderIDFoodItemIdDeleteRequest_WhenDeleteOrderFoodItem_ThenOrderItemDeleted() throws Exception {
-        log.info("Entering deleteOrderFoodItem() controller");
+        log.info("Entering givenFoodOrderIDFoodItemIdDeleteRequest_WhenDeleteOrderFoodItem_ThenOrderItemDeleted() controller");
         // given order id and item id
         // when
         doNothing().when(foodOrderService).deleteOrderFoodItem(ORDER_ID, 1L);
@@ -238,12 +243,12 @@ class FoodOrderControllerTest {
                         .param("foodItemId", "1")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNoContent());
-        log.info("Leaving deleteOrderFoodItem() controller");
+        log.info("Leaving givenFoodOrderIDFoodItemIdDeleteRequest_WhenDeleteOrderFoodItem_ThenOrderItemDeleted() controller");
     }
 
     @Test
     void givenFoodOrderIDDeleteRequest_WhenDeleteFoodOrder_ThenOrderDeleted() throws Exception {
-        log.info("Entering deleteFoodOrder() controller");
+        log.info("Entering givenFoodOrderIDDeleteRequest_WhenDeleteFoodOrder_ThenOrderDeleted() controller");
         // given order id
         // when
         doNothing().when(foodOrderService).deleteFoodOrder(ORDER_ID);
@@ -253,6 +258,6 @@ class FoodOrderControllerTest {
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNoContent());
 
-        log.info("Leaving deleteFoodOrder() controller");
+        log.info("Leaving givenFoodOrderIDDeleteRequest_WhenDeleteFoodOrder_ThenOrderDeleted() controller");
     }
 }

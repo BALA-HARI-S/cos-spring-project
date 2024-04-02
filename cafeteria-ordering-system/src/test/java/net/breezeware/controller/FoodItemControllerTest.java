@@ -21,10 +21,15 @@ import java.util.List;
 
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
-import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -58,7 +63,7 @@ class FoodItemControllerTest {
 
     @Test
     void givenRetrieveFoodItemsRequest_WhenRetrieveFoodItems_ThenReturnFoodItemsList() throws Exception {
-        log.info("Entering RetrieveFoodItems Test");
+        log.info("Entering givenRetrieveFoodItemsRequest_WhenRetrieveFoodItems_ThenReturnFoodItemsList Test");
 
         // given
         List<FoodItemDto> foodItems = new ArrayList<>();
@@ -78,12 +83,12 @@ class FoodItemControllerTest {
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.length()", is(1)));
-        log.info("Leaving RetrieveFoodItems Test");
+        log.info("Leaving givenRetrieveFoodItemsRequest_WhenRetrieveFoodItems_ThenReturnFoodItemsList Test");
     }
 
     @Test
     void givenFoodItemId_WhenRetrieveFoodItem_ThenReturnFoodItemDto() throws Exception {
-        log.info("Entering RetrieveFoodItem Test");
+        log.info("Entering givenFoodItemId_WhenRetrieveFoodItem_ThenReturnFoodItemDto Test");
 
         // given
         FoodItemDto foodItem = new FoodItemDto();
@@ -101,12 +106,12 @@ class FoodItemControllerTest {
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.name", equalTo("Dosa")));
-        log.info("Leaving RetrieveFoodItem Test");
+        log.info("Leaving givenFoodItemId_WhenRetrieveFoodItem_ThenReturnFoodItemDto Test");
     }
 
     @Test
     void givenFoodItemName_WhenRetrieveFoodItemByName_ThenReturnFoodItemDto() throws Exception {
-        log.info("Entering RetrieveFoodItemByName Test");
+        log.info("Entering givenFoodItemName_WhenRetrieveFoodItemByName_ThenReturnFoodItemDto Test");
 
         // given
         FoodItemDto foodItemDto = new FoodItemDto();
@@ -124,12 +129,12 @@ class FoodItemControllerTest {
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.name", equalTo("Dosa")));
-        log.info("Leaving RetrieveFoodItemByName Test");
+        log.info("Leaving givenFoodItemName_WhenRetrieveFoodItemByName_ThenReturnFoodItemDto Test");
     }
 
     @Test
     void givenFoodItemDto_WhenCreateFoodItem_ThenReturnFoodItemDto() throws Exception {
-        log.info("Entering CreateFoodItem Test");
+        log.info("Entering givenFoodItemDto_WhenCreateFoodItem_ThenReturnFoodItemDto Test");
 
         // given
         FoodItemDto foodItemDto = new FoodItemDto();
@@ -148,12 +153,12 @@ class FoodItemControllerTest {
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.name", equalTo(FOOD_ITEM_NAME)));
-        log.info("Leaving CreateFoodItem Test");
+        log.info("Leaving givenFoodItemDto_WhenCreateFoodItem_ThenReturnFoodItemDto Test");
     }
 
     @Test
     void givenFoodItemDto_WhenUpdateFoodItem_ThenReturnFoodItemDto() throws Exception {
-        log.info("Entering UpdateFoodItem Test");
+        log.info("Entering givenFoodItemDto_WhenUpdateFoodItem_ThenReturnFoodItemDto Test");
 
         // given
         FoodItemDto foodItemDto = new FoodItemDto();
@@ -172,12 +177,12 @@ class FoodItemControllerTest {
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.name", equalTo(FOOD_ITEM_NAME)));
-        log.info("Leaving UpdateFoodItem Test");
+        log.info("Leaving givenFoodItemDto_WhenUpdateFoodItem_ThenReturnFoodItemDto Test");
     }
 
     @Test
     void givenDeleteFoodItemRequest_WhenDeleteFoodItem_ThenFoodItemDeleted() throws Exception {
-        log.info("Entering DeleteFoodItem Test");
+        log.info("Entering givenDeleteFoodItemRequest_WhenDeleteFoodItem_ThenFoodItemDeleted Test");
         // given ID
         // when
         doNothing().when(foodItemService).deleteFoodItem(ID);
@@ -186,6 +191,6 @@ class FoodItemControllerTest {
         mockMvc.perform(delete(FoodItemController.BASE_URL + "/" + ID)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNoContent());
-        log.info("Leaving DeleteFoodItem Test");
+        log.info("Leaving givenDeleteFoodItemRequest_WhenDeleteFoodItem_ThenFoodItemDeleted Test");
     }
 }
