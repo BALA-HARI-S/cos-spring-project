@@ -6,10 +6,7 @@ import net.breezeware.dto.foodItemDto.FoodItemDto;
 import net.breezeware.dto.foodOrderDto.CreateFoodOrderDto;
 import net.breezeware.dto.foodOrderDto.FoodOrderDto;
 import net.breezeware.dto.foodOrderDto.UpdateFoodOrderDto;
-import net.breezeware.entity.FoodItem;
-import net.breezeware.entity.FoodOrder;
-import net.breezeware.entity.OrderFoodItemMap;
-import net.breezeware.entity.OrderStatus;
+import net.breezeware.entity.*;
 import net.breezeware.exception.FoodItemException;
 import net.breezeware.exception.FoodMenuException;
 import net.breezeware.exception.FoodOrderException;
@@ -65,14 +62,12 @@ class FoodOrderServiceImplTest {
     void setUp() {
         log.info("Entering Test setUp()");
         MockitoAnnotations.openMocks(this);
-        foodOrderService = new FoodOrderServiceImpl(foodMenuRepository,foodMenuItemMapRepository,foodMenuItemQuantityMapRepository,foodOrderRepository,
-                orderFoodItemMapRepository,foodItemService,foodItemMapper);
         log.info("Leaving Test setUp()");
     }
 
     @Test
     void givenRetrieveFoodOrdersRequest_WhenRetrieveFoodOrders_ThenReturnFoodOrders() throws FoodItemException {
-        log.info("Entering retrieveFoodOrders() Test");
+        log.info("Entering givenRetrieveFoodOrdersRequest_WhenRetrieveFoodOrders_ThenReturnFoodOrders() Test");
         // given
         List<FoodOrder> foodOrderList = new ArrayList<>();
         FoodOrder foodOrder1 = new FoodOrder();
@@ -89,12 +84,12 @@ class FoodOrderServiceImplTest {
         // then
         Assertions.assertThat(1).isEqualTo(foodOrderDtoList.size());
         Assertions.assertThat(CUSTOMER_ID).isEqualTo(foodOrderDtoList.get(0).getId());
-        log.info("Leaving retrieveFoodOrders() Test");
+        log.info("Leaving givenRetrieveFoodOrdersRequest_WhenRetrieveFoodOrders_ThenReturnFoodOrders() Test");
     }
 
     @Test
     void givenInvalidFoodOrderId_WhenRetrieveFoodOrder_ThenThrowsException() throws FoodOrderException, FoodItemException {
-        log.info("Entering retrieveFoodOrder() Test");
+        log.info("Entering givenInvalidFoodOrderId_WhenRetrieveFoodOrder_ThenThrowsException() Test");
         // given food order id
 
         // when
@@ -104,12 +99,12 @@ class FoodOrderServiceImplTest {
         Assertions.assertThatThrownBy(() -> foodOrderService.retrieveFoodOrder(ORDER_ID))
                 .isInstanceOf(FoodOrderException.class)
                 .hasMessage("Order not found for id: " + ORDER_ID);
-        log.info("Leaving retrieveFoodOrder() Test");
+        log.info("Leaving givenInvalidFoodOrderId_WhenRetrieveFoodOrder_ThenThrowsException() Test");
     }
 
     @Test
     void givenFoodOrderId_WhenRetrieveFoodOrder_ThenReturnFoodOrder() throws FoodOrderException, FoodItemException {
-        log.info("Entering retrieveFoodOrder() Test");
+        log.info("Entering givenFoodOrderId_WhenRetrieveFoodOrder_ThenReturnFoodOrder() Test");
         // given
         FoodItemDto foodItemDto1 = new FoodItemDto(1L, "Dosa", 15.0, FIXED_INSTANT, FIXED_INSTANT);
 
@@ -126,55 +121,54 @@ class FoodOrderServiceImplTest {
         // then
         Assertions.assertThat(CUSTOMER_ID).isEqualTo(retrievedFoodOrderDto.getId());
         Assertions.assertThat(TOTAL_COST).isEqualTo(retrievedFoodOrderDto.getTotalCost());
-        log.info("Leaving retrieveFoodOrder() Test");
+        log.info("Leaving givenFoodOrderId_WhenRetrieveFoodOrder_ThenReturnFoodOrder() Test");
     }
 
     @Test
     void givenCreateFoodOrderDto_WhenCreateFoodOrder_ThenReturnFoodOrderDto() throws FoodItemException, FoodOrderException, FoodMenuException {
-        log.info("Entering createFoodOrder() Test");
+        log.info("Entering givenCreateFoodOrderDto_WhenCreateFoodOrder_ThenReturnFoodOrderDto() Test");
         // given
-        FoodItem foodItem1 = new FoodItem(1L, "Dosa", 15.0, FIXED_INSTANT, FIXED_INSTANT);
-        FoodItemDto foodItemDto1 = new FoodItemDto(1L, "Dosa", 15.0, FIXED_INSTANT, FIXED_INSTANT);
+        FoodItem foodItem = new FoodItem(1L, "Dosa", 15.0, FIXED_INSTANT, FIXED_INSTANT);
+
+        FoodItemDto foodItemDto = new FoodItemDto(1L, "Dosa", 15.0, FIXED_INSTANT, FIXED_INSTANT);
+
+        Set<Availability> availability = new HashSet<>(Arrays.asList(Availability.MONDAY,Availability.TUESDAY));
+        FoodMenu foodMenu = new FoodMenu(1L,"Standard",FIXED_INSTANT,FIXED_INSTANT, availability);
 
         Map<Long, Integer> orderFoodItemQuantityMap = new HashMap<>();
         orderFoodItemQuantityMap.put(CUSTOMER_ID,1);
 
         Map<FoodItemDto, Integer> foodItemQuantityMap = new HashMap<>();
-        foodItemQuantityMap.put(foodItemDto1,1);
+        foodItemQuantityMap.put(foodItemDto,1);
 
-        CreateFoodOrderDto createfoodOrderDto = new CreateFoodOrderDto();
-        createfoodOrderDto.setCustomerId(CUSTOMER_ID);
-        createfoodOrderDto.setFoodItemsQuantityMap(orderFoodItemQuantityMap);
+        CreateFoodOrderDto createfoodOrderDto = new CreateFoodOrderDto(CUSTOMER_ID, 1L, orderFoodItemQuantityMap);
 
-        FoodOrder foodOrder1 = new FoodOrder();
-        foodOrder1.setId(ORDER_ID);
-        foodOrder1.setCustomerId(CUSTOMER_ID);
-        foodOrder1.setTotalCost(TOTAL_COST);
-        foodOrder1.setOrderStatus(OrderStatus.ORDER_CART);
-        foodOrder1.setCreated(FIXED_INSTANT);
+        FoodOrder foodOrder = new FoodOrder(ORDER_ID,CUSTOMER_ID,TOTAL_COST,OrderStatus.ORDER_CART,FIXED_INSTANT);
 
-        OrderFoodItemMap orderFoodItemMap1 = new OrderFoodItemMap();
-        orderFoodItemMap1.setId(1L);
-        orderFoodItemMap1.setFoodOrder(foodOrder1);
-        orderFoodItemMap1.setFoodItem(foodItem1);
-        orderFoodItemMap1.setQuantity(1);
+        OrderFoodItemMap orderFoodItemMap = new OrderFoodItemMap(1L, foodOrder, foodMenu, foodItem, 1);
 
+        FoodMenuItemMap foodMenuItemMap = new FoodMenuItemMap(1L, foodItem, foodMenu);
+
+        FoodMenuItemQuantityMap foodMenuItemQuantityMap = new FoodMenuItemQuantityMap(1L,foodMenuItemMap,100,FIXED_INSTANT,FIXED_INSTANT);
         // when
-        when(foodItemService.retrieveFoodItem(anyLong())).thenReturn(foodItemDto1);
-        when(orderFoodItemMapRepository.save(any(OrderFoodItemMap.class))).thenReturn(orderFoodItemMap1);
-        when(foodOrderRepository.save(any(FoodOrder.class))).thenReturn(foodOrder1);
+        when(foodMenuRepository.findById(anyLong())).thenReturn(Optional.of(foodMenu));
+        when(foodItemService.retrieveFoodItem(anyLong())).thenReturn(foodItemDto);
+        when(foodMenuItemMapRepository.findByFoodMenuId(anyLong())).thenReturn(new ArrayList<>(List.of(foodMenuItemMap)));
+        when(foodMenuItemQuantityMapRepository.findByFoodMenuItemMapId(anyLong())).thenReturn(foodMenuItemQuantityMap);
+        when(orderFoodItemMapRepository.save(any(OrderFoodItemMap.class))).thenReturn(orderFoodItemMap);
+        when(foodOrderRepository.save(any(FoodOrder.class))).thenReturn(foodOrder);
         FoodOrderDto foodOrderDto = foodOrderService.createFoodOrder(createfoodOrderDto);
 
         // then
         Assertions.assertThat(ORDER_ID).isEqualTo(foodOrderDto.getId());
         Assertions.assertThat(CUSTOMER_ID).isEqualTo(foodOrderDto.getCustomerId());
         Assertions.assertThat(foodItemQuantityMap).containsExactlyEntriesOf(foodOrderDto.getFoodItemsQuantityMap());
-        log.info("Leaving createFoodOrder() Test");
+        log.info("Leaving givenCreateFoodOrderDto_WhenCreateFoodOrder_ThenReturnFoodOrderDto() Test");
     }
 
     @Test
     void givenTotalCost_WhenUpdateFoodOrder_ThenReturnFoodOrderDto() throws FoodOrderException, FoodItemException {
-        log.info("Entering updateFoodOrder() Test");
+        log.info("Entering givenTotalCost_WhenUpdateFoodOrder_ThenReturnFoodOrderDto() Test");
         // given
         FoodItemDto foodItemDto1 = new FoodItemDto(1L, "Dosa", 15.0, FIXED_INSTANT, FIXED_INSTANT);
 
@@ -207,12 +201,12 @@ class FoodOrderServiceImplTest {
         // then
         Assertions.assertThat(ORDER_ID).isEqualTo(savedFoodOrderDto.getId());
         Assertions.assertThat(100.00).isEqualTo(savedFoodOrderDto.getTotalCost());
-        log.info("Leaving updateFoodOrder() Test");
+        log.info("Leaving givenTotalCost_WhenUpdateFoodOrder_ThenReturnFoodOrderDto() Test");
     }
 
     @Test
     void givenInvalidFoodOrderIdFoodItemIdQuantity_WhenAddFoodItemToOrder_ThenThrowsException() throws FoodItemException, FoodOrderException {
-        log.info("Entering addFoodItemToOrder() Test");
+        log.info("Entering givenInvalidFoodOrderIdFoodItemIdQuantity_WhenAddFoodItemToOrder_ThenThrowsException() Test");
         // given
         // when
         when(foodOrderRepository.findById(anyLong())).thenReturn(Optional.empty());
@@ -221,60 +215,55 @@ class FoodOrderServiceImplTest {
         Assertions.assertThatThrownBy(() -> foodOrderService.addFoodItemToOrder(ORDER_ID, 1L, 1L, 1))
                 .isInstanceOf(FoodOrderException.class)
                 .hasMessage("Order not found for id: " + ORDER_ID);
-        log.info("Leaving addFoodItemToOrder() Test");
+        log.info("Leaving givenInvalidFoodOrderIdFoodItemIdQuantity_WhenAddFoodItemToOrder_ThenThrowsException() Test");
     }
 
     @Test
     void givenFoodOrderIdFoodItemIdQuantity_WhenAddFoodItemToOrder_ThenReturnFoodOrderDto() throws FoodItemException, FoodOrderException, FoodMenuException {
-        log.info("Entering addFoodItemToOrder() Test");
+        log.info("Entering givenFoodOrderIdFoodItemIdQuantity_WhenAddFoodItemToOrder_ThenReturnFoodOrderDto() Test");
         // given
-        FoodItem foodItem1 = new FoodItem(1L, "Dosa", 15.0, FIXED_INSTANT, FIXED_INSTANT);
-        FoodItemDto foodItemDto1 = new FoodItemDto(1L, "Dosa", 15.0, FIXED_INSTANT, FIXED_INSTANT);
+        FoodItem foodItem = new FoodItem(1L, "Dosa", 15.0, FIXED_INSTANT, FIXED_INSTANT);
+
+        FoodItemDto foodItemDto = new FoodItemDto(1L, "Dosa", 15.0, FIXED_INSTANT, FIXED_INSTANT);
+
+        Set<Availability> availability = new HashSet<>(Arrays.asList(Availability.MONDAY,Availability.TUESDAY));
+        FoodMenu foodMenu = new FoodMenu(1L,"Standard",FIXED_INSTANT,FIXED_INSTANT, availability);
 
         Map<FoodItemDto, Integer> foodItemQuantityMap = new HashMap<>();
-        foodItemQuantityMap.put(foodItemDto1,1);
 
-        FoodOrder foodOrder1 = new FoodOrder();
-        foodOrder1.setId(ORDER_ID);
-        foodOrder1.setCustomerId(CUSTOMER_ID);
-        foodOrder1.setTotalCost(TOTAL_COST);
-        foodOrder1.setOrderStatus(OrderStatus.ORDER_CART);
-        foodOrder1.setCreated(FIXED_INSTANT);
+        FoodOrder foodOrder = new FoodOrder(ORDER_ID,CUSTOMER_ID,TOTAL_COST,OrderStatus.ORDER_CART,FIXED_INSTANT);
+        FoodOrderDto foodOrderDto = new FoodOrderDto(ORDER_ID,CUSTOMER_ID,foodItemQuantityMap,TOTAL_COST,OrderStatus.ORDER_CART,FIXED_INSTANT);
 
-        FoodOrderDto foodOrderDto1 = new FoodOrderDto();
-        foodOrderDto1.setId(ORDER_ID);
-        foodOrderDto1.setCustomerId(CUSTOMER_ID);
-        foodOrderDto1.setFoodItemsQuantityMap(foodItemQuantityMap);
-        foodOrderDto1.setTotalCost(TOTAL_COST);
-        foodOrderDto1.setOrderStatus(OrderStatus.ORDER_CART);
-        foodOrderDto1.setCreated(FIXED_INSTANT);
+        OrderFoodItemMap orderFoodItemMap = new OrderFoodItemMap(1L, foodOrder, foodMenu, foodItem, 1);
 
-        List<OrderFoodItemMap> orderFoodItemMaps = new ArrayList<>();
-        OrderFoodItemMap orderFoodItemMap1 = new OrderFoodItemMap();
-        orderFoodItemMap1.setId(1L);
-        orderFoodItemMap1.setFoodOrder(foodOrder1);
-        orderFoodItemMap1.setFoodItem(foodItem1);
-        orderFoodItemMap1.setQuantity(1);
-        orderFoodItemMaps.add(orderFoodItemMap1);
+        FoodMenuItemMap foodMenuItemMap = new FoodMenuItemMap(1L, foodItem, foodMenu);
+
+        FoodMenuItemQuantityMap foodMenuItemQuantityMap = new FoodMenuItemQuantityMap(1L,foodMenuItemMap,100,FIXED_INSTANT,FIXED_INSTANT);
 
         // when
-        when(foodOrderRepository.findById(anyLong())).thenReturn(Optional.of(foodOrder1));
-        when(foodItemService.retrieveFoodItem(anyLong())).thenReturn(foodItemDto1);
-        when(orderFoodItemMapRepository.save(any(OrderFoodItemMap.class))).thenReturn(orderFoodItemMap1);
-        when(foodOrderRepository.save(any(FoodOrder.class))).thenReturn(foodOrder1);
-        when(orderFoodItemMapRepository.findByFoodOrderId(anyLong())).thenReturn(orderFoodItemMaps);
+        when(foodOrderRepository.findById(ORDER_ID)).thenReturn(Optional.of(foodOrder));
+        when(foodMenuRepository.findById(anyLong())).thenReturn(Optional.of(foodMenu));
+        when(foodItemService.retrieveFoodItem(anyLong())).thenReturn(foodItemDto);
+        when(foodItemMapper.foodItemDtoToFoodItem(any(FoodItemDto.class))).thenReturn(foodItem);
+        when(orderFoodItemMapRepository.findByFoodOrderIdAndFoodItemId(anyLong(),anyLong())).thenReturn(orderFoodItemMap);
+        when(orderFoodItemMapRepository.save(any(OrderFoodItemMap.class))).thenReturn(orderFoodItemMap);
+        when(foodOrderRepository.save(any(FoodOrder.class))).thenReturn(foodOrder);
+        when(foodMenuItemMapRepository.findByFoodMenuId(anyLong())).thenReturn(new ArrayList<>(List.of(foodMenuItemMap)));
+        when(foodMenuItemQuantityMapRepository.findByFoodMenuItemMapId(anyLong())).thenReturn(foodMenuItemQuantityMap);
+        when(foodMenuItemQuantityMapRepository.findByFoodMenuItemMapId(anyLong())).thenReturn(foodMenuItemQuantityMap);
+        when(foodMenuItemQuantityMapRepository.save(any(FoodMenuItemQuantityMap.class))).thenReturn(foodMenuItemQuantityMap);
 
-        FoodOrderDto foodOrderDto = foodOrderService.addFoodItemToOrder(ORDER_ID, 1L, 1L, 1);
+        FoodOrderDto retrievedFoodOrderDto = foodOrderService.addFoodItemToOrder(ORDER_ID, 1L, 1L, 1);
 
         // then
-        Assertions.assertThat(ORDER_ID).isEqualTo(foodOrderDto.getId());
-        Assertions.assertThat(foodItemQuantityMap).containsExactlyEntriesOf(foodOrderDto.getFoodItemsQuantityMap());
-        log.info("Leaving addFoodItemToOrder() Test");
+        Assertions.assertThat(ORDER_ID).isEqualTo(retrievedFoodOrderDto.getId());
+        Assertions.assertThat(foodItemQuantityMap).containsExactlyEntriesOf(retrievedFoodOrderDto.getFoodItemsQuantityMap());
+        log.info("Leaving givenFoodOrderIdFoodItemIdQuantity_WhenAddFoodItemToOrder_ThenReturnFoodOrderDto() Test");
     }
 
     @Test
     void givenInvalidFoodOrderId_WhenDeleteOrderFoodItem_ThenThrowsException() throws FoodOrderException {
-        log.info("Entering deleteOrderFoodItem() Test");
+        log.info("Entering givenInvalidFoodOrderId_WhenDeleteOrderFoodItem_ThenThrowsException() Test");
         // given
         // when
         when(foodOrderRepository.findById(anyLong())).thenReturn(Optional.empty());
@@ -283,45 +272,50 @@ class FoodOrderServiceImplTest {
         Assertions.assertThatThrownBy(() -> foodOrderService.deleteOrderFoodItem(ORDER_ID, 1L))
                 .isInstanceOf(FoodOrderException.class)
                 .hasMessage("Order not found for id: " + ORDER_ID);
-        log.info("Leaving deleteOrderFoodItem() Test");
+        log.info("Leaving givenInvalidFoodOrderId_WhenDeleteOrderFoodItem_ThenThrowsException() Test");
     }
 
     @Test
     void givenFoodOrderIdFoodItemId_WhenDeleteOrderFoodItem_ThenOrderFoodItemMapDeleted() throws FoodOrderException {
-        log.info("Entering deleteOrderFoodItem() Test");
+        log.info("Entering givenFoodOrderIdFoodItemId_WhenDeleteOrderFoodItem_ThenOrderFoodItemMapDeleted() Test");
         // given
-        FoodItem foodItem1 = new FoodItem(1L, "Dosa", 15.0, FIXED_INSTANT, FIXED_INSTANT);
+        FoodItem foodItem = new FoodItem(1L, "Dosa", 15.0, FIXED_INSTANT, FIXED_INSTANT);
 
-        FoodOrder foodOrder1 = new FoodOrder();
-        foodOrder1.setId(ORDER_ID);
-        foodOrder1.setCustomerId(CUSTOMER_ID);
-        foodOrder1.setTotalCost(TOTAL_COST);
-        foodOrder1.setOrderStatus(OrderStatus.ORDER_CART);
-        foodOrder1.setCreated(FIXED_INSTANT);
+        FoodItemDto foodItemDto = new FoodItemDto(1L, "Dosa", 15.0, FIXED_INSTANT, FIXED_INSTANT);
 
-        List<OrderFoodItemMap> orderFoodItemMaps = new ArrayList<>();
-        OrderFoodItemMap orderFoodItemMap1 = new OrderFoodItemMap();
-        orderFoodItemMap1.setId(1L);
-        orderFoodItemMap1.setFoodOrder(foodOrder1);
-        orderFoodItemMap1.setFoodItem(foodItem1);
-        orderFoodItemMap1.setQuantity(1);
-        orderFoodItemMaps.add(orderFoodItemMap1);
+        Set<Availability> availability = new HashSet<>(Arrays.asList(Availability.MONDAY,Availability.TUESDAY));
+        FoodMenu foodMenu = new FoodMenu(1L,"Standard",FIXED_INSTANT,FIXED_INSTANT, availability);
+
+        Map<FoodItemDto, Integer> foodItemQuantityMap = new HashMap<>();
+
+        FoodOrder foodOrder = new FoodOrder(ORDER_ID,CUSTOMER_ID,TOTAL_COST,OrderStatus.ORDER_CART,FIXED_INSTANT);
+        FoodOrderDto foodOrderDto = new FoodOrderDto(ORDER_ID,CUSTOMER_ID,foodItemQuantityMap,TOTAL_COST,OrderStatus.ORDER_CART,FIXED_INSTANT);
+
+        OrderFoodItemMap orderFoodItemMap = new OrderFoodItemMap(1L, foodOrder, foodMenu, foodItem, 1);
+
+        FoodMenuItemMap foodMenuItemMap = new FoodMenuItemMap(1L, foodItem, foodMenu);
+
+        FoodMenuItemQuantityMap foodMenuItemQuantityMap = new FoodMenuItemQuantityMap(1L,foodMenuItemMap,100,FIXED_INSTANT,FIXED_INSTANT);
 
         // when
-        when(foodOrderRepository.findById(anyLong())).thenReturn(Optional.of(foodOrder1));
-        when(orderFoodItemMapRepository.findByFoodOrderId(anyLong())).thenReturn(orderFoodItemMaps);
-        when(foodOrderRepository.save(any(FoodOrder.class))).thenReturn(foodOrder1);
-        doNothing().when(orderFoodItemMapRepository).delete(orderFoodItemMap1);
+        when(foodOrderRepository.findById(anyLong())).thenReturn(Optional.of(foodOrder));
+        when(orderFoodItemMapRepository.findByFoodOrderId(anyLong())).thenReturn(new ArrayList<>(List.of(orderFoodItemMap)));
+        when(foodOrderRepository.save(any(FoodOrder.class))).thenReturn(foodOrder);
+        doNothing().when(orderFoodItemMapRepository).delete(orderFoodItemMap);
+        when(foodMenuItemMapRepository.findByFoodMenuId(anyLong())).thenReturn(new ArrayList<>(List.of(foodMenuItemMap)));
+        when(foodMenuItemQuantityMapRepository.findByFoodMenuItemMapId(anyLong())).thenReturn(foodMenuItemQuantityMap);
+        when(foodMenuItemQuantityMapRepository.save(any(FoodMenuItemQuantityMap.class))).thenReturn(foodMenuItemQuantityMap);
+
         foodOrderService.deleteOrderFoodItem(ORDER_ID, 1L);
 
         // then
-        verify(orderFoodItemMapRepository, times(1)).delete(orderFoodItemMap1);
-        log.info("Leaving deleteOrderFoodItem() Test");
+        verify(orderFoodItemMapRepository, times(1)).delete(orderFoodItemMap);
+        log.info("Leaving givenFoodOrderIdFoodItemId_WhenDeleteOrderFoodItem_ThenOrderFoodItemMapDeleted() Test");
     }
 
     @Test
     void givenInvalidFoodOrderId_WhenDeleteFoodOrder_ThenThrowsException() throws FoodOrderException {
-        log.info("Entering deleteOrderFoodItem() Test");
+        log.info("Entering givenInvalidFoodOrderId_WhenDeleteFoodOrder_ThenThrowsException() Test");
         // given
         // when
         when(foodOrderRepository.findById(anyLong())).thenReturn(Optional.empty());
@@ -330,12 +324,12 @@ class FoodOrderServiceImplTest {
         Assertions.assertThatThrownBy(() -> foodOrderService.deleteFoodOrder(ORDER_ID))
                 .isInstanceOf(FoodOrderException.class)
                 .hasMessage("Order not found for id: " + ORDER_ID);
-        log.info("Leaving deleteOrderFoodItem() Test");
+        log.info("Leaving givenInvalidFoodOrderId_WhenDeleteFoodOrder_ThenThrowsException() Test");
     }
 
     @Test
     void givenFoodOrderId_WhenDeleteFoodOrder_ThenFoodOrderDeleted() throws FoodOrderException {
-        log.info("Entering deleteOrderFoodItem() Test");
+        log.info("Entering givenFoodOrderId_WhenDeleteFoodOrder_ThenFoodOrderDeleted() Test");
         // given
         FoodOrder foodOrder1 = new FoodOrder();
         foodOrder1.setId(ORDER_ID);
@@ -353,6 +347,6 @@ class FoodOrderServiceImplTest {
         // then
         verify(orderFoodItemMapRepository, times(1)).deleteByFoodOrderId(ORDER_ID);
         verify(foodOrderRepository, times(1)).delete(foodOrder1);
-        log.info("Leaving deleteOrderFoodItem() Test");
+        log.info("Leaving givenFoodOrderId_WhenDeleteFoodOrder_ThenFoodOrderDeleted() Test");
     }
 }
