@@ -21,19 +21,19 @@ public class FoodItemDto {
     @Schema(description = "The ID of the food item")
     private Long id;
 
-    @Schema(description = "The name of the food item")
+    @Schema(description = "The food item name of the food item")
     @NotBlank(message = "name must not be empty")
     private String name;
 
-    @Schema(description = "The price of the food item")
+    @Schema(description = "The food item price of the food item")
     @NotNull
     @DecimalMin(value = "0.0", message = "Value must be greater than or equal to {value}")
     @DecimalMax(value = "100.0", message = "Value must be less than or equal to {value}")
     private Double price;
 
-    @Schema(description = "The instant when the food item was created")
+    @Schema(description = "The food item instant when the food item was created")
     private Instant created;
 
-    @Schema(description = "The instant when the food item was last modified")
+    @Schema(description = "The food item instant when the food item was last modified")
     private Instant modified;
 }

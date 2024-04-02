@@ -4,11 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.OneToOne;
+import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.time.Instant;
 
@@ -16,20 +12,26 @@ import java.time.Instant;
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
+@Table(name = "food_menu_item_quantity_map")
 public class FoodMenuItemQuantityMap {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
     private Long id;
 
     @OneToOne
+    @Column(name = "food_menu_item_map_id")
     private FoodMenuItemMap foodMenuItemMap;
 
-    @NotNull
+    @NotNull(message = "The food menu item quantity map quantity must not be empty")
+    @Column(name = "quantity")
     private Integer quantity;
 
-    @NotNull
+    @NotNull(message = "The food menu item quantity map created date and time must not be empty")
+    @Column(name = "created")
     private Instant created;
 
-    @NotNull
+    @NotNull(message = "The food menu item quantity map modified date and time must not be empty")
+    @Column(name = "modified")
     private Instant modified;
 }

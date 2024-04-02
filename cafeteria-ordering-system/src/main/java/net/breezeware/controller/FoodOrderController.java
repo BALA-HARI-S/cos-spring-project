@@ -28,6 +28,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -100,7 +101,7 @@ public class FoodOrderController {
     )
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public FoodOrderDto createFoodOrder(@RequestBody CreateFoodOrderDto createFoodOrderDto) throws FoodItemException, FoodOrderException, FoodMenuException {
+    public FoodOrderDto createFoodOrder(@Valid @RequestBody CreateFoodOrderDto createFoodOrderDto) throws FoodItemException, FoodOrderException, FoodMenuException {
         log.info("Entering createFoodOrder() controller");
         FoodOrderDto foodOrderDto = foodOrderService.createFoodOrder(createFoodOrderDto);
         log.info("Leaving createFoodOrder() controller");
@@ -126,7 +127,7 @@ public class FoodOrderController {
             }
     )
     @PatchMapping("/update/{orderId}")
-    public FoodOrderDto updateFoodOrder(@PathVariable Long orderId,@RequestBody UpdateFoodOrderDto updateFoodOrderDto) throws FoodItemException, FoodOrderException {
+    public FoodOrderDto updateFoodOrder(@PathVariable Long orderId,@Valid @RequestBody UpdateFoodOrderDto updateFoodOrderDto) throws FoodItemException, FoodOrderException {
         log.info("Entering updateFoodOrder() controller");
         FoodOrderDto foodOrderDto = foodOrderService.updateFoodOrder(orderId,updateFoodOrderDto);
         log.info("Leaving updateFoodOrder() controller");
