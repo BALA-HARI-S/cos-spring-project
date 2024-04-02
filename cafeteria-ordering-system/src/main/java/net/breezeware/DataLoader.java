@@ -1,8 +1,20 @@
 package net.breezeware;
 
 import lombok.AllArgsConstructor;
-import net.breezeware.dao.*;
-import net.breezeware.entity.*;
+import net.breezeware.dao.FoodItemRepository;
+import net.breezeware.dao.FoodMenuItemMapRepository;
+import net.breezeware.dao.FoodMenuItemQuantityMapRepository;
+import net.breezeware.dao.FoodMenuRepository;
+import net.breezeware.dao.FoodOrderRepository;
+import net.breezeware.dao.OrderFoodItemMapRepository;
+import net.breezeware.entity.Availability;
+import net.breezeware.entity.FoodItem;
+import net.breezeware.entity.FoodMenu;
+import net.breezeware.entity.FoodMenuItemMap;
+import net.breezeware.entity.FoodMenuItemQuantityMap;
+import net.breezeware.entity.FoodOrder;
+import net.breezeware.entity.OrderFoodItemMap;
+import net.breezeware.entity.OrderStatus;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
