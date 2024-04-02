@@ -48,7 +48,5 @@ public class FoodMenu {
     @ElementCollection(targetClass = Availability.class)
     @Enumerated(EnumType.STRING)
     @CollectionTable(name = "food_menu_availability_map")
-    @NotNull(message = "The food menu availability day must not be empty")
-    @Column(name = "availability")
     private Set<Availability> menuAvailability;
 }

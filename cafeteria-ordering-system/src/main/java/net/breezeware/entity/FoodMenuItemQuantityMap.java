@@ -20,7 +20,6 @@ public class FoodMenuItemQuantityMap {
     private Long id;
 
     @OneToOne
-    @Column(name = "food_menu_item_map_id")
     private FoodMenuItemMap foodMenuItemMap;
 
     @NotNull(message = "The food menu item quantity map quantity must not be empty")

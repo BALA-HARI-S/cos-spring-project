@@ -20,15 +20,12 @@ public class OrderFoodItemMap {
     private Long id;
 
     @OneToOne
-    @Column(name = "food_order_id")
     private FoodOrder foodOrder;
 
     @OneToOne
-    @Column(name = "food_menu_id")
     private FoodMenu foodMenu;
 
     @OneToOne
-    @Column(name = "food_item_id")
     private FoodItem foodItem;
 
     @NotNull(message = "The ordered food item quantity must not be empty")
