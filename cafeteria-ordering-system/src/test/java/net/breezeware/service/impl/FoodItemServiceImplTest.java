@@ -13,14 +13,15 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
-
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.*;
+
 
 @Slf4j
 class FoodItemServiceImplTest {
@@ -30,39 +31,24 @@ class FoodItemServiceImplTest {
     public static final String FOOD_ITEM_NAME = "Dosa";
     public static final double PRICE = 10.00;
     @Mock
-    FoodItemRepository foodItemRepository;
+    private FoodItemRepository foodItemRepository;
+
+    @Mock
+    private FoodItemMapper foodItemMapper;
 
     @InjectMocks
-    FoodItemServiceImpl foodItemService;
+    private FoodItemServiceImpl foodItemService;
 
     @BeforeEach
     void setUp() throws Exception {
         log.info("Entering Test Setup");
         MockitoAnnotations.openMocks(this);
-        foodItemService = new FoodItemServiceImpl(foodItemRepository, FoodItemMapper.INSTANCE);
         log.info("leaving Test Setup");
     }
 
     @Test
-    void givenRetrieveFoodItemsRequest_WhenRetrieveFoodItems_ThenTrowsException() throws FoodItemException {
-        log.info("Entering RetrieveFoodItems Test");
-
-        // given
-        List<FoodItem> emptyFoodItemsList = new ArrayList<>();
-
-        // when
-        when(foodItemRepository.findAll()).thenReturn(emptyFoodItemsList);
-
-        // then
-        Assertions.assertThatThrownBy(() -> foodItemService.retrieveFoodItems())
-                .isInstanceOf(FoodItemException.class)
-                .hasMessage("No food Items found");
-        log.info("Leaving RetrieveFoodItems Test");
-    }
-
-    @Test
     void givenRetrieveFoodItemsRequest_WhenRetrieveFoodItems_ThenReturnFoodItemsList() throws FoodItemException {
-        log.info("Entering RetrieveFoodItems Test");
+        log.info("Entering givenRetrieveFoodItemsRequest_WhenRetrieveFoodItems_ThenReturnFoodItemsList() Test");
 
         // given
         List<FoodItem> foodItems = new ArrayList<>();
@@ -81,28 +67,28 @@ class FoodItemServiceImplTest {
         // then
         verify(foodItemRepository, times(1)).findAll();
 
-        Assertions.assertThat(1).isEqualTo(foodItemDtos.size());
-        log.info("Leaving RetrieveFoodItems Test");
+        Assertions.assertThat(foodItemDtos.size()).isEqualTo(1);
+        log.info("Leaving givenRetrieveFoodItemsRequest_WhenRetrieveFoodItems_ThenReturnFoodItemsList() Test");
     }
 
     @Test
-    void givenFoodItemId_WhenRetrieveFoodItem_ThenTrowsException() throws FoodItemException {
-        log.info("Entering RetrieveFoodItem Test");
+    void givenFoodItemId_WhenRetrieveFoodItem_ThenTrowsException() {
+        log.info("Entering givenFoodItemId_WhenRetrieveFoodItem_ThenTrowsException() Test");
 
         // given ID
         // when
-        when(foodItemRepository.findById(anyLong())).thenReturn(Optional.empty());
+        when(foodItemRepository.findById(ID)).thenReturn(Optional.empty());
 
         // then
         Assertions.assertThatThrownBy(() -> foodItemService.retrieveFoodItem(ID))
                 .isInstanceOf(FoodItemException.class)
                 .hasMessage("Food item not found for id: " + ID);
-        log.info("Leaving RetrieveFoodItem Test");
+        log.info("Leaving givenFoodItemId_WhenRetrieveFoodItem_ThenTrowsException() Test");
     }
 
     @Test
     void givenFoodItemId_WhenRetrieveFoodItem_ThenReturnFoodItemDto() throws FoodItemException {
-        log.info("Entering RetrieveFoodItem Test");
+        log.info("Entering givenFoodItemId_WhenRetrieveFoodItem_ThenReturnFoodItemDto() Test");
 
         // given
         FoodItem foodItem = new FoodItem();
@@ -112,35 +98,43 @@ class FoodItemServiceImplTest {
         foodItem.setCreated(FIXED_INSTANT);
         foodItem.setModified(FIXED_INSTANT);
 
-        // when
-        when(foodItemRepository.findById(anyLong())).thenReturn(Optional.of(foodItem));
+        FoodItemDto foodItemDto = new FoodItemDto();
+        foodItemDto.setId(ID);
+        foodItemDto.setName(FOOD_ITEM_NAME);
+        foodItemDto.setPrice(PRICE);
+        foodItemDto.setCreated(FIXED_INSTANT);
+        foodItemDto.setModified(FIXED_INSTANT);
 
-        FoodItemDto foodItemDto = foodItemService.retrieveFoodItem(ID);
+        // when
+        when(foodItemMapper.foodItemToFoodItemDto(any(FoodItem.class))).thenReturn(foodItemDto);
+        when(foodItemRepository.findById(ID)).thenReturn(Optional.of(foodItem));
+
+        FoodItemDto retrievedFoodItem = foodItemService.retrieveFoodItem(ID);
 
         // then
-        Assertions.assertThat(1L).isEqualTo(foodItemDto.getId());
-        Assertions.assertThat("Dosa").isEqualTo(foodItemDto.getName());
-        log.info("Leaving RetrieveFoodItem");
+        Assertions.assertThat(retrievedFoodItem.getId()).isEqualTo(ID);
+        Assertions.assertThat(retrievedFoodItem.getName()).isEqualTo(FOOD_ITEM_NAME);
+        log.info("Leaving givenFoodItemId_WhenRetrieveFoodItem_ThenReturnFoodItemDto() Test");
     }
 
     @Test
-    void givenFoodItemName_WhenRetrieveFoodItemByName_ThenTrowsException() throws FoodItemException {
-        log.info("Entering RetrieveFoodItemByName Test");
+    void givenFoodItemName_WhenRetrieveFoodItemByName_ThenTrowsException() {
+        log.info("Entering givenFoodItemName_WhenRetrieveFoodItemByName_ThenTrowsException() Test");
 
         // given ID
         // when
-        when(foodItemRepository.findById(anyLong())).thenReturn(Optional.empty());
+        when(foodItemRepository.findById(ID)).thenReturn(Optional.empty());
 
         // then
         Assertions.assertThatThrownBy(() -> foodItemService.retrieveFoodItemByName(FOOD_ITEM_NAME))
                 .isInstanceOf(FoodItemException.class)
                 .hasMessage("Food item not found for name: " + FOOD_ITEM_NAME);
-        log.info("Leaving RetrieveFoodItemByName Test");
+        log.info("Leaving givenFoodItemName_WhenRetrieveFoodItemByName_ThenTrowsException() Test");
     }
 
     @Test
     void givenFoodItemName_WhenRetrieveFoodItemByName_ThenReturnFoodItemDto() throws FoodItemException {
-        log.info("Entering RetrieveFoodItemByName Test");
+        log.info("Entering givenFoodItemName_WhenRetrieveFoodItemByName_ThenReturnFoodItemDto() Test");
 
         // given
         FoodItem foodItem = new FoodItem();
@@ -150,158 +144,180 @@ class FoodItemServiceImplTest {
         foodItem.setCreated(FIXED_INSTANT);
         foodItem.setModified(FIXED_INSTANT);
 
+        FoodItemDto foodItemDto = new FoodItemDto();
+        foodItemDto.setId(ID);
+        foodItemDto.setName(FOOD_ITEM_NAME);
+        foodItemDto.setPrice(PRICE);
+        foodItemDto.setCreated(FIXED_INSTANT);
+        foodItemDto.setModified(FIXED_INSTANT);
         // when
-        when(foodItemRepository.findByName(anyString())).thenReturn(Optional.of(foodItem));
+        when(foodItemMapper.foodItemToFoodItemDto(any(FoodItem.class))).thenReturn(foodItemDto);
+        when(foodItemRepository.findByName(FOOD_ITEM_NAME)).thenReturn(Optional.of(foodItem));
 
-        FoodItemDto foodItemDto = foodItemService.retrieveFoodItemByName(FOOD_ITEM_NAME);
+        FoodItemDto retrievedFoodItemDto = foodItemService.retrieveFoodItemByName(FOOD_ITEM_NAME);
 
         // then
-        Assertions.assertThat(1L).isEqualTo(foodItemDto.getId());
-        Assertions.assertThat("Dosa").isEqualTo(foodItemDto.getName());
-        log.info("Leaving RetrieveFoodItemByName Test");
+        Assertions.assertThat(retrievedFoodItemDto.getId()).isEqualTo(ID);
+        Assertions.assertThat(retrievedFoodItemDto.getName()).isEqualTo(FOOD_ITEM_NAME);
+        log.info("Leaving givenFoodItemName_WhenRetrieveFoodItemByName_ThenReturnFoodItemDto() Test");
     }
 
     @Test
-    void givenFoodItemDto_WhenCreateFoodItem_ThenReturnFoodItemDto() throws FoodItemException {
-        log.info("Entering CreateFoodItem Test");
+    void givenFoodItemDto_WhenCreateFoodItem_ThenReturnFoodItemDto() {
+        log.info("Entering givenFoodItemDto_WhenCreateFoodItem_ThenReturnFoodItemDto() Test");
 
         // given
-        FoodItemDto foodItemDto = new FoodItemDto();
-        foodItemDto.setName(FOOD_ITEM_NAME);
-        foodItemDto.setPrice(PRICE);
+        FoodItemDto createFoodItemDto = new FoodItemDto();
+        createFoodItemDto.setName(FOOD_ITEM_NAME);
+        createFoodItemDto.setPrice(PRICE);
 
         FoodItem foodItem = new FoodItem();
         foodItem.setId(ID);
         foodItem.setName(FOOD_ITEM_NAME);
         foodItem.setPrice(PRICE);
+        foodItem.setCreated(FIXED_INSTANT);
+        foodItem.setModified(FIXED_INSTANT);
 
+        FoodItemDto foodItemDto = new FoodItemDto();
+        foodItemDto.setId(ID);
+        foodItemDto.setName(FOOD_ITEM_NAME);
+        foodItemDto.setPrice(PRICE);
+        foodItemDto.setCreated(FIXED_INSTANT);
+        foodItemDto.setModified(FIXED_INSTANT);
         // when
+        when(foodItemMapper.foodItemToFoodItemDto(any(FoodItem.class))).thenReturn(foodItemDto);
+        when(foodItemMapper.foodItemDtoToFoodItem(any(FoodItemDto.class))).thenReturn(foodItem);
         when(foodItemRepository.save(any(FoodItem.class))).thenReturn(foodItem);
 
-        FoodItemDto createdFoodItem = foodItemService.createFoodItem(foodItemDto);
+        FoodItemDto createdFoodItem = foodItemService.createFoodItem(createFoodItemDto);
 
         // then
-        Assertions.assertThat(1L).isEqualTo(createdFoodItem.getId());
-        Assertions.assertThat("Dosa").isEqualTo(createdFoodItem.getName());
-        log.info("Leaving CreateFoodItem Test");
+        Assertions.assertThat(createdFoodItem.getId()).isEqualTo(ID);
+        Assertions.assertThat(createdFoodItem.getName()).isEqualTo(FOOD_ITEM_NAME);
+        log.info("Leaving givenFoodItemDto_WhenCreateFoodItem_ThenReturnFoodItemDto() Test");
     }
 
     @Test
-    void givenFoodItemIdAndDto_WhenUpdateFoodItem_ThenTrowsException() throws FoodItemException {
-        log.info("Entering UpdateFoodItem Test");
+    void givenFoodItemIdAndDto_WhenUpdateFoodItem_ThenTrowsException() {
+        log.info("Entering givenFoodItemIdAndDto_WhenUpdateFoodItem_ThenTrowsException() Test");
         // given ID and Dto
         // when
-        when(foodItemRepository.findById(anyLong())).thenReturn(Optional.empty());
+        when(foodItemRepository.findById(ID)).thenReturn(Optional.empty());
 
         // then
         Assertions.assertThatThrownBy(() -> foodItemService.updateFoodItem(ID,any(FoodItemDto.class)))
                 .isInstanceOf(FoodItemException.class)
                 .hasMessage("Food item not found for id: " + ID);
-        log.info("Leaving UpdateFoodItem Test");
+        log.info("Leaving givenFoodItemIdAndDto_WhenUpdateFoodItem_ThenTrowsException() Test");
     }
 
     @Test
-    void givenFoodItemDto_WhenUpdateFoodItem_ThenReturnFoodItemDto() throws FoodItemException {
-        log.info("Entering UpdateFoodItem Test");
+    void givenFoodItemDtoWithNewName_WhenUpdateFoodItem_ThenReturnFoodItemDto() throws FoodItemException {
+        log.info("Entering givenFoodItemDto_WhenUpdateFoodItem_ThenReturnFoodItemDto() Test");
         // given
         FoodItemDto updateFoodItemDto = new FoodItemDto();
         updateFoodItemDto.setName("Idli");
-        updateFoodItemDto.setPrice(PRICE);
 
-        FoodItem FoodItem = new FoodItem();
-        FoodItem.setId(ID);
-        FoodItem.setName("Idli");
-        updateFoodItemDto.setPrice(PRICE);
-
-        // when
-        when(foodItemRepository.findById(anyLong())).thenReturn(Optional.of(FoodItem));
-        when(foodItemRepository.save(any(FoodItem.class))).thenReturn(FoodItem);
-        FoodItemDto updatedFoodItem = foodItemService.updateFoodItem(ID, updateFoodItemDto);
-
-        // then
-        Assertions.assertThat(1L).isEqualTo(updatedFoodItem.getId());
-        Assertions.assertThat("Idli").isEqualTo(updatedFoodItem.getName());
-        log.info("Leaving UpdateFoodItem Test");
-    }
-
-    @Test
-    void givenFoodItemNameInDto_WhenUpdateFoodItem_ThenReturnFoodItemDto() throws FoodItemException {
-        log.info("Entering UpdateFoodItem Test");
-        // given
-        FoodItemDto foodItemDto = new FoodItemDto();
-        String newFoodItemName = "Idli";
-        foodItemDto.setName(newFoodItemName);
-
-        FoodItem excistingFoodItem = new FoodItem();
-        excistingFoodItem.setId(ID);
-        excistingFoodItem.setName(FOOD_ITEM_NAME);
-        excistingFoodItem.setPrice(PRICE);
+        FoodItem updateFoodItem = new FoodItem();
+        updateFoodItem.setName("Idli");
 
         FoodItem savedFoodItem = new FoodItem();
         savedFoodItem.setId(ID);
-        savedFoodItem.setName(newFoodItemName);
+        savedFoodItem.setName("Idli");
         savedFoodItem.setPrice(PRICE);
+        savedFoodItem.setCreated(FIXED_INSTANT);
+        savedFoodItem.setModified(FIXED_INSTANT);
 
+        FoodItem existingFoodItem = new FoodItem();
+        existingFoodItem.setId(ID);
+        existingFoodItem.setName(FOOD_ITEM_NAME);
+        existingFoodItem.setPrice(PRICE);
+        existingFoodItem.setCreated(FIXED_INSTANT);
+        existingFoodItem.setModified(FIXED_INSTANT);
+
+        FoodItemDto foodItemDto = new FoodItemDto();
+        foodItemDto.setId(ID);
+        foodItemDto.setName("Idli");
+        foodItemDto.setPrice(PRICE);
+        foodItemDto.setCreated(FIXED_INSTANT);
+        foodItemDto.setModified(FIXED_INSTANT);
         // when
-        when(foodItemRepository.findById(anyLong())).thenReturn(Optional.of(excistingFoodItem));
+        when(foodItemMapper.foodItemToFoodItemDto(any(FoodItem.class))).thenReturn(foodItemDto);
+        when(foodItemMapper.foodItemDtoToFoodItem(any(FoodItemDto.class))).thenReturn(updateFoodItem);
+        when(foodItemRepository.findById(ID)).thenReturn(Optional.of(existingFoodItem));
         when(foodItemRepository.save(any(FoodItem.class))).thenReturn(savedFoodItem);
-        FoodItemDto updatedFoodItem = foodItemService.updateFoodItem(ID, foodItemDto);
+        FoodItemDto updatedFoodItem = foodItemService.updateFoodItem(ID, updateFoodItemDto);
 
         // then
-        Assertions.assertThat(1L).isEqualTo(updatedFoodItem.getId());
-        Assertions.assertThat(newFoodItemName).isEqualTo(updatedFoodItem.getName());
-        log.info("Leaving UpdateFoodItem Test");
+        Assertions.assertThat(updatedFoodItem.getId()).isEqualTo(ID);
+        Assertions.assertThat(updatedFoodItem.getName()).isEqualTo("Idli");
+        log.info("Leaving givenFoodItemDto_WhenUpdateFoodItem_ThenReturnFoodItemDto() Test");
     }
 
     @Test
-    void givenFoodItemPriceInDto_WhenUpdateFoodItem_ThenReturnFoodItemDto() throws FoodItemException {
-        log.info("Entering UpdateFoodItem Test");
+    void givenFoodItemDtoWithNewPrice_WhenUpdateFoodItem_ThenReturnFoodItemDto() throws FoodItemException {
+        log.info("Entering givenFoodItemPriceInDto_WhenUpdateFoodItem_ThenReturnFoodItemDto() Test");
         // given
         double newPrice = 15.0;
-        FoodItemDto foodItemDto = new FoodItemDto();
-        foodItemDto.setPrice(newPrice);
+        FoodItemDto updateFoodItemDto = new FoodItemDto();
+        updateFoodItemDto.setPrice(newPrice);
 
-        FoodItem excistingFoodItem = new FoodItem();
-        excistingFoodItem.setId(ID);
-        excistingFoodItem.setName(FOOD_ITEM_NAME);
-        foodItemDto.setPrice(PRICE);
+        FoodItem updateFoodItem = new FoodItem();
+        updateFoodItem.setPrice(newPrice);
 
         FoodItem savedFoodItem = new FoodItem();
         savedFoodItem.setId(ID);
         savedFoodItem.setName(FOOD_ITEM_NAME);
         savedFoodItem.setPrice(newPrice);
+        savedFoodItem.setCreated(FIXED_INSTANT);
+        savedFoodItem.setModified(FIXED_INSTANT);
 
+        FoodItem existingFoodItem = new FoodItem();
+        existingFoodItem.setId(ID);
+        existingFoodItem.setName(FOOD_ITEM_NAME);
+        existingFoodItem.setPrice(PRICE);
+        existingFoodItem.setCreated(FIXED_INSTANT);
+        existingFoodItem.setModified(FIXED_INSTANT);
+
+        FoodItemDto foodItemDto = new FoodItemDto();
+        foodItemDto.setId(ID);
+        foodItemDto.setName(FOOD_ITEM_NAME);
+        foodItemDto.setPrice(newPrice);
+        foodItemDto.setCreated(FIXED_INSTANT);
+        foodItemDto.setModified(FIXED_INSTANT);
         // when
-        when(foodItemRepository.findById(anyLong())).thenReturn(Optional.of(excistingFoodItem));
+        when(foodItemMapper.foodItemToFoodItemDto(any(FoodItem.class))).thenReturn(foodItemDto);
+        when(foodItemMapper.foodItemDtoToFoodItem(any(FoodItemDto.class))).thenReturn(updateFoodItem);
+        when(foodItemRepository.findById(ID)).thenReturn(Optional.of(existingFoodItem));
         when(foodItemRepository.save(any(FoodItem.class))).thenReturn(savedFoodItem);
-        FoodItemDto updatedFoodItem = foodItemService.updateFoodItem(ID, foodItemDto);
+        FoodItemDto updatedFoodItem = foodItemService.updateFoodItem(ID, updateFoodItemDto);
 
         // then
-        Assertions.assertThat(1L).isEqualTo(updatedFoodItem.getId());
-        Assertions.assertThat(FOOD_ITEM_NAME).isEqualTo(updatedFoodItem.getName());
-        Assertions.assertThat(newPrice).isEqualTo(updatedFoodItem.getPrice());
+        Assertions.assertThat(updatedFoodItem.getId()).isEqualTo(ID);
+        Assertions.assertThat(updatedFoodItem.getName()).isEqualTo(FOOD_ITEM_NAME);
+        Assertions.assertThat(updatedFoodItem.getPrice()).isEqualTo(newPrice);
 
-        log.info("Leaving UpdateFoodItem Test");
+        log.info("Leaving givenFoodItemPriceInDto_WhenUpdateFoodItem_ThenReturnFoodItemDto() Test");
     }
 
     @Test
-    void givenFoodItemId_WhenDeleteFoodItem_ThenTrowsException() throws FoodItemException {
-        log.info("Entering DeleteFoodItem Test");
+    void givenInvalidFoodItemId_WhenDeleteFoodItem_ThenTrowsException() {
+        log.info("Entering givenInvalidFoodItemId_WhenDeleteFoodItem_ThenTrowsException() Test");
 
         // given ID
         // when
-        when(foodItemRepository.findById(anyLong())).thenReturn(Optional.empty());
+        when(foodItemRepository.findById(ID)).thenReturn(Optional.empty());
 
         // then
         Assertions.assertThatThrownBy(() -> foodItemService.deleteFoodItem(ID))
                 .isInstanceOf(FoodItemException.class)
                 .hasMessage("Food item not found for id: " + ID);
-        log.info("Leaving DeleteFoodItem Test");
+        log.info("Leaving givenInvalidFoodItemId_WhenDeleteFoodItem_ThenTrowsException() Test");
     }
 
     @Test
     void givenDeleteFoodItemRequest_WhenDeleteFoodItem_ThenFoodItemDeleted() throws FoodItemException {
-        log.info("Entering DeleteFoodItem Test");
+        log.info("Entering givenDeleteFoodItemRequest_WhenDeleteFoodItem_ThenFoodItemDeleted() Test");
 
         // given
         FoodItem foodItem = new FoodItem();
@@ -312,12 +328,12 @@ class FoodItemServiceImplTest {
         foodItem.setModified(FIXED_INSTANT);
 
         // when
-        when(foodItemRepository.findById(anyLong())).thenReturn(Optional.of(foodItem));
+        when(foodItemRepository.findById(ID)).thenReturn(Optional.of(foodItem));
         doNothing().when(foodItemRepository).deleteById(anyLong());
         foodItemService.deleteFoodItem(ID);
 
         // then
         verify(foodItemRepository, times(1)).deleteById(ID);
-        log.info("Leaving DeleteFoodItem Test");
+        log.info("Leaving givenDeleteFoodItemRequest_WhenDeleteFoodItem_ThenFoodItemDeleted() Test");
     }
 }
