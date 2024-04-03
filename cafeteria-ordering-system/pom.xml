@@ -24,7 +24,8 @@
 		<jackson-datatype-jsr310.version>2.15.2</jackson-datatype-jsr310.version>
 		<checkstyle.version>10.14.1</checkstyle.version>
 		<breezeware-google-checkstyle.configLocation>
-			https://breezeware-dev-config.s3.amazonaws.com/BreezewareGoogleCheckStyle.xml
+<!--			https://breezeware-dev-config.s3.amazonaws.com/BreezewareGoogleCheckStyle.xml-->
+			src/main/resources/BreezewareGoogleCheckStyle.xml
 		</breezeware-google-checkstyle.configLocation>
 	</properties>
 

@@ -2,10 +2,10 @@ package net.breezeware.service.impl;
 
 import lombok.extern.slf4j.Slf4j;
 import net.breezeware.dao.*;
-import net.breezeware.dto.foodItemDto.FoodItemDto;
-import net.breezeware.dto.foodOrderDto.CreateFoodOrderDto;
-import net.breezeware.dto.foodOrderDto.FoodOrderDto;
-import net.breezeware.dto.foodOrderDto.UpdateFoodOrderDto;
+import net.breezeware.dto.food.item.FoodItemDto;
+import net.breezeware.dto.food.order.CreateFoodOrderDto;
+import net.breezeware.dto.food.order.FoodOrderDto;
+import net.breezeware.dto.food.order.UpdateFoodOrderDto;
 import net.breezeware.entity.*;
 import net.breezeware.exception.FoodItemException;
 import net.breezeware.exception.FoodMenuException;

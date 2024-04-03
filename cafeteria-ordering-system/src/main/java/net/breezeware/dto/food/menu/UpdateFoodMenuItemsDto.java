@@ -1,15 +1,19 @@
-package net.breezeware.dto.foodMenuDto;
+package net.breezeware.dto.food.menu;
+
+import java.util.List;
+
+import javax.validation.constraints.NotNull;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonRootName;
-import io.swagger.v3.oas.annotations.media.Schema;
+
+import net.breezeware.dto.food.item.FoodItemDto;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import net.breezeware.dto.foodItemDto.FoodItemDto;
 
-import javax.validation.constraints.NotNull;
-import java.util.List;
+import io.swagger.v3.oas.annotations.media.Schema;
 
 @Data
 @JsonRootName("FoodMenuItems")

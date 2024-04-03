@@ -1,13 +1,16 @@
-package net.breezeware.dto.foodOrderDto;
+package net.breezeware.dto.food.order;
+
+import java.util.Map;
+
+import javax.validation.constraints.NotNull;
 
 import com.fasterxml.jackson.annotation.JsonRootName;
-import io.swagger.v3.oas.annotations.media.Schema;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.validation.constraints.NotNull;
-import java.util.Map;
+import io.swagger.v3.oas.annotations.media.Schema;
 
 @Data
 @JsonRootName("CreateFoodOrder")

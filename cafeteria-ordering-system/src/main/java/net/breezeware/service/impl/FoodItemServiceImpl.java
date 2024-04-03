@@ -1,19 +1,21 @@
 package net.breezeware.service.impl;
 
-import lombok.AllArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import net.breezeware.dao.FoodItemRepository;
-import net.breezeware.dto.foodItemDto.FoodItemDto;
-import net.breezeware.entity.FoodItem;
-import net.breezeware.exception.FoodItemException;
-import net.breezeware.mapper.FoodItemMapper;
-import net.breezeware.service.api.FoodItemService;
-import org.springframework.stereotype.Service;
-
 import java.time.Instant;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+
+import org.springframework.stereotype.Service;
+
+import net.breezeware.dao.FoodItemRepository;
+import net.breezeware.dto.food.item.FoodItemDto;
+import net.breezeware.entity.FoodItem;
+import net.breezeware.exception.FoodItemException;
+import net.breezeware.mapper.FoodItemMapper;
+import net.breezeware.service.api.FoodItemService;
+
+import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @Service
 @AllArgsConstructor
@@ -30,10 +32,8 @@ public class FoodItemServiceImpl implements FoodItemService {
         if (foodItems.isEmpty()) {
             throw new FoodItemException("No food Items found");
         }
-        List<FoodItemDto> listOfFoodItems = foodItems
-                .stream()
-                .map(foodItemMapper::foodItemToFoodItemDto)
-                .toList();
+
+        List<FoodItemDto> listOfFoodItems = foodItems.stream().map(foodItemMapper::foodItemToFoodItemDto).toList();
         log.info("Leaving retrieveFoodItems()");
         return listOfFoodItems;
     }
@@ -41,8 +41,8 @@ public class FoodItemServiceImpl implements FoodItemService {
     @Override
     public FoodItemDto retrieveFoodItem(Long id) throws FoodItemException {
         log.info("Entering retrieveFoodItem()");
-        FoodItem foodItem = foodItemRepository.findById(id).orElseThrow(() ->
-                new FoodItemException("Food item not found for id: " + id));
+        FoodItem foodItem = foodItemRepository.findById(id)
+                .orElseThrow(() -> new FoodItemException("Food item not found for id: " + id));
         FoodItemDto foodItemDto = foodItemMapper.foodItemToFoodItemDto(foodItem);
         log.info("Leaving retrieveFoodItem()");
         return foodItemDto;
@@ -51,7 +51,8 @@ public class FoodItemServiceImpl implements FoodItemService {
     @Override
     public FoodItemDto retrieveFoodItemByName(String name) throws FoodItemException {
         log.info("Entering retrieveFoodItemByName()");
-        FoodItem foodItem = foodItemRepository.findByName(name).orElseThrow(() -> new FoodItemException("Food item not found for name: " + name));
+        FoodItem foodItem = foodItemRepository.findByName(name)
+                .orElseThrow(() -> new FoodItemException("Food item not found for name: " + name));
         FoodItemDto foodItemDto = foodItemMapper.foodItemToFoodItemDto(foodItem);
         log.info("Leaving retrieveFoodItemByName()");
         return foodItemDto;
@@ -72,19 +73,22 @@ public class FoodItemServiceImpl implements FoodItemService {
         log.info("Entering updateFoodItem()");
         Optional<FoodItem> retrievedFoodItem = foodItemRepository.findById(id);
         FoodItem foodItem = foodItemMapper.foodItemDtoToFoodItem(foodItemDto);
-        if(retrievedFoodItem.isPresent()) {
+        if (retrievedFoodItem.isPresent()) {
             foodItem.setId(retrievedFoodItem.get().getId());
             if (Objects.isNull(foodItemDto.getName())) {
                 foodItem.setName(retrievedFoodItem.get().getName());
             }
+
             if (Objects.isNull(foodItemDto.getPrice())) {
                 foodItem.setPrice(retrievedFoodItem.get().getPrice());
             }
+
             foodItem.setCreated(retrievedFoodItem.get().getCreated());
             foodItem.setModified(Instant.now());
         } else {
             throw new FoodItemException("Food item not found for id: " + id);
         }
+
         log.info("Leaving updateFoodItem()");
         return processFoodItem(foodItem);
     }
@@ -92,8 +96,8 @@ public class FoodItemServiceImpl implements FoodItemService {
     @Override
     public void deleteFoodItem(Long id) throws FoodItemException {
         log.info("Entering deleteFoodItem()");
-        FoodItem foodItem = foodItemRepository.findById(id).orElseThrow(() ->
-                new FoodItemException("Food item not found for id: " + id));
+        FoodItem foodItem = foodItemRepository.findById(id)
+                .orElseThrow(() -> new FoodItemException("Food item not found for id: " + id));
         foodItemRepository.deleteById(foodItem.getId());
         log.info("Leaving deleteFoodItem()");
     }

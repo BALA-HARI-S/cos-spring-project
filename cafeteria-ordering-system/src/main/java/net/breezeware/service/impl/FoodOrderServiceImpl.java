@@ -1,16 +1,25 @@
 package net.breezeware.service.impl;
 
-import lombok.AllArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
+import java.time.Instant;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+
+import javax.transaction.Transactional;
+
+import org.springframework.stereotype.Service;
+
 import net.breezeware.dao.FoodMenuItemMapRepository;
 import net.breezeware.dao.FoodMenuItemQuantityMapRepository;
 import net.breezeware.dao.FoodMenuRepository;
 import net.breezeware.dao.FoodOrderRepository;
 import net.breezeware.dao.OrderFoodItemMapRepository;
-import net.breezeware.dto.foodItemDto.FoodItemDto;
-import net.breezeware.dto.foodOrderDto.CreateFoodOrderDto;
-import net.breezeware.dto.foodOrderDto.FoodOrderDto;
-import net.breezeware.dto.foodOrderDto.UpdateFoodOrderDto;
+import net.breezeware.dto.food.item.FoodItemDto;
+import net.breezeware.dto.food.order.CreateFoodOrderDto;
+import net.breezeware.dto.food.order.FoodOrderDto;
+import net.breezeware.dto.food.order.UpdateFoodOrderDto;
 import net.breezeware.entity.FoodItem;
 import net.breezeware.entity.FoodMenu;
 import net.breezeware.entity.FoodMenuItemMap;
@@ -24,16 +33,9 @@ import net.breezeware.exception.FoodOrderException;
 import net.breezeware.mapper.FoodItemMapper;
 import net.breezeware.service.api.FoodItemService;
 import net.breezeware.service.api.FoodOrderService;
-import org.springframework.stereotype.Service;
 
-import javax.transaction.Transactional;
-import java.time.Instant;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-
+import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @Service
 @AllArgsConstructor
@@ -60,7 +62,7 @@ public class FoodOrderServiceImpl implements FoodOrderService {
         List<FoodOrder> foodOrderList = foodOrderRepository.findAll();
         List<FoodOrderDto> foodOrderDtoList = new ArrayList<>();
 
-        for(FoodOrder foodOrder: foodOrderList){
+        for (FoodOrder foodOrder : foodOrderList) {
             FoodOrderDto foodOrderDto = new FoodOrderDto();
             foodOrderDto.setId(foodOrder.getId());
             foodOrderDto.setCustomerId(foodOrder.getCustomerId());
@@ -71,7 +73,7 @@ public class FoodOrderServiceImpl implements FoodOrderService {
             List<OrderFoodItemMap> orderFoodItemMaps = orderFoodItemMapRepository.findByFoodOrderId(foodOrder.getId());
             Map<FoodItemDto, Integer> orderFoodItemQuantityMap = new HashMap<>();
 
-            for (OrderFoodItemMap itemMap: orderFoodItemMaps){
+            for (OrderFoodItemMap itemMap : orderFoodItemMaps) {
                 FoodItemDto foodItemDto = foodItemService.retrieveFoodItem(itemMap.getFoodItem().getId());
                 Integer quantity = itemMap.getQuantity();
                 orderFoodItemQuantityMap.put(foodItemDto, quantity);
@@ -88,8 +90,8 @@ public class FoodOrderServiceImpl implements FoodOrderService {
     @Override
     public FoodOrderDto retrieveFoodOrder(Long id) throws FoodOrderException, FoodItemException {
         log.info("Entering retrieveFoodOrder() service");
-        FoodOrder foodOrder = foodOrderRepository.findById(id).orElseThrow(() ->
-                new FoodOrderException("Order not found for id: " + id));
+        FoodOrder foodOrder = foodOrderRepository.findById(id)
+                .orElseThrow(() -> new FoodOrderException("Order not found for id: " + id));
 
         FoodOrderDto foodOrderDto = new FoodOrderDto();
         foodOrderDto.setId(foodOrder.getId());
@@ -101,7 +103,7 @@ public class FoodOrderServiceImpl implements FoodOrderService {
         List<OrderFoodItemMap> orderFoodItemMaps = orderFoodItemMapRepository.findByFoodOrderId(foodOrder.getId());
         Map<FoodItemDto, Integer> orderFoodItemQuantityMap = new HashMap<>();
 
-        for (OrderFoodItemMap itemMap: orderFoodItemMaps){
+        for (OrderFoodItemMap itemMap : orderFoodItemMaps) {
             FoodItemDto foodItemDto = foodItemService.retrieveFoodItem(itemMap.getFoodItem().getId());
             Integer quantity = itemMap.getQuantity();
             orderFoodItemQuantityMap.put(foodItemDto, quantity);
@@ -114,27 +116,29 @@ public class FoodOrderServiceImpl implements FoodOrderService {
 
     @Override
     @Transactional
-    public FoodOrderDto createFoodOrder(CreateFoodOrderDto createFoodOrderDto) throws FoodItemException, FoodOrderException, FoodMenuException {
+    public FoodOrderDto createFoodOrder(CreateFoodOrderDto createFoodOrderDto)
+            throws FoodItemException, FoodOrderException, FoodMenuException {
         log.info("Entering createFoodOrder() service");
         FoodOrder foodOrder = new FoodOrder();
         foodOrder.setCustomerId(createFoodOrderDto.getCustomerId());
         foodOrder.setOrderStatus(OrderStatus.ORDER_CART);
         foodOrder.setCreated(Instant.now());
         double totalCost = 0.00;
-        FoodMenu foodMenu = foodMenuRepository.findById(createFoodOrderDto.getMenuId()).orElseThrow(() ->
-                new FoodMenuException("Food menu not found for id:" + createFoodOrderDto.getMenuId()));
+        FoodMenu foodMenu = foodMenuRepository.findById(createFoodOrderDto.getMenuId()).orElseThrow(
+                () -> new FoodMenuException("Food menu not found for id:" + createFoodOrderDto.getMenuId()));
 
-        for(Long foodItemId: createFoodOrderDto.getFoodItemsQuantityMap().keySet()){
+        for (Long foodItemId : createFoodOrderDto.getFoodItemsQuantityMap().keySet()) {
             FoodItemDto foodItem = foodItemService.retrieveFoodItem(foodItemId);
             Integer quantity = createFoodOrderDto.getFoodItemsQuantityMap().get(foodItemId);
             totalCost += foodItem.getPrice() * quantity;
 
             List<FoodMenuItemMap> foodMenuItemMaps = foodMenuItemMapRepository.findByFoodMenuId(foodMenu.getId());
-            for (FoodMenuItemMap itemMap: foodMenuItemMaps){
-                if(Objects.equals(itemMap.getFoodItem().getId(), foodItemId)){
-                    FoodMenuItemQuantityMap itemQuantityMap = foodMenuItemQuantityMapRepository.findByFoodMenuItemMapId(itemMap.getId());
+            for (FoodMenuItemMap itemMap : foodMenuItemMaps) {
+                if (Objects.equals(itemMap.getFoodItem().getId(), foodItemId)) {
+                    FoodMenuItemQuantityMap itemQuantityMap =
+                            foodMenuItemQuantityMapRepository.findByFoodMenuItemMapId(itemMap.getId());
                     int foodMenuItemQuantity = itemQuantityMap.getQuantity();
-                    if( foodMenuItemQuantity == 0 || quantity > foodMenuItemQuantity){
+                    if (foodMenuItemQuantity == 0 || quantity > foodMenuItemQuantity) {
                         throw new FoodOrderException("Cannot place your order, Insufficient food items");
                     } else if (quantity <= 0) {
                         throw new FoodOrderException("Cannot place your order, Invalid quantity provided");
@@ -142,21 +146,24 @@ public class FoodOrderServiceImpl implements FoodOrderService {
                         itemQuantityMap.setQuantity(foodMenuItemQuantity - quantity);
                         foodMenuItemQuantityMapRepository.save(itemQuantityMap);
                     }
+
                 }
+
             }
+
         }
 
         foodOrder.setTotalCost(totalCost);
         FoodOrder savedFoodOrder = foodOrderRepository.save(foodOrder);
 
         Map<FoodItemDto, Integer> foodItemQuantity = new HashMap<>();
-        for(Long foodItemId: createFoodOrderDto.getFoodItemsQuantityMap().keySet()){
+        for (Long foodItemId : createFoodOrderDto.getFoodItemsQuantityMap().keySet()) {
             FoodItemDto foodItemDto = foodItemService.retrieveFoodItem(foodItemId);
-            FoodItem foodItem = foodItemMapper.foodItemDtoToFoodItem(foodItemDto);
-            Integer quantity = createFoodOrderDto.getFoodItemsQuantityMap().get(foodItemId);
 
+            Integer quantity = createFoodOrderDto.getFoodItemsQuantityMap().get(foodItemId);
             foodItemQuantity.put(foodItemDto, quantity);
 
+            FoodItem foodItem = foodItemMapper.foodItemDtoToFoodItem(foodItemDto);
             OrderFoodItemMap orderFoodItemMap = new OrderFoodItemMap();
             orderFoodItemMap.setFoodOrder(savedFoodOrder);
             orderFoodItemMap.setFoodMenu(foodMenu);
@@ -164,6 +171,7 @@ public class FoodOrderServiceImpl implements FoodOrderService {
             orderFoodItemMap.setQuantity(quantity);
             orderFoodItemMapRepository.save(orderFoodItemMap);
         }
+
         FoodOrderDto foodOrderDto = new FoodOrderDto();
         foodOrderDto.setId(savedFoodOrder.getId());
         foodOrderDto.setCustomerId(savedFoodOrder.getCustomerId());
@@ -177,16 +185,19 @@ public class FoodOrderServiceImpl implements FoodOrderService {
     }
 
     @Override
-    public FoodOrderDto updateFoodOrder(Long orderId,UpdateFoodOrderDto updateFoodOrderDto) throws FoodOrderException, FoodItemException {
+    public FoodOrderDto updateFoodOrder(Long orderId, UpdateFoodOrderDto updateFoodOrderDto)
+            throws FoodOrderException, FoodItemException {
         log.info("Entering updateFoodOrder() service");
-        FoodOrder foodOrder = foodOrderRepository.findById(orderId).orElseThrow(() ->
-                new FoodOrderException("Order not found for id: " + orderId));
-        if(!Objects.isNull(updateFoodOrderDto.getOrderStatus())){
+        FoodOrder foodOrder = foodOrderRepository.findById(orderId)
+                .orElseThrow(() -> new FoodOrderException("Order not found for id: " + orderId));
+        if (!Objects.isNull(updateFoodOrderDto.getOrderStatus())) {
             foodOrder.setOrderStatus(updateFoodOrderDto.getOrderStatus());
         }
-        if(!Objects.isNull(updateFoodOrderDto.getTotalCost())){
+
+        if (!Objects.isNull(updateFoodOrderDto.getTotalCost())) {
             foodOrder.setTotalCost(updateFoodOrderDto.getTotalCost());
         }
+
         FoodOrder savedFoodOrder = foodOrderRepository.save(foodOrder);
 
         log.info("Leaving updateFoodOrder() service");
@@ -195,16 +206,18 @@ public class FoodOrderServiceImpl implements FoodOrderService {
 
     @Override
     @Transactional
-    public FoodOrderDto addFoodItemToOrder(Long orderId,Long menuId, Long foodItemId, Integer quantity) throws FoodOrderException, FoodItemException, FoodMenuException {
+    public FoodOrderDto addFoodItemToOrder(Long orderId, Long menuId, Long foodItemId, Integer quantity)
+            throws FoodOrderException, FoodItemException, FoodMenuException {
         log.info("Entering addFoodItemToOrder() service");
-        FoodOrder foodOrder = foodOrderRepository.findById(orderId).orElseThrow(() ->
-                new FoodOrderException("Order not found for id: " + orderId));
-        FoodMenu foodMenu = foodMenuRepository.findById(menuId).orElseThrow(() ->
-                new FoodMenuException("Food menu not found for id:" + menuId));
+        FoodOrder foodOrder = foodOrderRepository.findById(orderId)
+                .orElseThrow(() -> new FoodOrderException("Order not found for id: " + orderId));
+        FoodMenu foodMenu = foodMenuRepository.findById(menuId)
+                .orElseThrow(() -> new FoodMenuException("Food menu not found for id:" + menuId));
         FoodItem foodItem = foodItemMapper.foodItemDtoToFoodItem(foodItemService.retrieveFoodItem(foodItemId));
-        OrderFoodItemMap retrievedOrderFoodItemMap = orderFoodItemMapRepository.findByFoodOrderIdAndFoodItemId(foodOrder.getId(),foodItem.getId());
+        OrderFoodItemMap retrievedOrderFoodItemMap =
+                orderFoodItemMapRepository.findByFoodOrderIdAndFoodItemId(foodOrder.getId(), foodItem.getId());
         OrderFoodItemMap savedOrderItem;
-        if (Objects.isNull(retrievedOrderFoodItemMap)){
+        if (Objects.isNull(retrievedOrderFoodItemMap)) {
             OrderFoodItemMap orderFoodItemMap = new OrderFoodItemMap();
             orderFoodItemMap.setFoodOrder(foodOrder);
             orderFoodItemMap.setFoodMenu(foodMenu);
@@ -216,18 +229,18 @@ public class FoodOrderServiceImpl implements FoodOrderService {
             savedOrderItem = orderFoodItemMapRepository.save(retrievedOrderFoodItemMap);
         }
 
-
         double totalCost = foodOrder.getTotalCost();
         totalCost += savedOrderItem.getFoodItem().getPrice() * quantity;
         foodOrder.setTotalCost(totalCost);
         FoodOrder savedFoodOrder = foodOrderRepository.save(foodOrder);
 
         List<FoodMenuItemMap> foodMenuItemMaps = foodMenuItemMapRepository.findByFoodMenuId(menuId);
-        for (FoodMenuItemMap itemMap: foodMenuItemMaps){
-            if(Objects.equals(itemMap.getFoodItem().getId(), foodItem.getId())){
-                FoodMenuItemQuantityMap itemQuantityMap = foodMenuItemQuantityMapRepository.findByFoodMenuItemMapId(itemMap.getId());
+        for (FoodMenuItemMap itemMap : foodMenuItemMaps) {
+            if (Objects.equals(itemMap.getFoodItem().getId(), foodItem.getId())) {
+                FoodMenuItemQuantityMap itemQuantityMap =
+                        foodMenuItemQuantityMapRepository.findByFoodMenuItemMapId(itemMap.getId());
                 int foodMenuItemQuantity = itemQuantityMap.getQuantity();
-                if( foodMenuItemQuantity == 0 || quantity > foodMenuItemQuantity){
+                if (foodMenuItemQuantity == 0 || quantity > foodMenuItemQuantity) {
                     throw new FoodOrderException("Cannot place your order, Insufficient food items");
                 } else if (quantity <= 0) {
                     throw new FoodOrderException("Cannot place your order, Invalid quantity provided");
@@ -235,7 +248,9 @@ public class FoodOrderServiceImpl implements FoodOrderService {
                     itemQuantityMap.setQuantity(foodMenuItemQuantity - quantity);
                     foodMenuItemQuantityMapRepository.save(itemQuantityMap);
                 }
+
             }
+
         }
 
         log.info("Leaving addFoodItemToOrder() service");
@@ -246,27 +261,32 @@ public class FoodOrderServiceImpl implements FoodOrderService {
     @Transactional
     public void deleteOrderFoodItem(Long orderId, Long foodItemId) throws FoodOrderException {
         log.info("Entering deleteOrderFoodItem() service");
-        FoodOrder foodOrder = foodOrderRepository.findById(orderId).orElseThrow(() ->
-                new FoodOrderException("Order not found for id: " + orderId));
+        FoodOrder foodOrder = foodOrderRepository.findById(orderId)
+                .orElseThrow(() -> new FoodOrderException("Order not found for id: " + orderId));
 
         List<OrderFoodItemMap> orderFoodItemMaps = orderFoodItemMapRepository.findByFoodOrderId(orderId);
-        for(OrderFoodItemMap orderItemMap: orderFoodItemMaps){
-            if(Objects.equals(orderItemMap.getFoodItem().getId(), foodItemId)){
+        for (OrderFoodItemMap orderItemMap : orderFoodItemMaps) {
+            if (Objects.equals(orderItemMap.getFoodItem().getId(), foodItemId)) {
                 double totalCost = foodOrder.getTotalCost();
                 totalCost -= orderItemMap.getFoodItem().getPrice() * orderItemMap.getQuantity();
                 foodOrder.setTotalCost(totalCost);
                 foodOrderRepository.save(foodOrder);
                 orderFoodItemMapRepository.delete(orderItemMap);
-                List<FoodMenuItemMap> foodMenuItemMaps = foodMenuItemMapRepository.findByFoodMenuId(orderItemMap.getFoodMenu().getId());
-                for (FoodMenuItemMap menuItemMap: foodMenuItemMaps){
-                    if(Objects.equals(menuItemMap.getFoodItem().getId(), orderItemMap.getFoodItem().getId())){
-                        FoodMenuItemQuantityMap itemQuantityMap = foodMenuItemQuantityMapRepository.findByFoodMenuItemMapId(menuItemMap.getId());
+                List<FoodMenuItemMap> foodMenuItemMaps =
+                        foodMenuItemMapRepository.findByFoodMenuId(orderItemMap.getFoodMenu().getId());
+                for (FoodMenuItemMap menuItemMap : foodMenuItemMaps) {
+                    if (Objects.equals(menuItemMap.getFoodItem().getId(), orderItemMap.getFoodItem().getId())) {
+                        FoodMenuItemQuantityMap itemQuantityMap =
+                                foodMenuItemQuantityMapRepository.findByFoodMenuItemMapId(menuItemMap.getId());
                         int foodMenuItemQuantity = itemQuantityMap.getQuantity();
-                            itemQuantityMap.setQuantity(foodMenuItemQuantity + orderItemMap.getQuantity());
-                            foodMenuItemQuantityMapRepository.save(itemQuantityMap);
+                        itemQuantityMap.setQuantity(foodMenuItemQuantity + orderItemMap.getQuantity());
+                        foodMenuItemQuantityMapRepository.save(itemQuantityMap);
                     }
+
                 }
+
             }
+
         }
 
         log.info("Leaving deleteOrderFoodItem() service");
@@ -276,21 +296,26 @@ public class FoodOrderServiceImpl implements FoodOrderService {
     @Transactional
     public void deleteFoodOrder(Long orderId) throws FoodOrderException {
         log.info("Entering deleteFoodOrder() service");
-        FoodOrder foodOrder = foodOrderRepository.findById(orderId).orElseThrow(() ->
-                new FoodOrderException("Order not found for id: " + orderId));
+        FoodOrder foodOrder = foodOrderRepository.findById(orderId)
+                .orElseThrow(() -> new FoodOrderException("Order not found for id: " + orderId));
         List<OrderFoodItemMap> orderFoodItemMaps = orderFoodItemMapRepository.findByFoodOrderId(orderId);
 
-        for(OrderFoodItemMap orderItemMap: orderFoodItemMaps){
-            List<FoodMenuItemMap> foodMenuItemMaps = foodMenuItemMapRepository.findByFoodMenuId(orderItemMap.getFoodMenu().getId());
-            for (FoodMenuItemMap menuItemMap: foodMenuItemMaps){
-                if(Objects.equals(menuItemMap.getFoodItem().getId(), orderItemMap.getFoodItem().getId())){
-                    FoodMenuItemQuantityMap itemQuantityMap = foodMenuItemQuantityMapRepository.findByFoodMenuItemMapId(menuItemMap.getId());
+        for (OrderFoodItemMap orderItemMap : orderFoodItemMaps) {
+            List<FoodMenuItemMap> foodMenuItemMaps =
+                    foodMenuItemMapRepository.findByFoodMenuId(orderItemMap.getFoodMenu().getId());
+            for (FoodMenuItemMap menuItemMap : foodMenuItemMaps) {
+                if (Objects.equals(menuItemMap.getFoodItem().getId(), orderItemMap.getFoodItem().getId())) {
+                    FoodMenuItemQuantityMap itemQuantityMap =
+                            foodMenuItemQuantityMapRepository.findByFoodMenuItemMapId(menuItemMap.getId());
                     int foodMenuItemQuantity = itemQuantityMap.getQuantity();
                     itemQuantityMap.setQuantity(foodMenuItemQuantity + orderItemMap.getQuantity());
                     foodMenuItemQuantityMapRepository.save(itemQuantityMap);
                 }
+
             }
+
         }
+
         orderFoodItemMapRepository.deleteByFoodOrderId(foodOrder.getId());
         foodOrderRepository.delete(foodOrder);
         log.info("Leaving deleteFoodOrder() service");

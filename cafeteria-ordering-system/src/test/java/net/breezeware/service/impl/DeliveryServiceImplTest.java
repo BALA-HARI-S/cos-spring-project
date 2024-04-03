@@ -2,8 +2,8 @@ package net.breezeware.service.impl;
 
 import lombok.extern.slf4j.Slf4j;
 import net.breezeware.dao.FoodOrderRepository;
-import net.breezeware.dto.foodItemDto.FoodItemDto;
-import net.breezeware.dto.foodOrderDto.FoodOrderDto;
+import net.breezeware.dto.food.item.FoodItemDto;
+import net.breezeware.dto.food.order.FoodOrderDto;
 import net.breezeware.entity.FoodOrder;
 import net.breezeware.entity.OrderStatus;
 import net.breezeware.exception.FoodItemException;

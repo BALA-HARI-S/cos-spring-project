@@ -1,6 +1,13 @@
 package net.breezeware;
 
-import lombok.AllArgsConstructor;
+import java.time.Instant;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
+
+import org.springframework.boot.CommandLineRunner;
+import org.springframework.stereotype.Component;
+
 import net.breezeware.dao.FoodItemRepository;
 import net.breezeware.dao.FoodMenuItemMapRepository;
 import net.breezeware.dao.FoodMenuItemQuantityMapRepository;
@@ -15,13 +22,8 @@ import net.breezeware.entity.FoodMenuItemQuantityMap;
 import net.breezeware.entity.FoodOrder;
 import net.breezeware.entity.OrderFoodItemMap;
 import net.breezeware.entity.OrderStatus;
-import org.springframework.boot.CommandLineRunner;
-import org.springframework.stereotype.Component;
 
-import java.time.Instant;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Set;
+import lombok.AllArgsConstructor;
 
 @Component
 @AllArgsConstructor
@@ -57,8 +59,8 @@ public class DataLoader implements CommandLineRunner {
         foodItemRepository.save(foodItem2);
         System.out.println("Loaded Food Item: " + foodItemRepository.count());
 
-
-        Set<Availability> menuAvailability = new HashSet<>(Arrays.asList(Availability.MONDAY,Availability.TUESDAY,Availability.WEDNESDAY));
+        Set<Availability> menuAvailability =
+                new HashSet<>(Arrays.asList(Availability.MONDAY, Availability.TUESDAY, Availability.WEDNESDAY));
 
         // Menu
         // Menu 1

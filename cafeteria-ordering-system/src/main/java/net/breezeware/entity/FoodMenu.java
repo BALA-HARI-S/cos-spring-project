@@ -1,8 +1,7 @@
 package net.breezeware.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import java.time.Instant;
+import java.util.Set;
 
 import javax.persistence.CollectionTable;
 import javax.persistence.Column;
@@ -17,8 +16,10 @@ import javax.persistence.Table;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-import java.time.Instant;
-import java.util.Set;
+
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
 @Entity
@@ -34,7 +35,7 @@ public class FoodMenu {
 
     @NotBlank(message = "The food menu name must not be empty")
     @Size(min = 1, max = 100)
-    @Column(name = "name",length = 100)
+    @Column(name = "name", length = 100)
     private String name;
 
     @NotNull(message = "The food menu created date and time must not be empty")

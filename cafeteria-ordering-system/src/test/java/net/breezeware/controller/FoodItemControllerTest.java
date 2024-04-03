@@ -3,7 +3,7 @@ package net.breezeware.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import lombok.extern.slf4j.Slf4j;
-import net.breezeware.dto.foodItemDto.FoodItemDto;
+import net.breezeware.dto.food.item.FoodItemDto;
 import net.breezeware.exception.CustomExceptionHandler;
 import net.breezeware.service.api.FoodItemService;
 import org.junit.jupiter.api.BeforeEach;

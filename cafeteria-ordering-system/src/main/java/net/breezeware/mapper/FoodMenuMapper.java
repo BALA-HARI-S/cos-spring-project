@@ -1,8 +1,9 @@
 package net.breezeware.mapper;
 
-import net.breezeware.dto.foodMenuDto.FoodMenuDto;
-import net.breezeware.entity.FoodMenu;
 import org.mapstruct.Mapper;
+
+import net.breezeware.dto.food.menu.FoodMenuDto;
+import net.breezeware.entity.FoodMenu;
 
 @Mapper(componentModel = "spring")
 public interface FoodMenuMapper {
