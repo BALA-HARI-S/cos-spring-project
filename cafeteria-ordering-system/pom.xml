@@ -21,7 +21,13 @@
 		<springdoc-openapi-ui.version>1.7.0</springdoc-openapi-ui.version>
 		<maven-checkstyle-plugin.version>3.2.1</maven-checkstyle-plugin.version>
 		<maven-pmd-plugin.version>3.13.0</maven-pmd-plugin.version>
+		<jackson-datatype-jsr310.version>2.15.2</jackson-datatype-jsr310.version>
+		<checkstyle.version>10.14.1</checkstyle.version>
+		<breezeware-google-checkstyle.configLocation>
+			https://breezeware-dev-config.s3.amazonaws.com/BreezewareGoogleCheckStyle.xml
+		</breezeware-google-checkstyle.configLocation>
 	</properties>
+
 	<dependencies>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -35,11 +41,11 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-validation</artifactId>
 		</dependency>
-		<!-- https://mvnrepository.com/artifact/com.fasterxml.jackson.datatype/jackson-datatype-jsr310 -->
+
 		<dependency>
 			<groupId>com.fasterxml.jackson.datatype</groupId>
 			<artifactId>jackson-datatype-jsr310</artifactId>
-			<version>2.15.2</version>
+			<version>${jackson-datatype-jsr310.version}</version>
 		</dependency>
 
 		<dependency>
@@ -64,17 +70,6 @@
 		</dependency>
 
 		<dependency>
-			<groupId>org.apache.maven.plugins</groupId>
-			<artifactId>maven-pmd-plugin</artifactId>
-			<version>${maven-pmd-plugin.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.apache.maven.plugins</groupId>
-			<artifactId>maven-checkstyle-plugin</artifactId>
-			<version>${maven-checkstyle-plugin.version}</version>
-		</dependency>
-
-		<dependency>
 			<groupId>org.junit.jupiter</groupId>
 			<artifactId>junit-jupiter-api</artifactId>
 			<version>${junit-jupiter-api.version}</version>
@@ -86,6 +81,7 @@
 			<scope>test</scope>
 		</dependency>
 	</dependencies>
+
 	<build>
 		<plugins>
 			<plugin>
@@ -119,12 +115,23 @@
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
+				<configuration>
+					<image>
+						<builder>paketobuildpacks/builder-jammy-base:latest</builder>
+					</image>
+					<excludes>
+						<exclude>
+							<groupId>org.projectlombok</groupId>
+							<artifactId>lombok</artifactId>
+						</exclude>
+					</excludes>
+				</configuration>
 			</plugin>
 
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-checkstyle-plugin</artifactId>
-				<version>3.2.1</version>
+				<version>${maven-checkstyle-plugin.version}</version>
 				<executions>
 					<execution>
 						<id>validate</id>
@@ -138,18 +145,18 @@
 					<dependency>
 						<groupId>com.puppycrawl.tools</groupId>
 						<artifactId>checkstyle</artifactId>
-						<version>10.14.1</version>
+						<version>${checkstyle.version}</version>
 					</dependency>
 				</dependencies>
 				<configuration>
 					<violationSeverity>warning</violationSeverity>
 					<failsOnError>true</failsOnError>
 					<consoleOutput>true</consoleOutput>
-<!--					<configLocation>src/main/resources/checkstyle.xml</configLocation>-->
-					<configLocation>https://breezeware-dev-config.s3.amazonaws.com/BreezewareGoogleCheckStyle.xml</configLocation>
+					<configLocation>${breezeware-google-checkstyle.configLocation}</configLocation>
 					<linkXRef>false</linkXRef>
 				</configuration>
 			</plugin>
 		</plugins>
 	</build>
+
 </project>
