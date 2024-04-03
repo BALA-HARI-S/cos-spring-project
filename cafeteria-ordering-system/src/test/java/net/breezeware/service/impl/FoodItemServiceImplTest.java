@@ -8,6 +8,7 @@ import net.breezeware.exception.FoodItemException;
 import net.breezeware.mapper.FoodItemMapper;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -50,6 +51,7 @@ class FoodItemServiceImplTest {
     }
 
     @Test
+    @Tag("retrieveFoodItem")
     void givenRetrieveFoodItemsRequest_WhenRetrieveFoodItems_ThenReturnFoodItemsList() throws FoodItemException {
         log.info("Entering givenRetrieveFoodItemsRequest_WhenRetrieveFoodItems_ThenReturnFoodItemsList() Test");
 
@@ -75,6 +77,7 @@ class FoodItemServiceImplTest {
     }
 
     @Test
+    @Tag("retrieveFoodItem")
     void givenFoodItemId_WhenRetrieveFoodItem_ThenTrowsException() {
         log.info("Entering givenFoodItemId_WhenRetrieveFoodItem_ThenTrowsException() Test");
 
@@ -90,6 +93,7 @@ class FoodItemServiceImplTest {
     }
 
     @Test
+    @Tag("retrieveFoodItem")
     void givenFoodItemId_WhenRetrieveFoodItem_ThenReturnFoodItemDto() throws FoodItemException {
         log.info("Entering givenFoodItemId_WhenRetrieveFoodItem_ThenReturnFoodItemDto() Test");
 
@@ -121,6 +125,7 @@ class FoodItemServiceImplTest {
     }
 
     @Test
+    @Tag("retrieveFoodItem")
     void givenFoodItemName_WhenRetrieveFoodItemByName_ThenTrowsException() {
         log.info("Entering givenFoodItemName_WhenRetrieveFoodItemByName_ThenTrowsException() Test");
 
@@ -136,6 +141,7 @@ class FoodItemServiceImplTest {
     }
 
     @Test
+    @Tag("retrieveFoodItem")
     void givenFoodItemName_WhenRetrieveFoodItemByName_ThenReturnFoodItemDto() throws FoodItemException {
         log.info("Entering givenFoodItemName_WhenRetrieveFoodItemByName_ThenReturnFoodItemDto() Test");
 
@@ -166,6 +172,7 @@ class FoodItemServiceImplTest {
     }
 
     @Test
+    @Tag("createFoodItem")
     void givenFoodItemDto_WhenCreateFoodItem_ThenReturnFoodItemDto() {
         log.info("Entering givenFoodItemDto_WhenCreateFoodItem_ThenReturnFoodItemDto() Test");
 
@@ -201,6 +208,7 @@ class FoodItemServiceImplTest {
     }
 
     @Test
+    @Tag("updateFoodItem")
     void givenFoodItemIdAndDto_WhenUpdateFoodItem_ThenTrowsException() {
         log.info("Entering givenFoodItemIdAndDto_WhenUpdateFoodItem_ThenTrowsException() Test");
         // given ID and Dto
@@ -215,6 +223,7 @@ class FoodItemServiceImplTest {
     }
 
     @Test
+    @Tag("updateFoodItem")
     void givenFoodItemDtoWithNewName_WhenUpdateFoodItem_ThenReturnFoodItemDto() throws FoodItemException {
         log.info("Entering givenFoodItemDto_WhenUpdateFoodItem_ThenReturnFoodItemDto() Test");
         // given
@@ -258,6 +267,7 @@ class FoodItemServiceImplTest {
     }
 
     @Test
+    @Tag("updateFoodItem")
     void givenFoodItemDtoWithNewPrice_WhenUpdateFoodItem_ThenReturnFoodItemDto() throws FoodItemException {
         log.info("Entering givenFoodItemPriceInDto_WhenUpdateFoodItem_ThenReturnFoodItemDto() Test");
         // given
@@ -304,6 +314,7 @@ class FoodItemServiceImplTest {
     }
 
     @Test
+    @Tag("deleteFoodItem")
     void givenInvalidFoodItemId_WhenDeleteFoodItem_ThenTrowsException() {
         log.info("Entering givenInvalidFoodItemId_WhenDeleteFoodItem_ThenTrowsException() Test");
 
@@ -319,6 +330,7 @@ class FoodItemServiceImplTest {
     }
 
     @Test
+    @Tag("deleteFoodItem")
     void givenDeleteFoodItemRequest_WhenDeleteFoodItem_ThenFoodItemDeleted() throws FoodItemException {
         log.info("Entering givenDeleteFoodItemRequest_WhenDeleteFoodItem_ThenFoodItemDeleted() Test");
 

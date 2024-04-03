@@ -53,7 +53,7 @@ class DeliveryControllerTest {
     }
 
     @Test
-    @Tag("updateFoodOrderStatus")
+    @Tag("updateFoodOrder")
     void givenOrderId_WhenUpdateFoodOrderStatus_ThenReturnUpdatedFoodOrderDto() throws Exception {
         log.info("Entering givenOrderId_WhenUpdateFoodOrderStatus_ThenReturnUpdatedFoodOrderDto() Test");
         // given

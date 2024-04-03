@@ -11,6 +11,7 @@ import net.breezeware.entity.OrderStatus;
 import net.breezeware.exception.CustomExceptionHandler;
 import net.breezeware.service.api.FoodOrderService;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -65,6 +66,7 @@ class FoodOrderControllerTest {
     }
 
     @Test
+    @Tag("retrieveFoodOrder")
     void givenRetrieveFoodOrdersGetRequest_WhenRetrieveFoodOrders_ThenReturnFoodOrdersDtoList() throws Exception {
         log.info("Entering givenRetrieveFoodOrdersGetRequest_WhenRetrieveFoodOrders_ThenReturnFoodOrdersDtoList() controller");
         // given
@@ -95,6 +97,7 @@ class FoodOrderControllerTest {
     }
 
     @Test
+    @Tag("retrieveFoodOrder")
     void givenRetrieveFoodOrderByIdGetRequest_WhenRetrieveFoodOrder_ThenReturnFoodOrdersDto() throws Exception {
         log.info("Entering givenRetrieveFoodOrderByIdGetRequest_WhenRetrieveFoodOrder_ThenReturnFoodOrdersDto() controller");
         // given
@@ -125,6 +128,7 @@ class FoodOrderControllerTest {
     }
 
     @Test
+    @Tag("createFoodOrder")
     void givenCreateFoodOrderDtoPostRequest_WhenCreateFoodOrder_ThenReturnFoodOrdersDto() throws Exception {
         log.info("Entering givenCreateFoodOrderDtoPostRequest_WhenCreateFoodOrder_ThenReturnFoodOrdersDto() controller");
         // given
@@ -163,6 +167,7 @@ class FoodOrderControllerTest {
     }
 
     @Test
+    @Tag("updateFoodOrder")
     void givenUpdateFoodOrderDtoPatchRequest_WhenUpdateFoodOrder_ThenReturnFoodOrdersDto() throws Exception {
         log.info("Entering givenUpdateFoodOrderDtoPatchRequest_WhenUpdateFoodOrder_ThenReturnFoodOrdersDto() controller");
         // given
@@ -198,6 +203,7 @@ class FoodOrderControllerTest {
     }
 
     @Test
+    @Tag("updateFoodOrder")
     void givenFoodOrderIdFoodItemIdQuantityPostRequest_WhenAddFoodItemToOrder_ThenReturnFoodOrdersDto() throws Exception {
         log.info("Entering givenFoodOrderIdFoodItemIdQuantityPostRequest_WhenAddFoodItemToOrder_ThenReturnFoodOrdersDto() controller");
         // given
@@ -231,6 +237,7 @@ class FoodOrderControllerTest {
     }
 
     @Test
+    @Tag("deleteFoodOrder")
     void givenFoodOrderIDFoodItemIdDeleteRequest_WhenDeleteOrderFoodItem_ThenOrderItemDeleted() throws Exception {
         log.info("Entering givenFoodOrderIDFoodItemIdDeleteRequest_WhenDeleteOrderFoodItem_ThenOrderItemDeleted() controller");
         // given order id and item id
@@ -247,6 +254,7 @@ class FoodOrderControllerTest {
     }
 
     @Test
+    @Tag("deleteFoodOrder")
     void givenFoodOrderIDDeleteRequest_WhenDeleteFoodOrder_ThenOrderDeleted() throws Exception {
         log.info("Entering givenFoodOrderIDDeleteRequest_WhenDeleteFoodOrder_ThenOrderDeleted() controller");
         // given order id

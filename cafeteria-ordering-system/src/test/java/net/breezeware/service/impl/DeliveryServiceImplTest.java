@@ -47,7 +47,7 @@ class DeliveryServiceImplTest {
     }
 
     @Test
-    @Tag("updateFoodOrderStatus")
+    @Tag("updateFoodOrder")
     void givenOrderId_WhenUpdateFoodOrderStatus_ThenThrowsException() throws FoodOrderException, FoodItemException {
         log.info("Entering givenOrderId_WhenUpdateFoodOrderStatus_ThenThrowsException() Test");
         // given
@@ -63,7 +63,7 @@ class DeliveryServiceImplTest {
     }
 
     @Test
-    @Tag("updateFoodOrderStatus")
+    @Tag("updateFoodOrder")
     void givenOrderId_WhenUpdateFoodOrderStatus_ThenReturnUpdatedFoodOrderDto() throws FoodOrderException, FoodItemException {
         log.info("Entering givenOrderId_WhenUpdateFoodOrderStatus_ThenReturnUpdatedFoodOrderDto() Test");
         // given

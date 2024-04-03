@@ -13,6 +13,7 @@ import net.breezeware.entity.Availability;
 import net.breezeware.exception.CustomExceptionHandler;
 import net.breezeware.service.api.FoodMenuService;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -72,6 +73,7 @@ class FoodMenuControllerTest {
     }
 
     @Test
+    @Tag("retrieveFoodMenu")
     void givenRetrieveFoodMenusGetRequest_WhenRetrieveFoodMenus_ThenReturnFoodMenuDtoList() throws Exception {
         log.info("Entering givenRetrieveFoodMenusGetRequest_WhenRetrieveFoodMenus_ThenReturnFoodMenuDtoList() Test");
         // given
@@ -91,6 +93,7 @@ class FoodMenuControllerTest {
     }
 
     @Test
+    @Tag("retrieveFoodMenu")
     void givenRetrieveFoodMenuOfTheDayGetRequest_WhenRetrieveFoodMenuOfTheDay_ThenReturnFoodMenuDtoList() throws Exception {
         log.info("Entering givenRetrieveFoodMenuOfTheDayGetRequest_WhenRetrieveFoodMenuOfTheDay_ThenReturnFoodMenuDtoList() Test");
         // given
@@ -121,6 +124,7 @@ class FoodMenuControllerTest {
     }
 
     @Test
+    @Tag("retrieveFoodMenu")
     void givenRetrieveFoodMenuGetRequest_WhenRetrieveFoodMenu_ThenReturnFoodMenuDto() throws Exception {
         log.info("Entering givenRetrieveFoodMenuGetRequest_WhenRetrieveFoodMenu_ThenReturnFoodMenuDto() Test");
         // given
@@ -144,6 +148,7 @@ class FoodMenuControllerTest {
     }
 
     @Test
+    @Tag("createFoodMenu")
     void givenFoodMenuCreateDtoPostRequest_WhenCreateFoodMenu_ThenReturnFoodMenuDto() throws Exception {
         log.info("Entering givenFoodMenuCreateDtoPostRequest_WhenCreateFoodMenu_ThenReturnFoodMenuDto() Test");
         // given
@@ -165,6 +170,7 @@ class FoodMenuControllerTest {
     }
 
     @Test
+    @Tag("updateFoodMenu")
     void givenFoodMenuUpdateDtoPatchRequest_WhenUpdateFoodMenu_ThenReturnFoodMenuDto() throws Exception {
         log.info("Entering givenFoodMenuUpdateDtoPatchRequest_WhenUpdateFoodMenu_ThenReturnFoodMenuDto() Test");
         // given
@@ -187,6 +193,7 @@ class FoodMenuControllerTest {
     }
 
     @Test
+    @Tag("updateFoodMenu")
     void givenFoodMenuIdFoodItemIdPatchRequest_WhenUpdateFoodMenuItem_ThenReturnFoodMenuItemsDto() throws Exception {
         log.info("Entering givenFoodMenuIdFoodItemIdPatchRequest_WhenUpdateFoodMenuItem_ThenReturnFoodMenuItemsDto() Test");
         // given
@@ -211,6 +218,7 @@ class FoodMenuControllerTest {
     }
 
     @Test
+    @Tag("updateFoodMenu")
     void givenFoodMenuIdFoodItemIdQuantityPatchRequest_WhenUpdateFoodMenuItemQuantity_ThenReturnFoodMenuItemQuantityDto() throws Exception {
         log.info("Entering givenFoodMenuIdFoodItemIdQuantityPatchRequest_WhenUpdateFoodMenuItemQuantity_ThenReturnFoodMenuItemQuantityDto() Test");
         // given
@@ -237,6 +245,7 @@ class FoodMenuControllerTest {
     }
 
     @Test
+    @Tag("deleteFoodMenu")
     void givenFoodMenuIdDeleteRequest_WhenDeleteFoodMenu_ThenFoodMenuDeleted() throws Exception {
         log.info("Entering givenFoodMenuIdDeleteRequest_WhenDeleteFoodMenu_ThenFoodMenuDeleted() Test");
         // given
@@ -251,6 +260,7 @@ class FoodMenuControllerTest {
     }
 
     @Test
+    @Tag("updateFoodMenu")
     void givenFoodMenuIdFoodItemIdDeleteRequest_WhenDeleteFoodMenuItem_ThenFoodMenuItemDeleted() throws Exception {
         log.info("Entering givenFoodMenuIdFoodItemIdDeleteRequest_WhenDeleteFoodMenuItem_ThenFoodMenuItemDeleted() Test");
         // given

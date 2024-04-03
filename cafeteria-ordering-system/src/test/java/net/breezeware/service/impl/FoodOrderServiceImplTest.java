@@ -14,6 +14,7 @@ import net.breezeware.mapper.FoodItemMapper;
 import net.breezeware.service.api.FoodItemService;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -66,6 +67,7 @@ class FoodOrderServiceImplTest {
     }
 
     @Test
+    @Tag("retrieveFoodOrder")
     void givenRetrieveFoodOrdersRequest_WhenRetrieveFoodOrders_ThenReturnFoodOrders() throws FoodItemException {
         log.info("Entering givenRetrieveFoodOrdersRequest_WhenRetrieveFoodOrders_ThenReturnFoodOrders() Test");
         // given
@@ -88,6 +90,7 @@ class FoodOrderServiceImplTest {
     }
 
     @Test
+    @Tag("retrieveFoodOrder")
     void givenInvalidFoodOrderId_WhenRetrieveFoodOrder_ThenThrowsException() throws FoodOrderException, FoodItemException {
         log.info("Entering givenInvalidFoodOrderId_WhenRetrieveFoodOrder_ThenThrowsException() Test");
         // given food order id
@@ -103,6 +106,7 @@ class FoodOrderServiceImplTest {
     }
 
     @Test
+    @Tag("retrieveFoodOrder")
     void givenFoodOrderId_WhenRetrieveFoodOrder_ThenReturnFoodOrder() throws FoodOrderException, FoodItemException {
         log.info("Entering givenFoodOrderId_WhenRetrieveFoodOrder_ThenReturnFoodOrder() Test");
         // given
@@ -125,6 +129,7 @@ class FoodOrderServiceImplTest {
     }
 
     @Test
+    @Tag("createFoodOrder")
     void givenCreateFoodOrderDto_WhenCreateFoodOrder_ThenReturnFoodOrderDto() throws FoodItemException, FoodOrderException, FoodMenuException {
         log.info("Entering givenCreateFoodOrderDto_WhenCreateFoodOrder_ThenReturnFoodOrderDto() Test");
         // given
@@ -167,6 +172,7 @@ class FoodOrderServiceImplTest {
     }
 
     @Test
+    @Tag("updateFoodOrder")
     void givenTotalCost_WhenUpdateFoodOrder_ThenReturnFoodOrderDto() throws FoodOrderException, FoodItemException {
         log.info("Entering givenTotalCost_WhenUpdateFoodOrder_ThenReturnFoodOrderDto() Test");
         // given
@@ -205,6 +211,7 @@ class FoodOrderServiceImplTest {
     }
 
     @Test
+    @Tag("updateFoodOrder")
     void givenInvalidFoodOrderIdFoodItemIdQuantity_WhenAddFoodItemToOrder_ThenThrowsException() throws FoodItemException, FoodOrderException {
         log.info("Entering givenInvalidFoodOrderIdFoodItemIdQuantity_WhenAddFoodItemToOrder_ThenThrowsException() Test");
         // given
@@ -219,6 +226,7 @@ class FoodOrderServiceImplTest {
     }
 
     @Test
+    @Tag("updateFoodOrder")
     void givenFoodOrderIdFoodItemIdQuantity_WhenAddFoodItemToOrder_ThenReturnFoodOrderDto() throws FoodItemException, FoodOrderException, FoodMenuException {
         log.info("Entering givenFoodOrderIdFoodItemIdQuantity_WhenAddFoodItemToOrder_ThenReturnFoodOrderDto() Test");
         // given
@@ -262,6 +270,7 @@ class FoodOrderServiceImplTest {
     }
 
     @Test
+    @Tag("deleteFoodOrder")
     void givenInvalidFoodOrderId_WhenDeleteOrderFoodItem_ThenThrowsException() throws FoodOrderException {
         log.info("Entering givenInvalidFoodOrderId_WhenDeleteOrderFoodItem_ThenThrowsException() Test");
         // given
@@ -276,6 +285,7 @@ class FoodOrderServiceImplTest {
     }
 
     @Test
+    @Tag("deleteFoodOrder")
     void givenFoodOrderIdFoodItemId_WhenDeleteOrderFoodItem_ThenOrderFoodItemMapDeleted() throws FoodOrderException {
         log.info("Entering givenFoodOrderIdFoodItemId_WhenDeleteOrderFoodItem_ThenOrderFoodItemMapDeleted() Test");
         // given
@@ -314,6 +324,7 @@ class FoodOrderServiceImplTest {
     }
 
     @Test
+    @Tag("deleteFoodOrder")
     void givenInvalidFoodOrderId_WhenDeleteFoodOrder_ThenThrowsException() throws FoodOrderException {
         log.info("Entering givenInvalidFoodOrderId_WhenDeleteFoodOrder_ThenThrowsException() Test");
         // given
@@ -328,6 +339,7 @@ class FoodOrderServiceImplTest {
     }
 
     @Test
+    @Tag("deleteFoodOrder")
     void givenFoodOrderId_WhenDeleteFoodOrder_ThenFoodOrderDeleted() throws FoodOrderException {
         log.info("Entering givenFoodOrderId_WhenDeleteFoodOrder_ThenFoodOrderDeleted() Test");
         // given

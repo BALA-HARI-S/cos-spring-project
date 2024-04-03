@@ -7,6 +7,7 @@ import net.breezeware.dto.foodItemDto.FoodItemDto;
 import net.breezeware.exception.CustomExceptionHandler;
 import net.breezeware.service.api.FoodItemService;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -62,6 +63,7 @@ class FoodItemControllerTest {
     }
 
     @Test
+    @Tag("retrieveFoodItem")
     void givenRetrieveFoodItemsRequest_WhenRetrieveFoodItems_ThenReturnFoodItemsList() throws Exception {
         log.info("Entering givenRetrieveFoodItemsRequest_WhenRetrieveFoodItems_ThenReturnFoodItemsList Test");
 
@@ -87,6 +89,7 @@ class FoodItemControllerTest {
     }
 
     @Test
+    @Tag("retrieveFoodItem")
     void givenFoodItemId_WhenRetrieveFoodItem_ThenReturnFoodItemDto() throws Exception {
         log.info("Entering givenFoodItemId_WhenRetrieveFoodItem_ThenReturnFoodItemDto Test");
 
@@ -110,6 +113,7 @@ class FoodItemControllerTest {
     }
 
     @Test
+    @Tag("retrieveFoodItem")
     void givenFoodItemName_WhenRetrieveFoodItemByName_ThenReturnFoodItemDto() throws Exception {
         log.info("Entering givenFoodItemName_WhenRetrieveFoodItemByName_ThenReturnFoodItemDto Test");
 
@@ -133,6 +137,7 @@ class FoodItemControllerTest {
     }
 
     @Test
+    @Tag("createFoodItem")
     void givenFoodItemDto_WhenCreateFoodItem_ThenReturnFoodItemDto() throws Exception {
         log.info("Entering givenFoodItemDto_WhenCreateFoodItem_ThenReturnFoodItemDto Test");
 
@@ -157,6 +162,7 @@ class FoodItemControllerTest {
     }
 
     @Test
+    @Tag("updateFoodItem")
     void givenFoodItemDto_WhenUpdateFoodItem_ThenReturnFoodItemDto() throws Exception {
         log.info("Entering givenFoodItemDto_WhenUpdateFoodItem_ThenReturnFoodItemDto Test");
 
@@ -181,6 +187,7 @@ class FoodItemControllerTest {
     }
 
     @Test
+    @Tag("deleteFoodItem")
     void givenDeleteFoodItemRequest_WhenDeleteFoodItem_ThenFoodItemDeleted() throws Exception {
         log.info("Entering givenDeleteFoodItemRequest_WhenDeleteFoodItem_ThenFoodItemDeleted Test");
         // given ID
