@@ -16,7 +16,7 @@ import lombok.NoArgsConstructor;
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "menu_food_item_map")
+@Table(name = "food_menu_item_map")
 public class FoodMenuItemMap {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

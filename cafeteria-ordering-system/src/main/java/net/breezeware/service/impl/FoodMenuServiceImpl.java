@@ -76,7 +76,7 @@ public class FoodMenuServiceImpl implements FoodMenuService {
 
         FoodMenuItemsDto foodMenuItemsDto = new FoodMenuItemsDto();
         foodMenuItemsDto.setName(foodMenu.getName());
-        foodMenuItemsDto.setMenuAvailability(foodMenu.getMenuAvailability());
+        foodMenuItemsDto.setMenuAvailability(foodMenu.getAvailability());
         foodMenuItemsDto.setFoodMenuItemsDto(retrieveFoodMenuItems(id));
         foodMenuItemsDto.setCreated(foodMenu.getCreated());
         foodMenuItemsDto.setModified(foodMenu.getModified());
@@ -92,14 +92,14 @@ public class FoodMenuServiceImpl implements FoodMenuService {
         DayOfWeek dayOfWeek = currentDate.getDayOfWeek();
         String today = dayOfWeek.getDisplayName(TextStyle.FULL, Locale.ENGLISH).toUpperCase();
 
-        List<FoodMenu> retrievedFoodMenus = foodMenuRepository.findByMenuAvailability(Availability.valueOf(today));
+        List<FoodMenu> retrievedFoodMenus = foodMenuRepository.findByAvailability(Availability.valueOf(today));
         List<FoodMenuItemsQuantityDto> foodMenuItemsQuantityDtoList = new ArrayList<>();
         for (FoodMenu foodMenu : retrievedFoodMenus) {
             Map<FoodItemDto, Integer> foodItemsQuantity = new HashMap<>();
             FoodMenuItemsQuantityDto foodMenuItemsQuantityDto = new FoodMenuItemsQuantityDto();
             List<FoodMenuItemMap> foodMenuItemMaps = foodMenuItemMapRepository.findByFoodMenuId(foodMenu.getId());
             foodMenuItemsQuantityDto.setName(foodMenu.getName());
-            foodMenuItemsQuantityDto.setMenuAvailability(foodMenu.getMenuAvailability());
+            foodMenuItemsQuantityDto.setMenuAvailability(foodMenu.getAvailability());
             for (FoodMenuItemMap itemMap : foodMenuItemMaps) {
                 FoodItemDto foodItemDto = foodItemMapper.foodItemToFoodItemDto(itemMap.getFoodItem());
                 Integer quantity =
@@ -144,7 +144,7 @@ public class FoodMenuServiceImpl implements FoodMenuService {
         }
 
         if (Objects.isNull(updateFoodMenuDto.getMenuAvailability())) {
-            foodMenuDto.setMenuAvailability(retrievedFoodMenu.getMenuAvailability());
+            foodMenuDto.setMenuAvailability(retrievedFoodMenu.getAvailability());
         } else {
             foodMenuDto.setMenuAvailability(updateFoodMenuDto.getMenuAvailability());
         }
@@ -198,7 +198,7 @@ public class FoodMenuServiceImpl implements FoodMenuService {
         foodMenuItemQuantityMapRepository.save(foodMenuItemQuantityMap);
 
         FoodMenuItemsDto foodMenuItemsDto =
-                new FoodMenuItemsDto(retrievedFoodMenu.getName(), retrievedFoodMenu.getMenuAvailability(),
+                new FoodMenuItemsDto(retrievedFoodMenu.getName(), retrievedFoodMenu.getAvailability(),
                         retrieveFoodMenuItems(menuId), retrievedFoodMenu.getCreated(), retrievedFoodMenu.getModified());
         log.info("Leaving updateFoodMenuItems() service");
         return foodMenuItemsDto;

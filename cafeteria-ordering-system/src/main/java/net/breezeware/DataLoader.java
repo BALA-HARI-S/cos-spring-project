@@ -69,7 +69,7 @@ public class DataLoader implements CommandLineRunner {
         foodMenu1.setName("Standard");
         foodMenu1.setCreated(now);
         foodMenu1.setModified(now);
-        foodMenu1.setMenuAvailability(menuAvailability);
+        foodMenu1.setAvailability(menuAvailability);
         foodMenuRepository.save(foodMenu1);
         // 2
         FoodMenu foodMenu2 = new FoodMenu();
@@ -77,7 +77,7 @@ public class DataLoader implements CommandLineRunner {
         foodMenu2.setName("Special");
         foodMenu2.setCreated(now);
         foodMenu2.setModified(now);
-        foodMenu2.setMenuAvailability(menuAvailability);
+        foodMenu2.setAvailability(menuAvailability);
         foodMenuRepository.save(foodMenu2);
         System.out.println("Loaded Food Menu: " + foodMenuRepository.count());
 

@@ -49,5 +49,5 @@ public class FoodMenu {
     @ElementCollection(targetClass = Availability.class)
     @Enumerated(EnumType.STRING)
     @CollectionTable(name = "food_menu_availability_map")
-    private Set<Availability> menuAvailability;
+    private Set<Availability> availability;
 }
