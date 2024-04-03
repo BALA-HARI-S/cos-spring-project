@@ -64,7 +64,7 @@ class DeliveryControllerTest {
         when(deliveryService.updateFoodOrderStatus(ORDER_ID)).thenReturn(updatedfoodOrderDto);
 
         // then
-        mockMvc.perform(patch(DeliveryController.BASE_URL + "/update-status/1")
+        mockMvc.perform(patch(DeliveryController.BASE_URL + "/update/order-status/" + ORDER_ID)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.orderStatus", is("ORDER_DELIVERED")));

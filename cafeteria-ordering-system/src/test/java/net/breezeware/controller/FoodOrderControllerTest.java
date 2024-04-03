@@ -142,6 +142,7 @@ class FoodOrderControllerTest {
 
         CreateFoodOrderDto createfoodOrderDto = new CreateFoodOrderDto();
         createfoodOrderDto.setCustomerId(CUSTOMER_ID);
+        createfoodOrderDto.setMenuId(1L);
         createfoodOrderDto.setFoodItemsQuantityMap(orderFoodItemQuantityMap);
 
         FoodOrderDto foodOrderDto1 = new FoodOrderDto();
