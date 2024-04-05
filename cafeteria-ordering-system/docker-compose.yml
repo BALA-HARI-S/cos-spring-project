@@ -1,0 +1,59 @@
+version: "3"
+
+services:
+  cos-app:
+    build:
+      context: . 	
+    container_name: cos-app
+    depends_on:
+      - cos-db
+    ports:
+      - "8080:8080"
+    healthcheck:
+      test: ["CMD", "curl -f http://localhost:8080/actuator/health || exit 1"]
+      interval: 10s
+      timeout: 15s
+      start_period: 0s
+      retries: 3
+    environment:
+      COS_SPRING_DB_HOST: cos-db
+      COS_SPRING_DB_PORT: 5432
+      COS_SPRING_DB_NAME: cos
+      COS_SPRING_DB_USERNAME: cos_usr
+      COS_SPRING_DB_PASSWORD: P@ssw0rd
+    volumes:
+      - cos-app-data:/var/lib/cos-app/data
+    restart: unless-stopped
+    networks:
+      - cos
+
+  cos-db:
+    image: postgres:14-alpine
+    container_name: cos-db
+    healthcheck:
+      test: ["CMD", "pg_isready"]
+      interval: 10s
+      timeout: 7s
+      start_period: 5s
+      retries: 3
+    env_file: .env.docker-compose.development
+    environment:
+      POSTGRES_USER: cos_usr
+      POSTGRES_PASSWORD: P@ssw0rd
+      POSTGRES_DB: cos
+    volumes:
+      - ./init-script.sql:/docker-entrypoint-initdb.d/init-script.sql
+      - cos-db-data:/var/lib/postgresql/data
+    restart: no
+    networks:
+      - cos
+
+
+
+volumes:
+  cos-db-data:
+  cos-app-data:
+
+networks:
+  cos:
+
