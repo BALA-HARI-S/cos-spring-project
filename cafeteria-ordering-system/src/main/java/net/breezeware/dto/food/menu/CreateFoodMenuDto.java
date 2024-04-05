@@ -16,7 +16,7 @@ import lombok.NoArgsConstructor;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 @Data
-@JsonRootName("FoodMenu")
+@JsonRootName("CreateFoodMenu")
 @NoArgsConstructor
 @AllArgsConstructor
 public class CreateFoodMenuDto {
