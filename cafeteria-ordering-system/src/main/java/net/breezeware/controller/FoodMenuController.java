@@ -3,6 +3,7 @@ package net.breezeware.controller;
 import java.util.List;
 
 import javax.validation.Valid;
+import javax.validation.constraints.Min;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -131,7 +132,7 @@ public class FoodMenuController {
                         content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
                                 schema = @Schema(implementation = ErrorDetail.class))) })
     @PatchMapping("/add/food-item")
-    public FoodMenuItemsDto updateFoodMenuItem(@RequestParam Long menuId, @RequestParam Long foodItemId)
+    public FoodMenuItemsDto updateFoodMenuItem(@Min(1) @RequestParam Long menuId,@Min(1) @RequestParam Long foodItemId)
             throws FoodMenuException, FoodItemException {
         log.info("Entering updateFoodMenuItem() controller");
         FoodMenuItemsDto updatedFoodMenuItemsDto = foodMenuService.addFoodItemToMenu(menuId, foodItemId);
@@ -148,8 +149,8 @@ public class FoodMenuController {
                         content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
                                 schema = @Schema(implementation = ErrorDetail.class))) })
     @PatchMapping("/update/food-item/quantity")
-    public FoodMenuItemsQuantityDto updateFoodMenuItemQuantity(@RequestParam Long menuId, @RequestParam Long foodItemId,
-            @RequestParam Integer quantity) throws FoodMenuException, FoodItemException {
+    public FoodMenuItemsQuantityDto updateFoodMenuItemQuantity(@Min(1) @RequestParam Long menuId,@Min(1) @RequestParam Long foodItemId,
+            @Min(0) @RequestParam Integer quantity) throws FoodMenuException, FoodItemException {
         log.info("Entering updateFoodMenuItemQuantity() controller");
         FoodMenuItemsQuantityDto updatedFoodMenuItemQuantityDto =
                 foodMenuService.updateFoodMenuItemQuantity(menuId, foodItemId, quantity);
@@ -173,7 +174,7 @@ public class FoodMenuController {
                     content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE)) })
     @DeleteMapping("/delete/food-item")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteFoodMenuItem(@RequestParam Long foodMenuId, @RequestParam Long foodItemId)
+    public void deleteFoodMenuItem(@Min(1) @RequestParam Long foodMenuId,@Min(1) @RequestParam Long foodItemId)
             throws FoodMenuException {
         log.info("Entering deleteFoodMenuItem() controller");
         foodMenuService.deleteFoodMenuItem(foodMenuId, foodItemId);

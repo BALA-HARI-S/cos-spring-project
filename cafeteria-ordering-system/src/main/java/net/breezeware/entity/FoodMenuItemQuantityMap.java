@@ -9,6 +9,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 
 import lombok.AllArgsConstructor;
@@ -31,6 +32,7 @@ public class FoodMenuItemQuantityMap {
 
     @NotNull(message = "The food menu item quantity map quantity must not be empty")
     @Column(name = "quantity")
+    @Min(value = 0,message = "Quantity must not be negative value")
     private Integer quantity;
 
     @NotNull(message = "The food menu item quantity map created date and time must not be empty")
