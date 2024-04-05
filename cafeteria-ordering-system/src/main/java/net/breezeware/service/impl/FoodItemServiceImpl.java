@@ -8,8 +8,11 @@ import java.util.Optional;
 import org.springframework.stereotype.Service;
 
 import net.breezeware.dao.FoodItemRepository;
+import net.breezeware.dto.food.item.CreateFoodItemDto;
 import net.breezeware.dto.food.item.FoodItemDto;
+import net.breezeware.dto.food.item.UpdateFoodItemDto;
 import net.breezeware.entity.FoodItem;
+import net.breezeware.exception.FoodItemAlreadyExistException;
 import net.breezeware.exception.FoodItemException;
 import net.breezeware.mapper.FoodItemMapper;
 import net.breezeware.service.api.FoodItemService;
@@ -59,8 +62,15 @@ public class FoodItemServiceImpl implements FoodItemService {
     }
 
     @Override
-    public FoodItemDto createFoodItem(FoodItemDto foodItemDto) {
+    public FoodItemDto createFoodItem(CreateFoodItemDto createFoodItemDto) throws FoodItemAlreadyExistException {
         log.info("Entering createFoodItem()");
+        Optional<FoodItem> foodItem = foodItemRepository.findByName(createFoodItemDto.getName());
+        if(foodItem.isPresent()){
+            throw new FoodItemAlreadyExistException("Food item already exist with the name: " + createFoodItemDto.getName());
+        }
+        FoodItemDto foodItemDto = new FoodItemDto();
+        foodItemDto.setName(createFoodItemDto.getName());
+        foodItemDto.setPrice(createFoodItemDto.getPrice());
         Instant instant = Instant.now();
         foodItemDto.setCreated(instant);
         foodItemDto.setModified(instant);
@@ -69,28 +79,34 @@ public class FoodItemServiceImpl implements FoodItemService {
     }
 
     @Override
-    public FoodItemDto updateFoodItem(Long id, FoodItemDto foodItemDto) throws FoodItemException {
+    public FoodItemDto updateFoodItem(Long id, UpdateFoodItemDto updateFoodItemDto) throws FoodItemException {
         log.info("Entering updateFoodItem()");
         Optional<FoodItem> retrievedFoodItem = foodItemRepository.findById(id);
-        FoodItem foodItem = foodItemMapper.foodItemDtoToFoodItem(foodItemDto);
+        FoodItemDto foodItemDto = new FoodItemDto();
         if (retrievedFoodItem.isPresent()) {
-            foodItem.setId(retrievedFoodItem.get().getId());
-            if (Objects.isNull(foodItemDto.getName())) {
-                foodItem.setName(retrievedFoodItem.get().getName());
+            foodItemDto.setId(retrievedFoodItem.get().getId());
+
+            foodItemDto.setPrice(retrievedFoodItem.get().getPrice());
+            if (Objects.isNull(updateFoodItemDto.getName())) {
+                foodItemDto.setName(retrievedFoodItem.get().getName());
+            } else {
+                foodItemDto.setName(updateFoodItemDto.getName());
             }
 
-            if (Objects.isNull(foodItemDto.getPrice())) {
-                foodItem.setPrice(retrievedFoodItem.get().getPrice());
+            if (Objects.isNull(updateFoodItemDto.getPrice())) {
+                foodItemDto.setPrice(retrievedFoodItem.get().getPrice());
+            } else {
+                foodItemDto.setPrice(updateFoodItemDto.getPrice());
             }
 
-            foodItem.setCreated(retrievedFoodItem.get().getCreated());
-            foodItem.setModified(Instant.now());
+            foodItemDto.setCreated(retrievedFoodItem.get().getCreated());
+            foodItemDto.setModified(Instant.now());
         } else {
             throw new FoodItemException("Food item not found for id: " + id);
         }
 
         log.info("Leaving updateFoodItem()");
-        return processFoodItem(foodItem);
+        return processFoodItem(foodItemMapper.foodItemDtoToFoodItem(foodItemDto));
     }
 
     @Override

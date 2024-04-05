@@ -222,7 +222,7 @@ class FoodOrderControllerTest {
         foodOrderDto1.setCreated(FIXED_INSTANT);
         // when
         when(foodOrderService.addFoodItemToOrder(anyLong(),anyLong(),anyLong(),anyInt())).thenReturn(foodOrderDto1);
-        mockMvc.perform(post(FoodOrderController.BASE_URL + "/add-food-item")
+        mockMvc.perform(post(FoodOrderController.BASE_URL + "/add/food-item")
                         .param("orderId", "1")
                         .param("menuId", "1")
                         .param("foodItemId", "1")
@@ -246,7 +246,7 @@ class FoodOrderControllerTest {
         doNothing().when(foodOrderService).deleteOrderFoodItem(ORDER_ID, 1L);
 
         // then
-        mockMvc.perform(delete(FoodOrderController.BASE_URL + "/delete-food-item")
+        mockMvc.perform(delete(FoodOrderController.BASE_URL + "/delete/food-item")
                         .param("orderId", "1")
                         .param("foodItemId", "1")
                         .contentType(MediaType.APPLICATION_JSON))

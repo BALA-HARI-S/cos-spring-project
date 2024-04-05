@@ -16,8 +16,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import net.breezeware.dto.food.item.CreateFoodItemDto;
 import net.breezeware.dto.food.item.FoodItemDto;
+import net.breezeware.dto.food.item.UpdateFoodItemDto;
 import net.breezeware.entity.ErrorDetail;
+import net.breezeware.exception.FoodItemAlreadyExistException;
 import net.breezeware.exception.FoodItemException;
 import net.breezeware.service.api.FoodItemService;
 
@@ -76,35 +79,20 @@ public class FoodItemController {
         return foodItemDto;
     }
 
-    @Operation(description = "Get detailed information about the food item", summary = "Get Food Item by name",
-            responses = {
-                @ApiResponse(description = "Success", responseCode = "200",
-                        content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
-                                schema = @Schema(implementation = FoodItemDto.class))),
-                @ApiResponse(description = "Client Error", responseCode = "4XX",
-                        content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
-                                schema = @Schema(implementation = ErrorDetail.class)))
-            }
-    )
-    @GetMapping(value = "/by-name/{name}")
-    public FoodItemDto retrieveFoodItemByName(@PathVariable String name) throws FoodItemException {
-        log.info("Entering retrieveFoodItemByName()");
-        FoodItemDto foodItemDto = foodItemService.retrieveFoodItemByName(name);
-        log.info("Leaving retrieveFoodItemByName()");
-        return foodItemDto;
-    }
-
     @Operation(description = "Create Food Item", summary = "Create Food Item",
-            responses = { @ApiResponse(description = "Created", responseCode = "201",
+            responses = {@ApiResponse(description = "Created", responseCode = "201",
                     content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
-                            schema = @Schema(implementation = FoodItemDto.class)))
+                            schema = @Schema(implementation = FoodItemDto.class))),
+                    @ApiResponse(description = "Client Error", responseCode = "4XX",
+                            content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
+                                    schema = @Schema(implementation = ErrorDetail.class)))
             }
     )
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public FoodItemDto createFoodItem(@Valid @RequestBody FoodItemDto foodItemDto) {
+    public FoodItemDto createFoodItem(@Valid @RequestBody CreateFoodItemDto createFoodItemDto) throws FoodItemAlreadyExistException {
         log.info("Entering createFoodItem()");
-        FoodItemDto foodItem = foodItemService.createFoodItem(foodItemDto);
+        FoodItemDto foodItem = foodItemService.createFoodItem(createFoodItemDto);
         log.info("Leaving createFoodItem()");
         return foodItem;
     }
@@ -115,11 +103,11 @@ public class FoodItemController {
                             schema = @Schema(implementation = FoodItemDto.class)))
             }
     )
-    @PatchMapping("/{id}")
-    public FoodItemDto updateFoodItem(@PathVariable Long id, @Valid @RequestBody FoodItemDto foodItemDto)
+    @PatchMapping("/update/{id}")
+    public FoodItemDto updateFoodItem(@PathVariable Long id, @Valid @RequestBody UpdateFoodItemDto updateFoodItemDto)
             throws FoodItemException {
         log.info("Entering updateFoodItem()");
-        FoodItemDto foodItemDto1 = foodItemService.updateFoodItem(id, foodItemDto);
+        FoodItemDto foodItemDto1 = foodItemService.updateFoodItem(id, updateFoodItemDto);
         log.info("Leaving updateFoodItem()");
         return foodItemDto1;
     }

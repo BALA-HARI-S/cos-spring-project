@@ -1,11 +1,17 @@
 package net.breezeware.service.impl;
 
-import lombok.extern.slf4j.Slf4j;
-import net.breezeware.dao.FoodItemRepository;
-import net.breezeware.dto.food.item.FoodItemDto;
-import net.breezeware.entity.FoodItem;
-import net.breezeware.exception.FoodItemException;
-import net.breezeware.mapper.FoodItemMapper;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
+import java.time.Instant;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Tag;
@@ -14,17 +20,16 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
-import java.time.Instant;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import net.breezeware.dao.FoodItemRepository;
+import net.breezeware.dto.food.item.CreateFoodItemDto;
+import net.breezeware.dto.food.item.FoodItemDto;
+import net.breezeware.dto.food.item.UpdateFoodItemDto;
+import net.breezeware.entity.FoodItem;
+import net.breezeware.exception.FoodItemAlreadyExistException;
+import net.breezeware.exception.FoodItemException;
+import net.breezeware.mapper.FoodItemMapper;
 
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.Mockito.doNothing;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import lombok.extern.slf4j.Slf4j;
 
 
 @Slf4j
@@ -173,11 +178,11 @@ class FoodItemServiceImplTest {
 
     @Test
     @Tag("createFoodItem")
-    void givenFoodItemDto_WhenCreateFoodItem_ThenReturnFoodItemDto() {
+    void givenFoodItemDto_WhenCreateFoodItem_ThenReturnFoodItemDto() throws FoodItemAlreadyExistException {
         log.info("Entering givenFoodItemDto_WhenCreateFoodItem_ThenReturnFoodItemDto() Test");
 
         // given
-        FoodItemDto createFoodItemDto = new FoodItemDto();
+        CreateFoodItemDto createFoodItemDto = new CreateFoodItemDto();
         createFoodItemDto.setName(FOOD_ITEM_NAME);
         createFoodItemDto.setPrice(PRICE);
 
@@ -216,7 +221,7 @@ class FoodItemServiceImplTest {
         when(foodItemRepository.findById(ID)).thenReturn(Optional.empty());
 
         // then
-        Assertions.assertThatThrownBy(() -> foodItemService.updateFoodItem(ID,any(FoodItemDto.class)))
+        Assertions.assertThatThrownBy(() -> foodItemService.updateFoodItem(ID,any(UpdateFoodItemDto.class)))
                 .isInstanceOf(FoodItemException.class)
                 .hasMessage("Food item not found for id: " + ID);
         log.info("Leaving givenFoodItemIdAndDto_WhenUpdateFoodItem_ThenTrowsException() Test");
@@ -227,7 +232,7 @@ class FoodItemServiceImplTest {
     void givenFoodItemDtoWithNewName_WhenUpdateFoodItem_ThenReturnFoodItemDto() throws FoodItemException {
         log.info("Entering givenFoodItemDto_WhenUpdateFoodItem_ThenReturnFoodItemDto() Test");
         // given
-        FoodItemDto updateFoodItemDto = new FoodItemDto();
+        UpdateFoodItemDto updateFoodItemDto = new UpdateFoodItemDto();
         updateFoodItemDto.setName("Idli");
 
         FoodItem updateFoodItem = new FoodItem();
@@ -272,7 +277,7 @@ class FoodItemServiceImplTest {
         log.info("Entering givenFoodItemPriceInDto_WhenUpdateFoodItem_ThenReturnFoodItemDto() Test");
         // given
         double newPrice = 15.0;
-        FoodItemDto updateFoodItemDto = new FoodItemDto();
+        UpdateFoodItemDto updateFoodItemDto = new UpdateFoodItemDto();
         updateFoodItemDto.setPrice(newPrice);
 
         FoodItem updateFoodItem = new FoodItem();

@@ -8,6 +8,7 @@ import net.breezeware.dto.food.menu.FoodMenuItemsDto;
 import net.breezeware.dto.food.menu.FoodMenuItemsQuantityDto;
 import net.breezeware.dto.food.menu.UpdateFoodMenuDto;
 import net.breezeware.exception.FoodItemException;
+import net.breezeware.exception.FoodMenuAlreadyExistException;
 import net.breezeware.exception.FoodMenuException;
 
 public interface FoodMenuService {
@@ -48,7 +49,7 @@ public interface FoodMenuService {
      * @return                   The {@link FoodMenuDto} representing the created
      *                           food menu.
      */
-    FoodMenuDto createFoodMenu(CreateFoodMenuDto createFoodMenuDto);
+    FoodMenuDto createFoodMenu(CreateFoodMenuDto createFoodMenuDto) throws FoodMenuAlreadyExistException;
 
     /**
      * Updates an existing food menu.

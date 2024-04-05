@@ -184,7 +184,7 @@ class FoodMenuControllerTest {
         when(foodMenuService.updateFoodMenu(anyLong(),any(UpdateFoodMenuDto.class))).thenReturn(foodMenuDto);
 
         // then
-        mockMvc.perform(patch(FoodMenuController.BASE_URL + "/update-menu/1")
+        mockMvc.perform(patch(FoodMenuController.BASE_URL + "/update/1")
                         .content(objectMapper.writeValueAsString(foodMenuDto))
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
@@ -208,7 +208,7 @@ class FoodMenuControllerTest {
         when(foodMenuService.addFoodItemToMenu(anyLong(), anyLong())).thenReturn(foodMenuItemsDto);
 
         // then
-        mockMvc.perform(patch(FoodMenuController.BASE_URL + "/add-food-item")
+        mockMvc.perform(patch(FoodMenuController.BASE_URL + "/add/food-item")
                         .param("menuId", "1")
                         .param("foodItemId", "1")
                         .contentType(MediaType.APPLICATION_JSON))
@@ -234,7 +234,7 @@ class FoodMenuControllerTest {
         when(foodMenuService.updateFoodMenuItemQuantity(anyLong(), anyLong(), anyInt())).thenReturn(updateFoodMenuItemQuantity);
 
         // then
-        mockMvc.perform(patch(FoodMenuController.BASE_URL + "/update-food-item-quantity")
+        mockMvc.perform(patch(FoodMenuController.BASE_URL + "/update/food-item/quantity")
                         .param("menuId", "1")
                         .param("foodItemId", "1")
                         .param("quantity", "1")
@@ -253,7 +253,7 @@ class FoodMenuControllerTest {
         doNothing().when(foodMenuService).deleteFoodMenu(anyLong());
 
         // then
-        mockMvc.perform(delete(FoodMenuController.BASE_URL + "/delete-menu/1" )
+        mockMvc.perform(delete(FoodMenuController.BASE_URL + "/delete/1" )
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNoContent());
         log.info("Leaving givenFoodMenuIdDeleteRequest_WhenDeleteFoodMenu_ThenFoodMenuDeleted() Test");
@@ -268,7 +268,7 @@ class FoodMenuControllerTest {
         doNothing().when(foodMenuService).deleteFoodMenuItem(anyLong(), anyLong());
 
         // then
-        mockMvc.perform(delete(FoodMenuController.BASE_URL + "/delete-food-item" )
+        mockMvc.perform(delete(FoodMenuController.BASE_URL + "/delete/food-item" )
                         .param("foodMenuId", "1")
                         .param("foodItemId", "1")
                         .contentType(MediaType.APPLICATION_JSON))

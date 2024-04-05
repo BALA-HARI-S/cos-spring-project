@@ -41,7 +41,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 @AllArgsConstructor
 @Slf4j
 public class FoodOrderController {
-    static final String BASE_URL = "/food-order";
+    static final String BASE_URL = "/food-orders";
 
     private final FoodOrderService foodOrderService;
 
@@ -112,7 +112,7 @@ public class FoodOrderController {
                 @ApiResponse(description = "Not Found", responseCode = "404",
                         content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
                                 schema = @Schema(implementation = ErrorDetail.class))) })
-    @PostMapping("/add-food-item")
+    @PostMapping("/add/food-item")
     public FoodOrderDto addFoodItemToOrder(@RequestParam Long orderId, @RequestParam Long menuId,
             @RequestParam Long foodItemId, @RequestParam Integer quantity)
             throws FoodItemException, FoodOrderException, FoodMenuException {
@@ -129,7 +129,7 @@ public class FoodOrderController {
                 @ApiResponse(description = "Not Found", responseCode = "404",
                         content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
                                 schema = @Schema(implementation = ErrorDetail.class))) })
-    @DeleteMapping("/delete-food-item")
+    @DeleteMapping("/delete/food-item")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteOrderFoodItem(@RequestParam Long orderId, @RequestParam Long foodItemId)
             throws FoodOrderException {

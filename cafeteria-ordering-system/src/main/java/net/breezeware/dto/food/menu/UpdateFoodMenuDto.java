@@ -21,5 +21,5 @@ public class UpdateFoodMenuDto {
     private String name;
 
     @Schema(description = "The availability of the food menu on different days")
-    private Set<Availability> menuAvailability;
+    private Set<Availability> availability;
 }

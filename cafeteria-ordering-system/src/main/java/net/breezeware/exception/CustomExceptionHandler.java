@@ -25,6 +25,26 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
         return new ResponseEntity<>(errorDetails, HttpStatus.NOT_FOUND);
     }
 
+    @ExceptionHandler(FoodItemAlreadyExistException.class)
+    public ResponseEntity<ErrorDetail> handleFoodItemAlreadyExistException(FoodItemAlreadyExistException exception,
+                                                                       WebRequest request) {
+        log.info("Entering Food Item Already Exist Exception Handler");
+        ErrorDetail errorDetails =
+                ErrorDetail.builder().message(HttpStatus.CONFLICT.name()).detail(exception.getMessage()).build();
+        log.info("Leaving Food Item Already Exist Exception Handler");
+        return new ResponseEntity<>(errorDetails, HttpStatus.CONFLICT);
+    }
+
+    @ExceptionHandler(FoodMenuAlreadyExistException.class)
+    public ResponseEntity<ErrorDetail> handleFoodMenuAlreadyExistException(FoodMenuAlreadyExistException exception,
+                                                                       WebRequest request) {
+        log.info("Entering Food Menu Already Exist Exception Handler");
+        ErrorDetail errorDetails =
+                ErrorDetail.builder().message(HttpStatus.CONFLICT.name()).detail(exception.getMessage()).build();
+        log.info("Leaving Food Menu Already Exist Exception Handler");
+        return new ResponseEntity<>(errorDetails, HttpStatus.CONFLICT);
+    }
+
     @ExceptionHandler(FoodMenuException.class)
     public ResponseEntity<ErrorDetail> handleFoodMenuNotFoundException(FoodMenuException exception,
             WebRequest request) {

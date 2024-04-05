@@ -1,11 +1,22 @@
 package net.breezeware.controller;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import lombok.extern.slf4j.Slf4j;
-import net.breezeware.dto.food.item.FoodItemDto;
-import net.breezeware.exception.CustomExceptionHandler;
-import net.breezeware.service.api.FoodItemService;
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.is;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
+import java.time.Instant;
+import java.util.ArrayList;
+import java.util.List;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
@@ -16,23 +27,16 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
-import java.time.Instant;
-import java.util.ArrayList;
-import java.util.List;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
-import static org.hamcrest.Matchers.equalTo;
-import static org.hamcrest.Matchers.is;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.doNothing;
-import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import net.breezeware.dto.food.item.CreateFoodItemDto;
+import net.breezeware.dto.food.item.FoodItemDto;
+import net.breezeware.dto.food.item.UpdateFoodItemDto;
+import net.breezeware.exception.CustomExceptionHandler;
+import net.breezeware.service.api.FoodItemService;
+
+import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 class FoodItemControllerTest {
@@ -113,35 +117,15 @@ class FoodItemControllerTest {
     }
 
     @Test
-    @Tag("retrieveFoodItem")
-    void givenFoodItemName_WhenRetrieveFoodItemByName_ThenReturnFoodItemDto() throws Exception {
-        log.info("Entering givenFoodItemName_WhenRetrieveFoodItemByName_ThenReturnFoodItemDto Test");
-
-        // given
-        FoodItemDto foodItemDto = new FoodItemDto();
-        foodItemDto.setId(ID);
-        foodItemDto.setName(FOOD_ITEM_NAME);
-        foodItemDto.setPrice(PRICE);
-        foodItemDto.setCreated(FIXED_INSTANT);
-        foodItemDto.setModified(FIXED_INSTANT);
-
-        // when
-        when(foodItemService.retrieveFoodItemByName(anyString())).thenReturn(foodItemDto);
-
-        // then
-        mockMvc.perform(get(FoodItemController.BASE_URL + "/by-name/Dosa")
-                        .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.name", equalTo("Dosa")));
-        log.info("Leaving givenFoodItemName_WhenRetrieveFoodItemByName_ThenReturnFoodItemDto Test");
-    }
-
-    @Test
     @Tag("createFoodItem")
     void givenFoodItemDto_WhenCreateFoodItem_ThenReturnFoodItemDto() throws Exception {
         log.info("Entering givenFoodItemDto_WhenCreateFoodItem_ThenReturnFoodItemDto Test");
 
         // given
+        CreateFoodItemDto createFoodItemDto = new CreateFoodItemDto();
+        createFoodItemDto.setName(FOOD_ITEM_NAME);
+        createFoodItemDto.setPrice(PRICE);
+
         FoodItemDto foodItemDto = new FoodItemDto();
         foodItemDto.setId(ID);
         foodItemDto.setName(FOOD_ITEM_NAME);
@@ -150,11 +134,11 @@ class FoodItemControllerTest {
         foodItemDto.setModified(FIXED_INSTANT);
 
         // when
-        when(foodItemService.createFoodItem(any(FoodItemDto.class))).thenReturn(foodItemDto);
+        when(foodItemService.createFoodItem(any(CreateFoodItemDto.class))).thenReturn(foodItemDto);
 
         // then
         mockMvc.perform(post(FoodItemController.BASE_URL)
-                        .content(objectMapper.writeValueAsString(foodItemDto))
+                        .content(objectMapper.writeValueAsString(createFoodItemDto))
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.name", equalTo(FOOD_ITEM_NAME)));
@@ -175,10 +159,10 @@ class FoodItemControllerTest {
         foodItemDto.setModified(FIXED_INSTANT);
 
         // when
-        when(foodItemService.updateFoodItem(anyLong(), any(FoodItemDto.class))).thenReturn(foodItemDto);
+        when(foodItemService.updateFoodItem(anyLong(), any(UpdateFoodItemDto.class))).thenReturn(foodItemDto);
 
         // then
-        mockMvc.perform(patch(FoodItemController.BASE_URL + "/2")
+        mockMvc.perform(patch(FoodItemController.BASE_URL + "/update/2")
                         .content(objectMapper.writeValueAsString(foodItemDto))
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())

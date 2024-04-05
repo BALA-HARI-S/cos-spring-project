@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 
 import javax.transaction.Transactional;
 
@@ -29,6 +30,7 @@ import net.breezeware.entity.FoodMenu;
 import net.breezeware.entity.FoodMenuItemMap;
 import net.breezeware.entity.FoodMenuItemQuantityMap;
 import net.breezeware.exception.FoodItemException;
+import net.breezeware.exception.FoodMenuAlreadyExistException;
 import net.breezeware.exception.FoodMenuException;
 import net.breezeware.mapper.FoodItemMapper;
 import net.breezeware.mapper.FoodMenuMapper;
@@ -69,14 +71,14 @@ public class FoodMenuServiceImpl implements FoodMenuService {
     }
 
     @Override
-    public FoodMenuItemsDto retrieveFoodMenu(Long id) throws FoodMenuException, FoodItemException {
+    public FoodMenuItemsDto retrieveFoodMenu(Long id) throws FoodMenuException{
         log.info("Entering retrieveFoodMenu() service");
         FoodMenu foodMenu = foodMenuRepository.findById(id)
                 .orElseThrow(() -> new FoodMenuException("Food menu not found for id: " + id));
 
         FoodMenuItemsDto foodMenuItemsDto = new FoodMenuItemsDto();
         foodMenuItemsDto.setName(foodMenu.getName());
-        foodMenuItemsDto.setMenuAvailability(foodMenu.getAvailability());
+        foodMenuItemsDto.setAvailability(foodMenu.getAvailability());
         foodMenuItemsDto.setFoodMenuItemsDto(retrieveFoodMenuItems(id));
         foodMenuItemsDto.setCreated(foodMenu.getCreated());
         foodMenuItemsDto.setModified(foodMenu.getModified());
@@ -99,7 +101,7 @@ public class FoodMenuServiceImpl implements FoodMenuService {
             FoodMenuItemsQuantityDto foodMenuItemsQuantityDto = new FoodMenuItemsQuantityDto();
             List<FoodMenuItemMap> foodMenuItemMaps = foodMenuItemMapRepository.findByFoodMenuId(foodMenu.getId());
             foodMenuItemsQuantityDto.setName(foodMenu.getName());
-            foodMenuItemsQuantityDto.setMenuAvailability(foodMenu.getAvailability());
+            foodMenuItemsQuantityDto.setAvailability(foodMenu.getAvailability());
             for (FoodMenuItemMap itemMap : foodMenuItemMaps) {
                 FoodItemDto foodItemDto = foodItemMapper.foodItemToFoodItemDto(itemMap.getFoodItem());
                 Integer quantity =
@@ -116,11 +118,15 @@ public class FoodMenuServiceImpl implements FoodMenuService {
     }
 
     @Override
-    public FoodMenuDto createFoodMenu(CreateFoodMenuDto createFoodMenuDto) {
+    public FoodMenuDto createFoodMenu(CreateFoodMenuDto createFoodMenuDto) throws FoodMenuAlreadyExistException {
         log.info("Entering createFoodMenu() service");
+        Optional<FoodMenu> foodMenu = foodMenuRepository.findByName(createFoodMenuDto.getName());
+        if (foodMenu.isPresent()){
+            throw new FoodMenuAlreadyExistException("Food menu already exist the name: " + createFoodMenuDto.getName());
+        }
         FoodMenuDto foodMenuDto = new FoodMenuDto();
         foodMenuDto.setName(createFoodMenuDto.getName());
-        foodMenuDto.setMenuAvailability(createFoodMenuDto.getMenuAvailability());
+        foodMenuDto.setAvailability(createFoodMenuDto.getMenuAvailability());
         Instant now = Instant.now();
         foodMenuDto.setCreated(now);
         foodMenuDto.setModified(now);
@@ -143,10 +149,10 @@ public class FoodMenuServiceImpl implements FoodMenuService {
             foodMenuDto.setName(updateFoodMenuDto.getName());
         }
 
-        if (Objects.isNull(updateFoodMenuDto.getMenuAvailability())) {
-            foodMenuDto.setMenuAvailability(retrievedFoodMenu.getAvailability());
+        if (Objects.isNull(updateFoodMenuDto.getAvailability())) {
+            foodMenuDto.setAvailability(retrievedFoodMenu.getAvailability());
         } else {
-            foodMenuDto.setMenuAvailability(updateFoodMenuDto.getMenuAvailability());
+            foodMenuDto.setAvailability(updateFoodMenuDto.getAvailability());
         }
 
         foodMenuDto.setCreated(retrievedFoodMenu.getCreated());
@@ -235,7 +241,7 @@ public class FoodMenuServiceImpl implements FoodMenuService {
         FoodMenuItemsDto retrievedFoodMenuDto = retrieveFoodMenu(menuId);
         FoodMenuItemsQuantityDto foodMenuItemsQuantityDto = new FoodMenuItemsQuantityDto();
         foodMenuItemsQuantityDto.setName(retrievedFoodMenuDto.getName());
-        foodMenuItemsQuantityDto.setMenuAvailability(retrievedFoodMenuDto.getMenuAvailability());
+        foodMenuItemsQuantityDto.setAvailability(retrievedFoodMenuDto.getAvailability());
         foodMenuItemsQuantityDto.setFoodMenuItemsQuantity(foodItemsQuantity);
         log.info("Leaving updateFoodMenuItemQuantity() service");
         return foodMenuItemsQuantityDto;

@@ -11,6 +11,7 @@ import net.breezeware.dto.food.menu.UpdateFoodMenuDto;
 import net.breezeware.entity.Availability;
 import net.breezeware.entity.FoodMenu;
 import net.breezeware.exception.FoodItemException;
+import net.breezeware.exception.FoodMenuAlreadyExistException;
 import net.breezeware.exception.FoodMenuException;
 import net.breezeware.mapper.FoodMenuMapper;
 import net.breezeware.service.api.FoodItemService;
@@ -139,7 +140,7 @@ class FoodMenuServiceImplTest {
 
     @Test
     @Tag("createFoodMenu")
-    void givenFoodMenuDto_WhenCreateFoodMenu_ThenReturnFoodMenuDto() {
+    void givenFoodMenuDto_WhenCreateFoodMenu_ThenReturnFoodMenuDto() throws FoodMenuAlreadyExistException {
         log.info("Entering givenFoodMenuDto_WhenCreateFoodMenu_ThenReturnFoodMenuDto() Test");
         // given
         CreateFoodMenuDto createFoodMenuDto = new CreateFoodMenuDto(MENU_NAME,AVAILABILITY);
@@ -197,7 +198,7 @@ class FoodMenuServiceImplTest {
         // then
         Assertions.assertThat(savedFoodMenuDto.getId()).isEqualTo(ID);
         Assertions.assertThat(savedFoodMenuDto.getName()).isEqualTo("special");
-        Assertions.assertThat(savedFoodMenuDto.getMenuAvailability()).isEqualTo(AVAILABILITY);
+        Assertions.assertThat(savedFoodMenuDto.getAvailability()).isEqualTo(AVAILABILITY);
         log.info("Leaving givenFoodMenuDtoWithNameAndId_WhenUpdateFoodMenu_ThenReturnFoodMenuDto() name Test");
     }
 
@@ -208,7 +209,7 @@ class FoodMenuServiceImplTest {
         // given
         UpdateFoodMenuDto updateFoodMenuDto = new UpdateFoodMenuDto();
         Set<Availability> newAvailability = new HashSet<>(Arrays.asList(Availability.MONDAY,Availability.TUESDAY));
-        updateFoodMenuDto.setMenuAvailability(newAvailability);
+        updateFoodMenuDto.setAvailability(newAvailability);
 
         FoodMenu existingFoodMenu = new FoodMenu(ID,MENU_NAME,FIXED_INSTANT,FIXED_INSTANT, AVAILABILITY);
         FoodMenu savedFoodMenu = new FoodMenu(ID,MENU_NAME,FIXED_INSTANT,FIXED_INSTANT, newAvailability);
@@ -225,7 +226,7 @@ class FoodMenuServiceImplTest {
         // then
         Assertions.assertThat(savedFoodMenuDto.getId()).isEqualTo(ID);
         Assertions.assertThat(savedFoodMenuDto.getName()).isEqualTo(MENU_NAME);
-        Assertions.assertThat(savedFoodMenuDto.getMenuAvailability()).isEqualTo(newAvailability);
+        Assertions.assertThat(savedFoodMenuDto.getAvailability()).isEqualTo(newAvailability);
         log.info("Leaving givenFoodMenuDtoWithAvailabilityAndId_WhenUpdateFoodMenu_ThenReturnFoodMenuDto() availability Test");
     }
 

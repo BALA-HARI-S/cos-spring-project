@@ -24,6 +24,7 @@ import net.breezeware.dto.food.menu.FoodMenuItemsQuantityDto;
 import net.breezeware.dto.food.menu.UpdateFoodMenuDto;
 import net.breezeware.entity.ErrorDetail;
 import net.breezeware.exception.FoodItemException;
+import net.breezeware.exception.FoodMenuAlreadyExistException;
 import net.breezeware.exception.FoodMenuException;
 import net.breezeware.service.api.FoodMenuService;
 
@@ -42,7 +43,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 @AllArgsConstructor
 @Slf4j
 public class FoodMenuController {
-    static final String BASE_URL = "/food-menu";
+    static final String BASE_URL = "/food-menus";
 
     private FoodMenuService foodMenuService;
 
@@ -89,11 +90,14 @@ public class FoodMenuController {
     @Operation(description = "Create food menu", summary = "Create food menu",
             responses = { @ApiResponse(description = "Created", responseCode = "201",
                     content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
-                            schema = @Schema(implementation = FoodMenuDto.class))) })
+                            schema = @Schema(implementation = FoodMenuDto.class))),
+                    @ApiResponse(description = "Client Error", responseCode = "4XX",
+                            content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
+                                    schema = @Schema(implementation = ErrorDetail.class))) })
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public FoodMenuDto createFoodMenu(@Valid @RequestBody CreateFoodMenuDto createFoodMenuDto)
-            throws FoodMenuException {
+            throws FoodMenuAlreadyExistException {
         log.info("Entering createFoodMenu() controller");
         FoodMenuDto createdFoodMenuDto = foodMenuService.createFoodMenu(createFoodMenuDto);
         log.info("Leaving createFoodMenu() controller");
@@ -108,7 +112,7 @@ public class FoodMenuController {
                 @ApiResponse(description = "Client Error", responseCode = "4XX",
                         content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
                                 schema = @Schema(implementation = ErrorDetail.class))) })
-    @PatchMapping("/update-menu/{id}")
+    @PatchMapping("/update/{id}")
     public FoodMenuDto updateFoodMenu(@PathVariable Long id, @Valid @RequestBody UpdateFoodMenuDto updateFoodMenuDto)
             throws FoodMenuException {
         log.info("Entering updateFoodMenu() controller");
@@ -125,7 +129,7 @@ public class FoodMenuController {
                 @ApiResponse(description = "Client Error", responseCode = "4XX",
                         content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
                                 schema = @Schema(implementation = ErrorDetail.class))) })
-    @PatchMapping("/add-food-item")
+    @PatchMapping("/add/food-item")
     public FoodMenuItemsDto updateFoodMenuItem(@RequestParam Long menuId, @RequestParam Long foodItemId)
             throws FoodMenuException, FoodItemException {
         log.info("Entering updateFoodMenuItem() controller");
@@ -142,7 +146,7 @@ public class FoodMenuController {
                 @ApiResponse(description = "Client Error", responseCode = "4XX",
                         content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
                                 schema = @Schema(implementation = ErrorDetail.class))) })
-    @PatchMapping("/update-food-item-quantity")
+    @PatchMapping("/update/food-item/quantity")
     public FoodMenuItemsQuantityDto updateFoodMenuItemQuantity(@RequestParam Long menuId, @RequestParam Long foodItemId,
             @RequestParam Integer quantity) throws FoodMenuException, FoodItemException {
         log.info("Entering updateFoodMenuItemQuantity() controller");
@@ -155,7 +159,7 @@ public class FoodMenuController {
     @Operation(description = "Delete food menu", summary = "Delete food menu",
             responses = { @ApiResponse(description = "No Content", responseCode = "204",
                     content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE)) })
-    @DeleteMapping("/delete-menu/{id}")
+    @DeleteMapping("/delete/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteFoodMenu(@PathVariable Long id) throws FoodMenuException {
         log.info("Entering deleteFoodMenu() controller");
@@ -166,7 +170,7 @@ public class FoodMenuController {
     @Operation(description = "Delete food menu item", summary = "Delete food menu item",
             responses = { @ApiResponse(description = "No Content", responseCode = "204",
                     content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE)) })
-    @DeleteMapping("/delete-food-item")
+    @DeleteMapping("/delete/food-item")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteFoodMenuItem(@RequestParam Long foodMenuId, @RequestParam Long foodItemId)
             throws FoodMenuException {

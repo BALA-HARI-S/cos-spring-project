@@ -2,7 +2,10 @@ package net.breezeware.service.api;
 
 import java.util.List;
 
+import net.breezeware.dto.food.item.CreateFoodItemDto;
 import net.breezeware.dto.food.item.FoodItemDto;
+import net.breezeware.dto.food.item.UpdateFoodItemDto;
+import net.breezeware.exception.FoodItemAlreadyExistException;
 import net.breezeware.exception.FoodItemException;
 
 /**
@@ -38,7 +41,7 @@ public interface FoodItemService {
      * @param  foodItemDto the DTO representing the food item to create
      * @return             the created food item DTO
      */
-    FoodItemDto createFoodItem(FoodItemDto foodItemDto);
+    FoodItemDto createFoodItem(CreateFoodItemDto createFoodItemDto) throws FoodItemAlreadyExistException;
 
     /**
      * Updates an existing food item.
@@ -47,7 +50,7 @@ public interface FoodItemService {
      * @return                   the updated food item DTO
      * @throws FoodItemException if the food item with the given ID is not found
      */
-    FoodItemDto updateFoodItem(Long id, FoodItemDto foodItemDto) throws FoodItemException;
+    FoodItemDto updateFoodItem(Long id, UpdateFoodItemDto updateFoodItemDto) throws FoodItemException;
 
     /**
      * Deletes a food item by its ID.

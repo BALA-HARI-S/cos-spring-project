@@ -28,7 +28,7 @@ public class FoodMenuItemsQuantityDto {
 
     @Schema(description = "The availability of the food menu on different days")
     @NotNull(message = "Menu availability must not be empty")
-    private Set<Availability> menuAvailability;
+    private Set<Availability> availability;
 
     @Schema(description = "The list food items in the menu")
     @NotNull(message = "Food menu food items and its quantities must not be empty")

@@ -40,5 +40,5 @@ public class FoodMenuDto {
 
     @Schema(description = "The availability of the food menu on different days")
     @NotNull(message = "Menu availability must not be empty")
-    private Set<Availability> menuAvailability;
+    private Set<Availability> availability;
 }

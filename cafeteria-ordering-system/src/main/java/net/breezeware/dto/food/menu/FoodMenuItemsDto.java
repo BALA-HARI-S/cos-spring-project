@@ -29,7 +29,7 @@ public class FoodMenuItemsDto {
     private String name;
 
     @Schema(description = "The availability of the food menu on different days")
-    private Set<Availability> menuAvailability;
+    private Set<Availability> availability;
 
     @Schema(description = "The list food items in the menu")
     @NotNull(message = "Menu food items must not be empty")
