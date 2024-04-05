@@ -13,7 +13,7 @@ import lombok.NoArgsConstructor;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 @Data
-@JsonRootName("FoodMenu")
+@JsonRootName("UpdateFoodMenu")
 @NoArgsConstructor
 @AllArgsConstructor
 public class UpdateFoodMenuDto {
