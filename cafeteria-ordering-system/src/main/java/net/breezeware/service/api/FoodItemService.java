@@ -39,14 +39,14 @@ public interface FoodItemService {
     /**
      * Creates a new food item.
      * @param  createFoodItemDto the DTO representing the food item to create
-     * @return             the created food item DTO
+     * @return                   the created food item DTO
      */
     FoodItemDto createFoodItem(CreateFoodItemDto createFoodItemDto) throws FoodItemAlreadyExistException;
 
     /**
      * Updates an existing food item.
      * @param  id                the ID of the food item to update
-     * @param  updateFoodItemDto       the DTO representing the updated food item
+     * @param  updateFoodItemDto the DTO representing the updated food item
      * @return                   the updated food item DTO
      * @throws FoodItemException if the food item with the given ID is not found
      */

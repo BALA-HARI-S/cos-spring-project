@@ -114,8 +114,8 @@ public class FoodOrderController {
                         content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
                                 schema = @Schema(implementation = ErrorDetail.class))) })
     @PostMapping("/add/food-item")
-    public FoodOrderDto addFoodItemToOrder(@Min(1) @RequestParam Long orderId,@Min(1) @RequestParam Long menuId,
-                                           @Min(1) @RequestParam Long foodItemId, @RequestParam Integer quantity)
+    public FoodOrderDto addFoodItemToOrder(@Min(1) @RequestParam Long orderId, @Min(1) @RequestParam Long menuId,
+            @Min(1) @RequestParam Long foodItemId, @RequestParam Integer quantity)
             throws FoodItemException, FoodOrderException, FoodMenuException {
         log.info("Entering addFoodItemToOrder() controller");
         FoodOrderDto foodOrderDto = foodOrderService.addFoodItemToOrder(orderId, menuId, foodItemId, quantity);
@@ -132,7 +132,7 @@ public class FoodOrderController {
                                 schema = @Schema(implementation = ErrorDetail.class))) })
     @DeleteMapping("/delete/food-item")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteOrderFoodItem(@Min(1) @RequestParam Long orderId,@Min(1) @RequestParam Long foodItemId)
+    public void deleteOrderFoodItem(@Min(1) @RequestParam Long orderId, @Min(1) @RequestParam Long foodItemId)
             throws FoodOrderException {
         log.info("Entering deleteOrderFoodItem() controller");
         foodOrderService.deleteOrderFoodItem(orderId, foodItemId);

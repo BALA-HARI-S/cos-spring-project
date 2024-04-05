@@ -32,7 +32,7 @@ public class FoodMenuItemQuantityMap {
 
     @NotNull(message = "The food menu item quantity map quantity must not be empty")
     @Column(name = "quantity")
-    @Min(value = 0,message = "Quantity must not be negative value")
+    @Min(value = 0, message = "Quantity must not be negative value")
     private Integer quantity;
 
     @NotNull(message = "The food menu item quantity map created date and time must not be empty")
