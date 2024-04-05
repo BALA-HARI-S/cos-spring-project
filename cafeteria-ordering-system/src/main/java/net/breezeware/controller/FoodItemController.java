@@ -50,9 +50,7 @@ public class FoodItemController {
                                 schema = @Schema(implementation = FoodItemDto.class))),
                 @ApiResponse(description = "Client Error", responseCode = "4XX",
                         content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
-                                schema = @Schema(implementation = ErrorDetail.class)))
-            }
-    )
+                                schema = @Schema(implementation = ErrorDetail.class))) })
     @GetMapping
     public List<FoodItemDto> retrieveFoodItems() throws FoodItemException {
         log.info("Entering retrieveFoodItems()");
@@ -68,9 +66,7 @@ public class FoodItemController {
                                 schema = @Schema(implementation = FoodItemDto.class))),
                 @ApiResponse(description = "Client Error", responseCode = "4XX",
                         content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
-                                schema = @Schema(implementation = ErrorDetail.class)))
-            }
-    )
+                                schema = @Schema(implementation = ErrorDetail.class))) })
     @GetMapping(value = "/{id}")
     public FoodItemDto retrieveFoodItem(@PathVariable Long id) throws FoodItemException {
         log.info("Entering retrieveFoodItem()");
@@ -80,17 +76,17 @@ public class FoodItemController {
     }
 
     @Operation(description = "Create Food Item", summary = "Create Food Item",
-            responses = {@ApiResponse(description = "Created", responseCode = "201",
-                    content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
-                            schema = @Schema(implementation = FoodItemDto.class))),
-                    @ApiResponse(description = "Client Error", responseCode = "4XX",
-                            content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
-                                    schema = @Schema(implementation = ErrorDetail.class)))
-            }
-    )
+            responses = {
+                @ApiResponse(description = "Created", responseCode = "201",
+                        content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
+                                schema = @Schema(implementation = FoodItemDto.class))),
+                @ApiResponse(description = "Client Error", responseCode = "4XX",
+                        content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
+                                schema = @Schema(implementation = ErrorDetail.class))) })
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public FoodItemDto createFoodItem(@Valid @RequestBody CreateFoodItemDto createFoodItemDto) throws FoodItemAlreadyExistException {
+    public FoodItemDto createFoodItem(@Valid @RequestBody CreateFoodItemDto createFoodItemDto)
+            throws FoodItemAlreadyExistException {
         log.info("Entering createFoodItem()");
         FoodItemDto foodItem = foodItemService.createFoodItem(createFoodItemDto);
         log.info("Leaving createFoodItem()");
@@ -100,9 +96,7 @@ public class FoodItemController {
     @Operation(description = "Edit Food Item", summary = "Update Food Item by Id",
             responses = { @ApiResponse(description = "Success", responseCode = "200",
                     content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
-                            schema = @Schema(implementation = FoodItemDto.class)))
-            }
-    )
+                            schema = @Schema(implementation = FoodItemDto.class))) })
     @PatchMapping("/update/{id}")
     public FoodItemDto updateFoodItem(@PathVariable Long id, @Valid @RequestBody UpdateFoodItemDto updateFoodItemDto)
             throws FoodItemException {
@@ -116,9 +110,7 @@ public class FoodItemController {
             responses = { @ApiResponse(description = "NO CONTENT", responseCode = "204"),
                 @ApiResponse(description = "Client Error", responseCode = "4XX",
                         content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
-                                schema = @Schema(implementation = ErrorDetail.class)))
-            }
-    )
+                                schema = @Schema(implementation = ErrorDetail.class))) })
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteFoodItem(@PathVariable Long id) throws FoodItemException {

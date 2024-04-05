@@ -71,7 +71,7 @@ public class FoodMenuServiceImpl implements FoodMenuService {
     }
 
     @Override
-    public FoodMenuItemsDto retrieveFoodMenu(Long id) throws FoodMenuException{
+    public FoodMenuItemsDto retrieveFoodMenu(Long id) throws FoodMenuException {
         log.info("Entering retrieveFoodMenu() service");
         FoodMenu foodMenu = foodMenuRepository.findById(id)
                 .orElseThrow(() -> new FoodMenuException("Food menu not found for id: " + id));
@@ -121,9 +121,10 @@ public class FoodMenuServiceImpl implements FoodMenuService {
     public FoodMenuDto createFoodMenu(CreateFoodMenuDto createFoodMenuDto) throws FoodMenuAlreadyExistException {
         log.info("Entering createFoodMenu() service");
         Optional<FoodMenu> foodMenu = foodMenuRepository.findByName(createFoodMenuDto.getName());
-        if (foodMenu.isPresent()){
+        if (foodMenu.isPresent()) {
             throw new FoodMenuAlreadyExistException("Food menu already exist the name: " + createFoodMenuDto.getName());
         }
+
         FoodMenuDto foodMenuDto = new FoodMenuDto();
         foodMenuDto.setName(createFoodMenuDto.getName());
         foodMenuDto.setAvailability(createFoodMenuDto.getMenuAvailability());
@@ -222,6 +223,7 @@ public class FoodMenuServiceImpl implements FoodMenuService {
             }
 
         }
+
         FoodMenuItemQuantityMap foodMenuItemQuantityMap =
                 foodMenuItemQuantityMapRepository.findByFoodMenuItemMapId(foodMenuItemMap.getId());
         foodMenuItemQuantityMap.setId(foodMenuItemMap.getId());
@@ -238,6 +240,7 @@ public class FoodMenuServiceImpl implements FoodMenuService {
                     foodMenuItemQuantityMapRepository.findByFoodMenuItemMapId(itemMap.getId()).getQuantity();
             foodItemsQuantity.put(foodItemDto, itemQuantity);
         }
+
         FoodMenuItemsDto retrievedFoodMenuDto = retrieveFoodMenu(menuId);
         FoodMenuItemsQuantityDto foodMenuItemsQuantityDto = new FoodMenuItemsQuantityDto();
         foodMenuItemsQuantityDto.setName(retrievedFoodMenuDto.getName());

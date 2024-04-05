@@ -88,12 +88,13 @@ public class FoodMenuController {
     }
 
     @Operation(description = "Create food menu", summary = "Create food menu",
-            responses = { @ApiResponse(description = "Created", responseCode = "201",
-                    content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
-                            schema = @Schema(implementation = FoodMenuDto.class))),
-                    @ApiResponse(description = "Client Error", responseCode = "4XX",
-                            content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
-                                    schema = @Schema(implementation = ErrorDetail.class))) })
+            responses = {
+                @ApiResponse(description = "Created", responseCode = "201",
+                        content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
+                                schema = @Schema(implementation = FoodMenuDto.class))),
+                @ApiResponse(description = "Client Error", responseCode = "4XX",
+                        content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
+                                schema = @Schema(implementation = ErrorDetail.class))) })
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public FoodMenuDto createFoodMenu(@Valid @RequestBody CreateFoodMenuDto createFoodMenuDto)

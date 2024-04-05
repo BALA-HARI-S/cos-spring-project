@@ -65,9 +65,11 @@ public class FoodItemServiceImpl implements FoodItemService {
     public FoodItemDto createFoodItem(CreateFoodItemDto createFoodItemDto) throws FoodItemAlreadyExistException {
         log.info("Entering createFoodItem()");
         Optional<FoodItem> foodItem = foodItemRepository.findByName(createFoodItemDto.getName());
-        if(foodItem.isPresent()){
-            throw new FoodItemAlreadyExistException("Food item already exist with the name: " + createFoodItemDto.getName());
+        if (foodItem.isPresent()) {
+            throw new FoodItemAlreadyExistException(
+                    "Food item already exist with the name: " + createFoodItemDto.getName());
         }
+
         FoodItemDto foodItemDto = new FoodItemDto();
         foodItemDto.setName(createFoodItemDto.getName());
         foodItemDto.setPrice(createFoodItemDto.getPrice());

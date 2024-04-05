@@ -12,5 +12,6 @@ import net.breezeware.entity.FoodMenu;
 @Repository
 public interface FoodMenuRepository extends JpaRepository<FoodMenu, Long> {
     List<FoodMenu> findByAvailability(Availability availability);
+
     Optional<FoodMenu> findByName(String name);
 }
