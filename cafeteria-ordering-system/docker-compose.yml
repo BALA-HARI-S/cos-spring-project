@@ -3,17 +3,16 @@ version: "3"
 services:
   cos-app:
     build:
-      context: . 	
+      context: .
     container_name: cos-app
     depends_on:
       - cos-db
     ports:
       - "8080:8080"
     healthcheck:
-      test: ["CMD", "curl -f http://localhost:8080/actuator/health || exit 1"]
+      test: "curl -f http://localhost:8080/actuator/health"
       interval: 10s
       timeout: 15s
-      start_period: 0s
       retries: 3
     environment:
       COS_SPRING_DB_HOST: cos-db
@@ -34,7 +33,6 @@ services:
       test: ["CMD", "pg_isready"]
       interval: 10s
       timeout: 7s
-      start_period: 5s
       retries: 3
     env_file: .env.docker-compose.development
     environment:
