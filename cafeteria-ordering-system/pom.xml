@@ -29,6 +29,7 @@
 		</breezeware-google-checkstyle.configLocation>
 		<postgresql.version>42.6.0</postgresql.version>
 		<spring-boot-starter-actuator.version>3.2.1</spring-boot-starter-actuator.version>
+		<maven-pmd-plugin.ruleset>src/main/resources/pmd-ruleset.xml</maven-pmd-plugin.ruleset>
 	</properties>
 
 	<dependencies>
@@ -139,6 +140,9 @@
 				<version>${maven-pmd-plugin.version}</version>
 				<configuration>
 					<failOnViolation>true</failOnViolation>
+					<rulesets>
+						<ruleset>${maven-pmd-plugin.ruleset}</ruleset>
+					</rulesets>
 				</configuration>
 			</plugin>
 
