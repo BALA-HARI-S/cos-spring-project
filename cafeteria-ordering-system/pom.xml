@@ -20,7 +20,7 @@
 		<maven-compiler-plugin.version>3.8.1</maven-compiler-plugin.version>
 		<springdoc-openapi-ui.version>1.7.0</springdoc-openapi-ui.version>
 		<maven-checkstyle-plugin.version>3.2.1</maven-checkstyle-plugin.version>
-		<maven-pmd-plugin.version>3.13.0</maven-pmd-plugin.version>
+		<maven-pmd-plugin.version>3.20.0</maven-pmd-plugin.version>
 		<jackson-datatype-jsr310.version>2.15.2</jackson-datatype-jsr310.version>
 		<checkstyle.version>10.14.1</checkstyle.version>
 		<breezeware-google-checkstyle.configLocation>
@@ -138,6 +138,15 @@
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-pmd-plugin</artifactId>
 				<version>${maven-pmd-plugin.version}</version>
+				<executions>
+					<execution>
+						<id>validate</id>
+						<phase>validate</phase>
+						<goals>
+							<goal>check</goal>
+						</goals>
+					</execution>
+				</executions>
 				<configuration>
 					<failOnViolation>true</failOnViolation>
 					<rulesets>

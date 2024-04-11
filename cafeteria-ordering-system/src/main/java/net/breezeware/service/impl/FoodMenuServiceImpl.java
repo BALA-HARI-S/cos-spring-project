@@ -231,8 +231,7 @@ public class FoodMenuServiceImpl implements FoodMenuService {
         foodMenuItemQuantityMap.setQuantity(quantity);
         foodMenuItemQuantityMap.setModified(Instant.now());
 
-        FoodMenuItemQuantityMap savedFoodMenuItemQuantityMap =
-                foodMenuItemQuantityMapRepository.save(foodMenuItemQuantityMap);
+        foodMenuItemQuantityMapRepository.save(foodMenuItemQuantityMap);
         Map<FoodItemDto, Integer> foodItemsQuantity = new HashMap<>();
         for (FoodMenuItemMap itemMap : foodMenuItemMaps) {
             FoodItemDto foodItemDto = foodItemMapper.foodItemToFoodItemDto(itemMap.getFoodItem());
